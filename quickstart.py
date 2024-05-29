@@ -1,4 +1,5 @@
 import os.path
+import base64
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -54,7 +55,25 @@ def main():
             return
         print("Labels:")
         for message in messages:
-            print(message)
+            message_id = message["id"]
+            # GET https://gmail.googleapis.com/gmail/v1/users/{userId}/messages/{id}
+            results = (
+                service.users().messages().get(id=message_id, userId="me").execute()
+            )
+
+            parts = results.get("payload").get("parts")
+
+            i = 0
+            for val in parts:
+                if val.get("partId") == "0":
+                    print("here", val.keys())
+                    for part in val.get("parts"):
+                        email_body = part.get("body").get("data")
+                        if email_body:
+                            decoded_email_body = base64.urlsafe_b64decode(email_body)
+                            print(type(decoded_email_body))
+
+                break
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
