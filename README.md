@@ -4,8 +4,19 @@
 
 ## Example
 
+Below is an example of a typical email you'd receive after applying for a role.
+
+> From: noreply-hr@flyingunicornsarefake.com
+>
+> Date: January 1
+> 
+> Subject: We received your application
+> 
+> Body: Thanks for applying to FlyingUnicorns! We'll reach out if there's a fit.
+
+
 <details>
-<summary>Click here to see the 10 applications I sent on January 1.
+<summary>Let's imagine I sent a total of 10 applications on January 1, including the 1 above for FlyingUnicorns.
 </summary>
 
 > From: noreply-hr@company1isfake.com
@@ -89,9 +100,12 @@
 > Body: Thanks for applying to FlyingUnicorns! We'll reach out if there's a fit.
 </details>
 
-
+<br>
 Now let's imagine on January 14, 2 weeks later, the only response I've gotten is from the FlyingUnicorns company.
 
+<br>
+
+>
 >
 > From: noreply-hr@flyingunicornsarefake.com
 >
