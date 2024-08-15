@@ -53,32 +53,58 @@ def main():
             .list(userId="me", labelIds=[JOBS_LABEL_ID])
             .execute()
         )
+
         messages = results.get("messages", [])
         # print(results)
         if not results:
             print("No message found.")
             return
-        print("Labels:")
+
+        # Directory to save the emails
+        output_dir = "emails_v2"
+        os.makedirs(output_dir, exist_ok=True)
+
         for message in messages:
-            message_id = message["id"]
-            # GET https://gmail.googleapis.com/gmail/v1/users/{userId}/messages/{id}
-            results = (
-                service.users().messages().get(id=message_id, userId="me").execute()
-            )
+            msg_id = message["id"]
+            msg = service.users().messages().get(userId="me", id=msg_id).execute()
+            email_data = msg["payload"]["headers"]
+            import pdb
 
-            parts = results.get("payload").get("parts")
+            pdb.set_trace()
+            for values in email_data:
+                name = values["name"]
+                if name == "From":
+                    from_name = values["value"]
+                    print(from_name)
+                    subject = [j["value"] for j in email_data if j["name"] == "Subject"]
+                    print(subject)
 
-            i = 0
-            for val in parts:
-                if val.get("partId") == "0":
-                    print("here", val.keys())
-                    for part in val.get("parts"):
-                        email_body = part.get("body").get("data")
-                        if email_body:
-                            decoded_email_body = base64.urlsafe_b64decode(email_body)
-                            print(type(decoded_email_body))
+            # I added the below script.
+            for p in msg["payload"]["parts"]:
+                if p["mimeType"] in ["text/plain", "text/html"]:
+                    data = base64.urlsafe_b64decode(p["body"]["data"]).decode("utf-8")
+                    print(data)
+            # Extract the email data
+            # email_data = msg.get(
+            #     "payload"
+            # )  # Simplified, can use 'payload' for full data
+            # email_body = msg.get("payload", {}).get("body", {}).get("data")
+            # if email_body:
+            #     email_body = base64.urlsafe_b64decode(
+            #         email_body.encode("ASCII")
+            #     ).decode("utf-8")
+            #     import pdb
 
-                break
+            #     pdb.set_trace()
+            # Choose file extension and content
+            filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
+            filepath = os.path.join(output_dir, filename)
+
+            # Save the email to a file
+            with open(filepath, "w", encoding="utf-8") as f:
+                f.write(data if data else email_data)
+
+            print(f"Saved email {msg_id} to {filepath}")
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
