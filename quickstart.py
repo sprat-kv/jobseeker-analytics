@@ -47,13 +47,18 @@ def main():
         # results = service.users().labels().list(userId="me").execute()
         # labels = results.get("labels", [])
         query = (
+            '(subject:"thank" AND from:"no-reply@ashbyhq.com") OR '
+            '(subject:"thank" AND from:"careers@") OR '
+            '(subject:"thank" AND from:"no-reply@greenhouse.io") OR '
+            '(subject:"application was sent" AND from:"jobs-noreply@linkedin.com") OR '
+            'from:"notification@smartrecruiters.com" OR '
             'subject:"received your application" OR '
+            'subject:"your application was sent to" OR '
             'subject:"thank you for applying" OR '
             'subject:"thanks for applying to" OR '
             'subject:"confirmation of your application" OR '
+            'subject:"your recent job application" OR '
             'subject:"successfully submitted" OR '
-            'from:"no-reply@ashbyhq.com" OR '
-            'from:"notification@smartrecruiters.com" OR '
             'subject:"application received" OR '
             'subject:"application submitted" OR '
             'subject:"we received your application" OR '
@@ -61,6 +66,7 @@ def main():
             'subject:"thank you for your interest" OR '
             'subject:"thanks for your interest" OR '
             'subject:"thank you for your application" OR '
+            'subject:"application has been submitted" OR '
             '(subject:"your application to" AND subject:"has been received") OR '
             '(subject:"your application for" AND -subject:"update") OR '
             'subject:"your job application has been received" OR '
