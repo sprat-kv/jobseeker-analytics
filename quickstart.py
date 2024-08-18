@@ -46,7 +46,27 @@ def main():
         service = build("gmail", "v1", credentials=creds)
         # results = service.users().labels().list(userId="me").execute()
         # labels = results.get("labels", [])
-
+        query = (
+            'subject:"received your application" OR '
+            'subject:"thank you for applying" OR '
+            'subject:"thanks for applying to" OR '
+            'subject:"confirmation of your application" OR '
+            'subject:"successfully submitted" OR '
+            'from:"no-reply@ashbyhq.com" OR '
+            'from:"notification@smartrecruiters.com" OR '
+            'subject:"application received" OR '
+            'subject:"application submitted" OR '
+            'subject:"we received your application" OR '
+            'subject:"thank you for your submission" OR '
+            'subject:"thank you for your interest" OR '
+            'subject:"thanks for your interest" OR '
+            'subject:"thank you for your application" OR '
+            '(subject:"your application to" AND subject:"has been received") OR '
+            '(subject:"your application for" AND -subject:"update") OR '
+            'subject:"your job application has been received" OR '
+            'subject:"thanks for your application" OR '
+            '(subject:"we received your" AND subject:"application")'
+        )  # label:jobs -label:query4
         results = (
             service.users()
             .messages()
