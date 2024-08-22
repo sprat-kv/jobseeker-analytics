@@ -27,6 +27,7 @@ def main():
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
     # If there are no (valid) credentials available, let the user log in.
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
@@ -35,8 +36,15 @@ def main():
                 os.remove("token.json")
                 creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("credentials.json", SCOPES)
-            creds = flow.run_local_server(port=0)
+            try:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    "credentials.json",
+                    scopes=SCOPES,
+                )
+                creds = flow.run_local_server(port=8001)
+            except RefreshError:
+                os.remove("token.json")
+                creds.refresh(Request())
         # Save the credentials for the next run
         with open("token.json", "w") as token:
             token.write(creds.to_json())
@@ -94,9 +102,7 @@ def main():
             msg_id = message["id"]
             msg = service.users().messages().get(userId="me", id=msg_id).execute()
             email_data = msg["payload"]["headers"]
-            import pdb
 
-            pdb.set_trace()
             for values in email_data:
                 name = values["name"]
                 if name == "From":
