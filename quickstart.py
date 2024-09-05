@@ -1,5 +1,7 @@
 import os.path
 import base64
+from bs4 import BeautifulSoup
+import re
 
 from google.auth.exceptions import RefreshError
 from google.auth.transport.requests import Request
@@ -100,6 +102,13 @@ def main():
 
         for message in messages:
             msg_id = message["id"]
+            # if msg_id == "1901318a60244309":
+            #     import pdb
+
+            #     pdb.set_trace()
+            # else:
+            #     continue
+
             msg = service.users().messages().get(userId="me", id=msg_id).execute()
             email_data = msg["payload"]["headers"]
 
@@ -110,34 +119,78 @@ def main():
                     print(from_name)
                     subject = [j["value"] for j in email_data if j["name"] == "Subject"]
                     print(subject)
+                if name == "ARC-Authentication-Results":
+                    arc_authentication_results = values["value"]
+                    fromdomain_pattern = r"from=@([\w.-]+)"
+                    fromdomain_matches = re.findall(
+                        fromdomain_pattern, arc_authentication_results
+                    )
+                    for domain in fromdomain_matches:
+                        print(
+                            "domain: {domain_alt}".format(
+                                domain_alt=domain.split(".")[0]
+                            )
+                        )
 
-            # I added the below script.
-            for p in msg["payload"]["parts"]:
-                if p["mimeType"] in ["text/plain", "text/html"]:
-                    data = base64.urlsafe_b64decode(p["body"]["data"]).decode("utf-8")
-                    print(data)
-            # Extract the email data
-            # email_data = msg.get(
-            #     "payload"
-            # )  # Simplified, can use 'payload' for full data
-            # email_body = msg.get("payload", {}).get("body", {}).get("data")
-            # if email_body:
-            #     email_body = base64.urlsafe_b64decode(
-            #         email_body.encode("ASCII")
-            #     ).decode("utf-8")
-            #     import pdb
+            payload = msg.get("payload")
+            if payload:
+                payload_parts = payload.get("parts")
+                if payload_parts:
+                    for p in payload_parts:
+                        if p["mimeType"] in ["text/plain", "text/html"]:
+                            data = base64.urlsafe_b64decode(
+                                p.get("body", {}).get("data", {})
+                            ).decode("utf-8")
+                            # Parse the content with BeautifulSoup
+                            soup = BeautifulSoup(data, "html.parser")
 
-            #     pdb.set_trace()
-            # Choose file extension and content
-            filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
-            filepath = os.path.join(output_dir, filename)
+                            # Extract the plain text from the HTML content
+                            email_text = soup.get_text()
 
-            # Save the email to a file
-            with open(filepath, "w", encoding="utf-8") as f:
-                f.write(data if data else email_data)
+                            # Optional: Clean up extra whitespace and line breaks
+                            cleaned_text = "\n".join(
+                                [
+                                    line.strip()
+                                    for line in email_text.splitlines()
+                                    if line.strip()
+                                ]
+                            )
 
-            print(f"Saved email {msg_id} to {filepath}")
+                            # print(data)
+                            # Extract the email data
+                            # email_data = msg.get(
+                            #     "payload"
+                            # )  # Simplified, can use 'payload' for full data
+                            # email_body = msg.get("payload", {}).get("body", {}).get("data")
+                            # if email_body:
+                            #     email_body = base64.urlsafe_b64decode(
+                            #         email_body.encode("ASCII")
+                            #     ).decode("utf-8")
+                            #     import pdb
 
+                            #     pdb.set_trace()
+                            # Choose file extension and content
+                            if cleaned_text:
+
+                                filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
+                                filepath = os.path.join(output_dir, filename)
+
+                                # Save the email to a file
+                                with open(filepath, "w", encoding="utf-8") as f:
+                                    f.write(
+                                        cleaned_text
+                                        if cleaned_text
+                                        else "Nothing to see here."
+                                    )
+
+                                print(f"Saved email {msg_id} to {filepath}")
+                else:
+                    # '18fe32d9f3325ccb', '18fe57a5ea4b9650', '190093da22ff5e29'
+                    print(
+                        "this payload doesnt have parts for message {id}".format(
+                            id=msg_id
+                        )
+                    )
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
