@@ -1,5 +1,6 @@
 import os.path
 import base64
+import spacy
 from bs4 import BeautifulSoup
 import re
 
@@ -19,6 +20,7 @@ JOBS_LABEL_ID = "Label_7646018251861665561"
 
 
 def main():
+    nlp = spacy.load("en_core_web_sm")
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
     """
@@ -121,7 +123,7 @@ def main():
                     print(subject)
                 if name == "ARC-Authentication-Results":
                     arc_authentication_results = values["value"]
-                    fromdomain_pattern = r"from=@([\w.-]+)"
+                    fromdomain_pattern = r"from=([\w.-]+)"
                     fromdomain_matches = re.findall(
                         fromdomain_pattern, arc_authentication_results
                     )
@@ -146,15 +148,21 @@ def main():
 
                             # Extract the plain text from the HTML content
                             email_text = soup.get_text()
+                            email_text_nlp = nlp(email_text)
+                            cleaned_text = [
+                                str(token)
+                                for token in email_text_nlp
+                                if not token.is_stop and not token.is_punct
+                            ]
 
                             # Optional: Clean up extra whitespace and line breaks
-                            cleaned_text = "\n".join(
-                                [
-                                    line.strip()
-                                    for line in email_text.splitlines()
-                                    if line.strip()
-                                ]
-                            )
+                            # cleaned_text = "\n".join(
+                            #     [
+                            #         line.strip()
+                            #         for line in email_text.splitlines()
+                            #         if line.strip()
+                            #     ]
+                            # )
 
                             # print(data)
                             # Extract the email data
@@ -177,11 +185,9 @@ def main():
 
                                 # Save the email to a file
                                 with open(filepath, "w", encoding="utf-8") as f:
-                                    f.write(
-                                        cleaned_text
-                                        if cleaned_text
-                                        else "Nothing to see here."
-                                    )
+                                    for line in cleaned_text:
+                                        if line.strip():
+                                            f.write(f"{line}\n")
 
                                 print(f"Saved email {msg_id} to {filepath}")
                 else:
