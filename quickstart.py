@@ -19,11 +19,7 @@ JOBS_LABEL_ID = "Label_7646018251861665561"
 # I manually filtered and placed in this label 'jobs' with this id starting with Label_
 
 
-def main():
-    nlp = spacy.load("en_core_web_sm")
-    """Shows basic usage of the Gmail API.
-    Lists the user's Gmail labels.
-    """
+def get_gmail_credentials():
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -52,7 +48,20 @@ def main():
         # Save the credentials for the next run
         with open("token.json", "w") as token:
             token.write(creds.to_json())
+    return creds
 
+
+def clean_email(payload):
+    nlp = spacy.load("en_core_web_sm")
+
+
+def save_emails_to_database(payload):
+    conn = sqlite3.connect("jobapps.db")
+    pass
+
+
+def main():
+    creds = get_gmail_credentials()
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
