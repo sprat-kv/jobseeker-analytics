@@ -198,7 +198,7 @@ def main():
 
                                 # Save the email to a file
                                 with open(filepath, "w", encoding="utf-8") as f:
-                                    for line in cleaned_text:
+                                    for line in cleaned_text[0].split(" "):
                                         if line.strip():
                                             f.write(f"{line}\n")
 
