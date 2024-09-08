@@ -97,7 +97,7 @@ def main():
         results = (
             service.users()
             .messages()
-            .list(userId="me", labelIds=[JOBS_LABEL_ID])
+            .list(userId="me", q=query, includeSpamTrash=True)
             .execute()
         )
 
