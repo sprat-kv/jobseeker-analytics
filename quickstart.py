@@ -1,6 +1,8 @@
 import os.path
 import base64
 import spacy
+from spacy_cleaner import processing, Cleaner
+
 from bs4 import BeautifulSoup
 import re
 
@@ -51,8 +53,15 @@ def get_gmail_credentials():
     return creds
 
 
-def clean_email(payload):
-    nlp = spacy.load("en_core_web_sm")
+def clean_email(email_body):
+    model = spacy.load("en_core_web_sm")
+    pipeline = Cleaner(
+        model,
+        processing.remove_stopword_token,
+        processing.remove_punctuation_token,
+        processing.remove_number_token,
+    )
+    return pipeline.clean([email_body])
 
 
 def save_emails_to_database(payload):
@@ -157,12 +166,7 @@ def main():
 
                             # Extract the plain text from the HTML content
                             email_text = soup.get_text()
-                            email_text_nlp = nlp(email_text)
-                            cleaned_text = [
-                                str(token)
-                                for token in email_text_nlp
-                                if not token.is_stop and not token.is_punct
-                            ]
+                            cleaned_text = clean_email(email_text)
 
                             # Optional: Clean up extra whitespace and line breaks
                             # cleaned_text = "\n".join(
