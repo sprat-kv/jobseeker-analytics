@@ -69,6 +69,18 @@ def save_emails_to_database(payload):
     pass
 
 
+def get_word_frequency(cleaned_email):
+    word_dict = {}
+    for word in cleaned_email[0].split(" "):
+        if word not in word_dict:
+            word_dict[word] = 1
+        else:
+            word_dict[word] += 1
+
+    word_dict_sorted = sorted(word_dict.items(), key=lambda item: item[1], reverse=True)
+    return word_dict_sorted
+
+
 def main():
     creds = get_gmail_credentials()
     try:
@@ -200,7 +212,8 @@ def main():
                             #     pdb.set_trace()
                             # Choose file extension and content
                             if cleaned_text:
-
+                                word_frequency = get_word_frequency(cleaned_text)
+                                print(word_frequency)
                                 filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
                                 filepath = os.path.join(output_dir, filename)
 
