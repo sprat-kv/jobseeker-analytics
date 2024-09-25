@@ -3,7 +3,6 @@ import base64
 import spacy
 from spacy_cleaner import processing, Cleaner
 
-import sqlite3
 from bs4 import BeautifulSoup
 import re
 
@@ -14,7 +13,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-from utils import get_connection, write_rows
+from db_utils import write_emails
+import datetime
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -67,21 +67,6 @@ def clean_email(email_body):
     return pipeline.clean([email_body])
 
 
-def save_emails_to_database():  # GET THE CONNECTION OBJECT
-    conn = get_connection()
-    # CREATE A CURSOR USING THE CONNECTION OBJECT
-    curr = conn.cursor()
-    # EXECUTE THE SQL QUERY
-    curr.execute("SELECT * FROM students;")
-    # FETCH ALL THE ROWS FROM THE CURSOR
-    data = curr.fetchall()
-    # PRINT THE RECORDS
-    for row in data:
-        print(row)
-    # CLOSE THE CONNECTION
-    conn.close()
-
-
 def get_word_frequency(cleaned_email):
     word_dict = {}
     for word in cleaned_email[0].split(" "):
@@ -95,8 +80,6 @@ def get_word_frequency(cleaned_email):
 
 
 def main():
-    # print(write_rows())
-    # return
     creds = get_gmail_credentials()
     try:
         # Call the Gmail API
@@ -158,8 +141,10 @@ def main():
         # Directory to save the emails
         output_dir = "emails_v2"
         os.makedirs(output_dir, exist_ok=True)
-
+        emails_data = []
         for message in messages:
+            message_data = []
+            # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
             # if msg_id == "1901318a60244309":
             #     import pdb
@@ -178,6 +163,8 @@ def main():
                     print(from_name)
                     subject = [j["value"] for j in email_data if j["name"] == "Subject"]
                     print(subject)
+                    message_data.append(subject)
+                    message_data.append(from_name)
                 if name == "ARC-Authentication-Results":
                     print("yes ARC")
                     arc_authentication_results = values["value"]
@@ -185,12 +172,10 @@ def main():
                     fromdomain_matches = re.findall(
                         fromdomain_pattern, arc_authentication_results
                     )
-                    for domain in fromdomain_matches:
-                        print(
-                            "domain: {domain_alt}".format(
-                                domain_alt=domain.split(".")[0]
-                            )
-                        )
+                    fromdomain_match = (
+                        fromdomain_matches[0] if fromdomain_matches else ""
+                    )
+                    message_data.append(fromdomain_match)
 
             payload = msg.get("payload")
             if payload:
@@ -208,42 +193,16 @@ def main():
                             email_text = soup.get_text()
                             cleaned_text = clean_email(email_text)
 
-                            # Optional: Clean up extra whitespace and line breaks
-                            # cleaned_text = "\n".join(
-                            #     [
-                            #         line.strip()
-                            #         for line in email_text.splitlines()
-                            #         if line.strip()
-                            #     ]
-                            # )
-
-                            # print(data)
-                            # Extract the email data
-                            # email_data = msg.get(
-                            #     "payload"
-                            # )  # Simplified, can use 'payload' for full data
-                            # email_body = msg.get("payload", {}).get("body", {}).get("data")
-                            # if email_body:
-                            #     email_body = base64.urlsafe_b64decode(
-                            #         email_body.encode("ASCII")
-                            #     ).decode("utf-8")
-                            #     import pdb
-
-                            #     pdb.set_trace()
-                            # Choose file extension and content
                             if cleaned_text:
                                 word_frequency = get_word_frequency(cleaned_text)
                                 print(word_frequency)
+                                top_word_company_proxy = word_frequency[0][0]
+                                message_data.append(top_word_company_proxy)
                                 filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
                                 filepath = os.path.join(output_dir, filename)
 
-                                # Save the email to a file
-                                # with open(filepath, "w", encoding="utf-8") as f:
-                                #     for line in cleaned_text[0].split(" "):
-                                #         if line.strip():
-                                #             f.write(f"{line}\n")
-
                                 print(f"Saved email {msg_id} to {filepath}")
+
                 else:
                     # '18fe32d9f3325ccb', '18fe57a5ea4b9650', '190093da22ff5e29'
                     print(
@@ -251,6 +210,9 @@ def main():
                             id=msg_id
                         )
                     )
+            message_data.append(datetime.datetime.now())
+            emails_data.append(tuple(message_data))
+        write_emails(emails_data)
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
