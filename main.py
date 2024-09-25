@@ -3,6 +3,7 @@ import base64
 import spacy
 from spacy_cleaner import processing, Cleaner
 
+import sqlite3
 from bs4 import BeautifulSoup
 import re
 
@@ -12,6 +13,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+from utils import get_connection, write_rows
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
@@ -64,9 +67,19 @@ def clean_email(email_body):
     return pipeline.clean([email_body])
 
 
-def save_emails_to_database(payload):
-    conn = sqlite3.connect("jobapps.db")
-    pass
+def save_emails_to_database():  # GET THE CONNECTION OBJECT
+    conn = get_connection()
+    # CREATE A CURSOR USING THE CONNECTION OBJECT
+    curr = conn.cursor()
+    # EXECUTE THE SQL QUERY
+    curr.execute("SELECT * FROM students;")
+    # FETCH ALL THE ROWS FROM THE CURSOR
+    data = curr.fetchall()
+    # PRINT THE RECORDS
+    for row in data:
+        print(row)
+    # CLOSE THE CONNECTION
+    conn.close()
 
 
 def get_word_frequency(cleaned_email):
@@ -82,6 +95,8 @@ def get_word_frequency(cleaned_email):
 
 
 def main():
+    # print(write_rows())
+    # return
     creds = get_gmail_credentials()
     try:
         # Call the Gmail API
@@ -131,6 +146,10 @@ def main():
         )
 
         messages = results.get("messages", [])
+        next_page_token = results.get("nextPageToken", "")
+        size_estimate = results.get("resultSizeEstimate", 0)
+        print("next page token {}".format(next_page_token))
+        print("size estimate {}".format(size_estimate))
         # print(results)
         if not results:
             print("No message found.")
@@ -160,6 +179,7 @@ def main():
                     subject = [j["value"] for j in email_data if j["name"] == "Subject"]
                     print(subject)
                 if name == "ARC-Authentication-Results":
+                    print("yes ARC")
                     arc_authentication_results = values["value"]
                     fromdomain_pattern = r"from=([\w.-]+)"
                     fromdomain_matches = re.findall(
@@ -218,10 +238,10 @@ def main():
                                 filepath = os.path.join(output_dir, filename)
 
                                 # Save the email to a file
-                                with open(filepath, "w", encoding="utf-8") as f:
-                                    for line in cleaned_text[0].split(" "):
-                                        if line.strip():
-                                            f.write(f"{line}\n")
+                                # with open(filepath, "w", encoding="utf-8") as f:
+                                #     for line in cleaned_text[0].split(" "):
+                                #         if line.strip():
+                                #             f.write(f"{line}\n")
 
                                 print(f"Saved email {msg_id} to {filepath}")
                 else:
