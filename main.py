@@ -143,7 +143,7 @@ def main():
         os.makedirs(output_dir, exist_ok=True)
         emails_data = []
         for message in messages:
-            message_data = []
+            message_data = {}
             # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
             # if msg_id == "1901318a60244309":
@@ -163,8 +163,14 @@ def main():
                     print(from_name)
                     subject = [j["value"] for j in email_data if j["name"] == "Subject"]
                     print(subject)
-                    message_data.append(subject)
-                    message_data.append(from_name)
+                    if message_data.get("subject"):
+                        message_data["subject"].append(subject)
+                    else:
+                        message_data["subject"] = [subject]
+                    if message_data.get("from_name"):
+                        message_data["from_name"].append(from_name)
+                    else:
+                        message_data["from_name"] = [from_name]
                 if name == "ARC-Authentication-Results":
                     print("yes ARC")
                     arc_authentication_results = values["value"]
@@ -175,7 +181,10 @@ def main():
                     fromdomain_match = (
                         fromdomain_matches[0] if fromdomain_matches else ""
                     )
-                    message_data.append(fromdomain_match)
+                    if message_data.get("fromdomain_match"):
+                        message_data["fromdomain_match"].append(fromdomain_match)
+                    else:
+                        message_data["fromdomain_match"] = [fromdomain_match]
 
             payload = msg.get("payload")
             if payload:
@@ -197,7 +206,14 @@ def main():
                                 word_frequency = get_word_frequency(cleaned_text)
                                 print(word_frequency)
                                 top_word_company_proxy = word_frequency[0][0]
-                                message_data.append(top_word_company_proxy)
+                                if message_data.get("top_word_company_proxy"):
+                                    message_data["top_word_company_proxy"].append(
+                                        top_word_company_proxy
+                                    )
+                                else:
+                                    message_data["top_word_company_proxy"] = [
+                                        top_word_company_proxy
+                                    ]
                                 filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
                                 filepath = os.path.join(output_dir, filename)
 
@@ -210,9 +226,17 @@ def main():
                             id=msg_id
                         )
                     )
-            message_data.append(datetime.datetime.now())
-            emails_data.append(tuple(message_data))
-        write_emails(emails_data)
+            message_data["received_at"] = [datetime.datetime.now()]
+            emails_data.append(message_data)
+            break
+        cleaned_emails = []
+        for email_dict in emails_data:
+            cleaned_email = []
+            for key in email_dict:
+                cleaned_email.append(email_dict[key][0])
+                continue
+            cleaned_emails.append(tuple(cleaned_email))
+        write_emails(cleaned_emails)
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
