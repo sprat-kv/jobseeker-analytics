@@ -104,7 +104,9 @@ def get_top_word_in_email_body(msg):
 def get_company_name(msg):
     top_word = get_top_word_in_email_body(msg)
     if not top_word:
-        # likely a calendar invite
-        # return email domain
+        # likely a calendar invite, haven't parsed these yet
+        # return email domain instead as shortcut
+        # TODO: compare email domain and top word to decide
         from_address = get_email_from_address(msg)
         return get_email_domain_from_address(from_address).split(".")[0]
+    return top_word
