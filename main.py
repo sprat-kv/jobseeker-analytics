@@ -8,6 +8,7 @@ import re
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from constants import QUERY_APPLIED_EMAIL_FILTER
 from db_utils import write_emails
 from email_utils import clean_email, get_word_frequency, get_gmail_credentials
 import datetime
@@ -25,45 +26,10 @@ def main():
         service = build("gmail", "v1", credentials=creds)
         # results = service.users().labels().list(userId="me").execute()
         # labels = results.get("labels", [])
-        query = (
-            '(subject:"thank" AND from:"no-reply@ashbyhq.com") OR '
-            '(subject:"thank" AND from:"careers@") OR '
-            '(subject:"thank" AND from:"no-reply@greenhouse.io") OR '
-            '(subject:"application was sent" AND from:"jobs-noreply@linkedin.com") OR '
-            'from:"notification@smartrecruiters.com" OR '
-            'subject:"application received" OR '
-            'subject:"received your application" OR '
-            'subject:"your application to" OR '
-            'subject:"applied to" OR '
-            'subject:"your application was sent to" OR '
-            'subject:"thank you for your submission" OR '
-            'subject:"thank you for applying" OR '
-            'subject:"thanks for applying to" OR '
-            'subject:"confirmation of your application" OR '
-            'subject:"your recent job application" OR '
-            'subject:"successfully submitted" OR '
-            'subject:"application received" OR '
-            'subject:"application submitted" OR '
-            'subject:"we received your application" OR '
-            'subject:"thank you for your submission" OR '
-            'subject:"thank you for your interest" OR '
-            'subject:"thanks for your interest" OR '
-            'subject:"thank you for your application" OR '
-            'subject:"thank you from" OR '
-            'subject:"application has been submitted" OR '
-            '(subject:"application to" AND subject:"successfully submitted") OR '
-            '(subject:"your application to" AND subject:"has been received") OR '
-            '(subject:"your application for" AND -subject:"update") OR '
-            'subject:"your job application has been received" OR '
-            'subject:"thanks for your application" OR '
-            'subject:"job application confirmation" OR '
-            'subject:"ve been referred" OR '
-            '(subject:"we received your" AND subject:"application")'
-        )  # label:jobs -label:query4
         results = (
             service.users()
             .messages()
-            .list(userId="me", q=query, includeSpamTrash=True)
+            .list(userId="me", q=QUERY_APPLIED_EMAIL_FILTER, includeSpamTrash=True)
             .execute()
         )
 
