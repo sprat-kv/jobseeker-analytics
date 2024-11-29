@@ -23,7 +23,8 @@ def test_get_email_domain():
 
 
 def test_get_company_name():
-    pass
+    company_name = email_utils.get_company_name(SAMPLE_MESSAGE)
+    assert company_name == "testcompanyname"
 
 
 def test_get_email_received_at():
