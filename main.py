@@ -14,6 +14,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from db_utils import write_emails
+from email_utils import clean_email, get_word_frequency
 import datetime
 
 # If modifying these scopes, delete the file token.json.
@@ -54,29 +55,6 @@ def get_gmail_credentials():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
     return creds
-
-
-def clean_email(email_body):
-    model = spacy.load("en_core_web_sm")
-    pipeline = Cleaner(
-        model,
-        processing.remove_stopword_token,
-        processing.remove_punctuation_token,
-        processing.remove_number_token,
-    )
-    return pipeline.clean([email_body])
-
-
-def get_word_frequency(cleaned_email):
-    word_dict = {}
-    for word in cleaned_email[0].split(" "):
-        if word not in word_dict:
-            word_dict[word] = 1
-        else:
-            word_dict[word] += 1
-
-    word_dict_sorted = sorted(word_dict.items(), key=lambda item: item[1], reverse=True)
-    return word_dict_sorted
 
 
 def main():
