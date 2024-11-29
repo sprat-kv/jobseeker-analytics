@@ -36,6 +36,16 @@ def get_email_from_address(msg):
     return ""
 
 
+def get_received_at_timestamp(msg):
+    email_headers = get_email_headers(msg)
+    if email_headers:
+        for header in email_headers:
+            key = header.get("name")
+            if key == "Date":
+                return header.get("value")
+    return ""
+
+
 def get_email_domain_from_address(email_address):
     return email_address.split("@")[1]
 
@@ -99,6 +109,7 @@ def get_top_word_in_email_body(msg):
                 if len(word_frequency) > 0:
                     if len(word_frequency[0]) > 0:
                         return word_frequency[0][0]
+    return ""
 
 
 def get_company_name(msg):
