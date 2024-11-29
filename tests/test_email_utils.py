@@ -11,11 +11,15 @@ def test_get_email_subject_line():
 
 
 def test_get_email_from_address():
-    pass
+    from_address = email_utils.get_email_from_address(SAMPLE_MESSAGE)
+    assert from_address == "recruitername@testcompanyname.com"
 
 
 def test_get_email_domain():
-    pass
+    from_email_domain = email_utils.get_email_domain_from_address(
+        "recruitername@testcompanyname.com"
+    )
+    assert from_email_domain == "testcompanyname.com"
 
 
 def test_get_company_name():
