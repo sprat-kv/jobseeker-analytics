@@ -62,7 +62,8 @@ def main():
             # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
             msg = get_message(id=msg_id, gmail_instance=service)
-            email_data = msg["payload"]["headers"]
+
+            # Constructing the object which will be written into db
             message_data["subject"] = [get_email_subject_line(msg)]
             message_data["from_name"] = [get_email_from_address(msg)]
             message_data["fromdomain_match"] = [get_email_domain_from_address(msg)]
