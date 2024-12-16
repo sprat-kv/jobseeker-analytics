@@ -1,82 +1,22 @@
 import os.path
 import base64
-import spacy
-from spacy_cleaner import processing, Cleaner
 
 from bs4 import BeautifulSoup
 import re
 
-from google.auth.exceptions import RefreshError
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+from constants import QUERY_APPLIED_EMAIL_FILTER
 from db_utils import write_emails
+from email_utils import clean_email, get_word_frequency, get_gmail_credentials
 import datetime
 
-# If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
 JOBS_LABEL_ID = "Label_7646018251861665561"
 # ideally would be able to programmatically fetch job application-related emails but in interest of time,
 # I manually filtered and placed in this label 'jobs' with this id starting with Label_
-
-
-def get_gmail_credentials():
-    creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                creds.refresh(Request())
-            except RefreshError:
-                os.remove("token.json")
-                creds.refresh(Request())
-        else:
-            try:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    "credentials.json",
-                    scopes=SCOPES,
-                )
-                creds = flow.run_local_server(port=8001)
-            except RefreshError:
-                os.remove("token.json")
-                creds.refresh(Request())
-        # Save the credentials for the next run
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
-    return creds
-
-
-def clean_email(email_body):
-    model = spacy.load("en_core_web_sm")
-    pipeline = Cleaner(
-        model,
-        processing.remove_stopword_token,
-        processing.remove_punctuation_token,
-        processing.remove_number_token,
-    )
-    return pipeline.clean([email_body])
-
-
-def get_word_frequency(cleaned_email):
-    word_dict = {}
-    for word in cleaned_email[0].split(" "):
-        if word not in word_dict:
-            word_dict[word] = 1
-        else:
-            word_dict[word] += 1
-
-    word_dict_sorted = sorted(word_dict.items(), key=lambda item: item[1], reverse=True)
-    return word_dict_sorted
 
 
 def main():
@@ -86,45 +26,10 @@ def main():
         service = build("gmail", "v1", credentials=creds)
         # results = service.users().labels().list(userId="me").execute()
         # labels = results.get("labels", [])
-        query = (
-            '(subject:"thank" AND from:"no-reply@ashbyhq.com") OR '
-            '(subject:"thank" AND from:"careers@") OR '
-            '(subject:"thank" AND from:"no-reply@greenhouse.io") OR '
-            '(subject:"application was sent" AND from:"jobs-noreply@linkedin.com") OR '
-            'from:"notification@smartrecruiters.com" OR '
-            'subject:"application received" OR '
-            'subject:"received your application" OR '
-            'subject:"your application to" OR '
-            'subject:"applied to" OR '
-            'subject:"your application was sent to" OR '
-            'subject:"thank you for your submission" OR '
-            'subject:"thank you for applying" OR '
-            'subject:"thanks for applying to" OR '
-            'subject:"confirmation of your application" OR '
-            'subject:"your recent job application" OR '
-            'subject:"successfully submitted" OR '
-            'subject:"application received" OR '
-            'subject:"application submitted" OR '
-            'subject:"we received your application" OR '
-            'subject:"thank you for your submission" OR '
-            'subject:"thank you for your interest" OR '
-            'subject:"thanks for your interest" OR '
-            'subject:"thank you for your application" OR '
-            'subject:"thank you from" OR '
-            'subject:"application has been submitted" OR '
-            '(subject:"application to" AND subject:"successfully submitted") OR '
-            '(subject:"your application to" AND subject:"has been received") OR '
-            '(subject:"your application for" AND -subject:"update") OR '
-            'subject:"your job application has been received" OR '
-            'subject:"thanks for your application" OR '
-            'subject:"job application confirmation" OR '
-            'subject:"ve been referred" OR '
-            '(subject:"we received your" AND subject:"application")'
-        )  # label:jobs -label:query4
         results = (
             service.users()
             .messages()
-            .list(userId="me", q=query, includeSpamTrash=True)
+            .list(userId="me", q=QUERY_APPLIED_EMAIL_FILTER, includeSpamTrash=True)
             .execute()
         )
 
