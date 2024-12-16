@@ -63,86 +63,26 @@ def main():
             msg_id = message["id"]
             msg = get_message(id=msg_id, gmail_instance=service)
             email_data = msg["payload"]["headers"]
-
-            for values in email_data:
-                name = values["name"]
-                if name == "From":
-                    from_name = values["value"]
-                    print(from_name)
-                    subject = [j["value"] for j in email_data if j["name"] == "Subject"]
-                    print(subject)
-                    if message_data.get("subject"):
-                        message_data["subject"].append(subject)
-                    else:
-                        message_data["subject"] = [subject]
-                    if message_data.get("from_name"):
-                        message_data["from_name"].append(from_name)
-                    else:
-                        message_data["from_name"] = [from_name]
-                if name == "ARC-Authentication-Results":
-                    print("yes ARC")
-                    arc_authentication_results = values["value"]
-                    fromdomain_pattern = r"from=([\w.-]+)"
-                    fromdomain_matches = re.findall(
-                        fromdomain_pattern, arc_authentication_results
-                    )
-                    fromdomain_match = (
-                        fromdomain_matches[0] if fromdomain_matches else ""
-                    )
-                    if message_data.get("fromdomain_match"):
-                        message_data["fromdomain_match"].append(fromdomain_match)
-                    else:
-                        message_data["fromdomain_match"] = [fromdomain_match]
-
-            payload = msg.get("payload")
-            if payload:
-                payload_parts = payload.get("parts")
-                if payload_parts:
-                    for p in payload_parts:
-                        if p["mimeType"] in ["text/plain", "text/html"]:
-                            data = base64.urlsafe_b64decode(
-                                p.get("body", {}).get("data", {})
-                            ).decode("utf-8")
-                            # Parse the content with BeautifulSoup
-                            soup = BeautifulSoup(data, "html.parser")
-
-                            # Extract the plain text from the HTML content
-                            email_text = soup.get_text()
-                            cleaned_text = clean_email(email_text)
-
-                            if cleaned_text:
-                                word_frequency = get_word_frequency(cleaned_text)
-                                print(word_frequency)
-                                top_word_company_proxy = word_frequency[0][0]
-                                if message_data.get("top_word_company_proxy"):
-                                    message_data["top_word_company_proxy"].append(
-                                        top_word_company_proxy
-                                    )
-                                else:
-                                    message_data["top_word_company_proxy"] = [
-                                        top_word_company_proxy
-                                    ]
-                                filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
-                                filepath = os.path.join(output_dir, filename)
-
-                                print(f"Saved email {msg_id} to {filepath}")
-
-                else:
-                    # '18fe32d9f3325ccb', '18fe57a5ea4b9650', '190093da22ff5e29'
-                    print(
-                        "this payload doesnt have parts for message {id}".format(
-                            id=msg_id
-                        )
-                    )
+            message_data["subject"] = [get_email_subject_line(msg)]
+            message_data["from_name"] = [get_email_from_address(msg)]
+            message_data["fromdomain_match"] = [get_email_domain_from_address(msg)]
+            message_data["top_word_company_proxy"] = [get_company_name(msg)]
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
+
+            filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
+            filepath = os.path.join(output_dir, filename)
+            print(f"Saved email {msg_id} to {filepath}")
+
             emails_data.append(message_data)
+
             break
+
         cleaned_emails = []
         for email_dict in emails_data:
             cleaned_email = []
             for key in email_dict:
                 cleaned_email.append(email_dict[key][0])
-                continue
+                continue  # not sure this is necessary? What is this?
             cleaned_emails.append(tuple(cleaned_email))
         write_emails(cleaned_emails)
     except HttpError as error:
