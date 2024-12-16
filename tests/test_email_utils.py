@@ -36,5 +36,5 @@ def test_get_company_name_returns_top_word():
 
 
 def test_get_email_received_at_timestamp():
-    received_at = email_utils.get_received_at_timestamp(SAMPLE_MESSAGE)
+    received_at = email_utils.get_received_at_timestamp(1, SAMPLE_MESSAGE)
     assert received_at == "Thu, 2 May 2024 16:45:00 +0000"

@@ -134,7 +134,7 @@ def main():
                             id=msg_id
                         )
                     )
-            message_data["received_at"] = [datetime.datetime.now()]
+            message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
             emails_data.append(message_data)
             break
         cleaned_emails = []
