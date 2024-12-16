@@ -10,7 +10,17 @@ from googleapiclient.errors import HttpError
 
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from db_utils import write_emails
-from email_utils import clean_email, get_word_frequency, get_gmail_credentials
+from email_utils import (
+    clean_email,
+    get_word_frequency,
+    get_gmail_credentials,
+    get_message,
+    get_company_name,
+    get_received_at_timestamp,
+    get_email_subject_line,
+    get_email_domain_from_address,
+    get_email_from_address,
+)
 import datetime
 
 
@@ -51,14 +61,7 @@ def main():
             message_data = {}
             # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
-            # if msg_id == "1901318a60244309":
-            #     import pdb
-
-            #     pdb.set_trace()
-            # else:
-            #     continue
-
-            msg = service.users().messages().get(userId="me", id=msg_id).execute()
+            msg = get_message(id=msg_id, gmail_instance=service)
             email_data = msg["payload"]["headers"]
 
             for values in email_data:

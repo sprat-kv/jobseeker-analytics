@@ -39,6 +39,11 @@ def get_gmail_credentials():
     return creds
 
 
+def get_message(id: str, gmail_instance=None):
+    if gmail_instance:
+        return gmail_instance.users().messages().get(userId="me", id=id).execute()
+
+
 def get_email_payload(msg):
     return msg.get("payload", None)
 
