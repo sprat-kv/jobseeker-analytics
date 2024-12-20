@@ -39,6 +39,11 @@ def get_gmail_credentials():
     return creds
 
 
+def get_message(id: str, gmail_instance=None):
+    if gmail_instance:
+        return gmail_instance.users().messages().get(userId="me", id=id).execute()
+
+
 def get_email_payload(msg):
     return msg.get("payload", None)
 
@@ -72,19 +77,24 @@ def get_email_from_address(msg):
     if email_headers:
         for header in email_headers:
             key = header.get("name")
-            if key == "Return-Path":
-                return header.get("value").strip("<").strip(">")
+            if key == "From":
+                return header.get("value").split("<")[1].strip(">")
     return ""
 
 
-def get_received_at_timestamp(msg):
-    email_headers = get_email_headers(msg)
-    if email_headers:
-        for header in email_headers:
-            key = header.get("name")
-            if key == "Date":
-                return header.get("value")
-    return ""
+def get_received_at_timestamp(id, msg):
+    import datetime
+
+    try:
+        email_headers = get_email_headers(msg)
+        if email_headers:
+            for header in email_headers:
+                key = header.get("name")
+                if key == "Date":
+                    return header.get("value")
+    except Exception as e:
+        print(f"msg_{id}: {e}")
+    return datetime.datetime.now()  # default if trouble parsing
 
 
 def get_email_domain_from_address(email_address):
