@@ -77,8 +77,8 @@ def get_email_from_address(msg):
     if email_headers:
         for header in email_headers:
             key = header.get("name")
-            if key == "Return-Path":
-                return header.get("value").strip("<").strip(">")
+            if key == "From":
+                return header.get("value").split("<")[1].strip(">")
     return ""
 
 

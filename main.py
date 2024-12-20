@@ -57,6 +57,7 @@ def main():
         output_dir = "emails_v2"
         os.makedirs(output_dir, exist_ok=True)
         emails_data = []
+        i = 0
         for message in messages:
             message_data = {}
             # (email_subject, email_from, email_domain, company_name, email_dt)
@@ -66,7 +67,9 @@ def main():
             # Constructing the object which will be written into db
             message_data["subject"] = [get_email_subject_line(msg)]
             message_data["from_name"] = [get_email_from_address(msg)]
-            message_data["fromdomain_match"] = [get_email_domain_from_address(msg)]
+            message_data["fromdomain_match"] = [
+                get_email_domain_from_address(message_data["from_name"][i])
+            ]
             message_data["top_word_company_proxy"] = [get_company_name(msg)]
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
@@ -75,7 +78,7 @@ def main():
             print(f"Saved email {msg_id} to {filepath}")
 
             emails_data.append(message_data)
-
+            i += 1
             break
 
         cleaned_emails = []
