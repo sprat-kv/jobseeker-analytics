@@ -39,14 +39,14 @@ def main():
         results = (
             service.users()
             .messages()
-            .list(userId="me", q=QUERY_APPLIED_EMAIL_FILTER, includeSpamTrash=True)
+            .list(userId="me", q=QUERY_APPLIED_EMAIL_FILTER, includeSpamTrash=True)     # TODO: default date filter, last 90 days?
             .execute()
         )
 
         messages = results.get("messages", [])
         next_page_token = results.get("nextPageToken", "")
         size_estimate = results.get("resultSizeEstimate", 0)
-        print("next page token {}".format(next_page_token))
+        print("next page token {}".format(next_page_token)) # TODO: handle pagination
         print("size estimate {}".format(size_estimate))
         # print(results)
         if not results:
