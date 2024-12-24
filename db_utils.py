@@ -40,3 +40,16 @@ def write_emails(emails: list):
             for record in cur:
                 print(record)
             conn.commit()
+
+
+def export_to_csv(main_filepath: str, message_data: dict):
+    if os.path.exists(main_filepath):   # TODO: dedupe records
+        with open(main_filepath, "a") as f:                  
+            values = ",".join(f'"{str(message_data[key][0])}"' if ',' in str(message_data[key][0]) else str(message_data[key][0]) for key in message_data)
+            f.write(values + "\n")
+    else:
+        with open(main_filepath, "w") as f:
+            headers = ",".join(message_data.keys())
+            f.write(headers + "\n")
+            values = ",".join(f'"{str(message_data[key][0])}"' if ',' in str(message_data[key][0]) else str(message_data[key][0]) for key in message_data)
+            f.write(values + "\n")

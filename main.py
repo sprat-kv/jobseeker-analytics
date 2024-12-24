@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 from constants import QUERY_APPLIED_EMAIL_FILTER
-from db_utils import write_emails
+from db_utils import write_emails, export_to_csv
 from email_utils import (
     clean_email,
     get_word_frequency,
@@ -57,6 +57,9 @@ def main():
         output_dir = "emails_v2"
         os.makedirs(output_dir, exist_ok=True)
         emails_data = []
+        main_filename = "emails.csv"
+        main_filepath = os.path.join(output_dir, main_filename)
+
         i = 0
         for message in messages:
             message_data = {}
@@ -73,9 +76,8 @@ def main():
             message_data["top_word_company_proxy"] = [get_company_name(msg)]
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
-            filename = f"{msg_id}.txt"  # or use ".json" and change content accordingly
-            filepath = os.path.join(output_dir, filename)
-            print(f"Saved email {msg_id} to {filepath}")
+            # Exporting the email data to a CSV file
+            export_to_csv(main_filepath, message_data)
 
             emails_data.append(message_data)
             i += 1
