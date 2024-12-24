@@ -1,9 +1,4 @@
 import os.path
-import base64
-
-from bs4 import BeautifulSoup
-import re
-
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -21,21 +16,12 @@ from email_utils import (
     get_email_domain_from_address,
     get_email_from_address,
 )
-import datetime
-
-
-JOBS_LABEL_ID = "Label_7646018251861665561"
-# ideally would be able to programmatically fetch job application-related emails but in interest of time,
-# I manually filtered and placed in this label 'jobs' with this id starting with Label_
-
 
 def main():
     creds = get_gmail_credentials()
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
-        # results = service.users().labels().list(userId="me").execute()
-        # labels = results.get("labels", [])
         results = (
             service.users()
             .messages()
@@ -48,14 +34,15 @@ def main():
         size_estimate = results.get("resultSizeEstimate", 0)
         print("next page token {}".format(next_page_token)) # TODO: handle pagination
         print("size estimate {}".format(size_estimate))
-        # print(results)
+        
         if not results:
             print("No message found.")
             return
 
         # Directory to save the emails
-        output_dir = "emails_v2"
+        output_dir = "data"
         os.makedirs(output_dir, exist_ok=True)
+
         emails_data = []
         main_filename = "emails.csv"
         main_filepath = os.path.join(output_dir, main_filename)
@@ -81,7 +68,6 @@ def main():
 
             emails_data.append(message_data)
             i += 1
-            break
 
         cleaned_emails = []
         for email_dict in emails_data:

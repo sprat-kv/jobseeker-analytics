@@ -134,11 +134,8 @@ def get_top_word_in_email_body(msg):
     from bs4 import BeautifulSoup
 
     parts = get_email_parts(msg)
-    print("ok!")
     if parts:
         for part in parts:
-            print("its a part!")
-            print(part)
             if part.get("mimeType") not in [
                 "text/plain",
                 "text/html",
@@ -158,7 +155,7 @@ def get_top_word_in_email_body(msg):
                 cleaned_text = clean_email(email_text)
                 if cleaned_text:
                     word_frequency = get_word_frequency(cleaned_text)
-                    print(word_frequency)
+                    # print(word_frequency)
                 if len(word_frequency) > 0:
                     if len(word_frequency[0]) > 0:
                         return word_frequency[0][0]
