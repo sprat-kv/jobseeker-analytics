@@ -58,7 +58,7 @@ def main():
             message_data["subject"] = [get_email_subject_line(msg)]
             message_data["from_name"] = [get_email_from_address(msg)]
             message_data["fromdomain_match"] = [
-                get_email_domain_from_address(message_data["from_name"][i])
+                get_email_domain_from_address(message_data["from_name"][0] if (isinstance(message_data["from_name"], list) and len(message_data["from_name"]) > 0) else message_data["from_name"])
             ]
             message_data["top_word_company_proxy"] = [get_company_name(msg)]
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
