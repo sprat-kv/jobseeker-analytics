@@ -1,5 +1,6 @@
 *.env
 venv/
+venv*
 *.log
 credentials.json
 token.json

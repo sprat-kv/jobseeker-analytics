@@ -53,3 +53,27 @@ def export_to_csv(main_filepath: str, message_data: dict):
             f.write(headers + "\n")
             values = ",".join(f'"{str(message_data[key][0])}"' if ',' in str(message_data[key][0]) else str(message_data[key][0]) for key in message_data)
             f.write(values + "\n")
+
+
+def get_response_rate():
+    import sqlite3
+    import pandas as pd
+
+    # Create a connection to the SQLite database
+    conn = sqlite3.connect("jobs.db")
+    cursor = conn.cursor()
+
+    # Import CSV using pandas and write to SQLite
+    df = pd.read_csv("./data/emails.csv")
+    df.to_sql("jobs", conn, if_exists="replace", index=False)
+
+    # Query the data
+    cursor.execute("""SELECT DISTINCT CASE WHEN subject like '%interview%' then 1 ELSE 0 END as success, received_at FROM jobs WHERE top_word_company_proxy = 'Retool'""")
+    print(cursor.fetchall())
+
+    # Close connection
+    conn.close()
+
+
+if __name__ == "__main__":
+    get_response_rate()
