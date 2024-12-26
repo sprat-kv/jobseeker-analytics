@@ -215,10 +215,13 @@ def get_top_word_in_email_body(msg_id, msg):
                 cleaned_text = clean_email(email_text)
                 # write to file for debugging
                 with open(f"data/{msg_id}.txt", "w") as f:
+                    f.write(email_text)
+                with open(f"data/{msg_id}_cleaned.txt", "w") as f:
                     f.write(cleaned_text[0])
                 if cleaned_text:
                     word_frequency = get_word_frequency(cleaned_text)
-                    # print(word_frequency)
+                    with open(f"data/{msg_id}_word_frequency.txt", "w") as f:
+                        f.write(str(word_frequency))
                 if len(word_frequency) > 0:
                     if len(word_frequency[0]) > 0:
                         return word_frequency[0][0]
