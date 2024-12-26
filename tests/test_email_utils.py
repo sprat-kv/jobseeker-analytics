@@ -4,9 +4,32 @@ from unittest import mock
 
 
 def test_get_top_consecutive_capitalized_words():
-    word_list = [("Hello", 10), ("World", 10), ("How", 5), ("Are", 5), ("You", 5)]
-    result = email_utils.get_top_consecutive_capitalized_words(word_list)
-    assert result == "Hello World"
+    test_cases = {
+        (
+            ("Hello", 10),  # capitalized, highest frequency, prioritize
+            ("World", 8),  # capitalized, lower frequency, ignore
+        ): "Hello",
+        (
+            ("Hello", 10),  # capitalized, highest frequency, prioritize
+            ("World", 10),  # capitalized, highest frequency, add to result
+            ("How", 5),  # capitalized, lower frequency, ignore
+        ): "Hello World",
+        (
+            ("hello", 5),  # not capitalized, highest frequency, ignore
+            ("World", 5),  # capitalized, highest frequency, prioritize
+            ("How", 5),  # capitalized, highest frequency, add to result
+            ("are", 5),  # not capitalized, highest frequency, ignore
+        ): "World How",
+        (
+            ("hello", 5),  # not capitalized, highest frequency, ignore
+            ("world", 5),  # capitalized, highest frequency, prioritize
+            ("how", 5),  # capitalized, highest frequency, add to result
+            ("are", 5),  # not capitalized, highest frequency, ignore
+        ): "",  # no consecutive capitalized words
+    }
+    for word_list, expected_value in test_cases.items():
+        result = email_utils.get_top_consecutive_capitalized_words(word_list)
+        assert result == expected_value
 
 
 def test_get_email_id():

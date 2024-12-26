@@ -222,9 +222,10 @@ def get_top_word_in_email_body(msg_id, msg):
                     word_frequency = get_word_frequency(cleaned_text)
                     with open(f"data/{msg_id}_word_frequency.txt", "w") as f:
                         f.write(str(word_frequency))
-                if len(word_frequency) > 0:
-                    if len(word_frequency[0]) > 0:
-                        return word_frequency[0][0]
+                    top_capitalized_word = get_top_consecutive_capitalized_words(
+                        word_frequency
+                    )
+                    return top_capitalized_word or cleaned_text[0][0]
     return ""
 
 
@@ -259,5 +260,5 @@ def get_top_consecutive_capitalized_words(tuples_list):
                 temp_group.append((first, second))
             if second < max:
                 break
-        result.append(first)
+            result.append(first)
     return " ".join(result)
