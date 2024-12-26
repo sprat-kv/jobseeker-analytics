@@ -1,3 +1,7 @@
+import re
+from email_validator import validate_email, EmailNotValidError
+
+
 def get_gmail_credentials():
     import os
     from google.auth.exceptions import RefreshError
@@ -39,9 +43,51 @@ def get_gmail_credentials():
     return creds
 
 
+def is_automated_email(email: str) -> bool:
+    """
+    Determines if an email address is automated or from a person.
+
+    Parameters:
+    email (str): The email address to classify.
+
+    Returns:
+    bool: True if automated, False otherwise.
+    """
+    # Define patterns for common automated prefixes and domains
+    automated_patterns = [
+        r"^no[-_.]?reply@",  # Matches "no-reply", "no_reply", "noreply"
+        r"^do[-_.]?not[-_.]?reply@",  # Matches "do-not-reply", "do_not_reply"
+        r"^notifications@",  # Matches "notifications@"
+        r"^team@",  # Matches "team@"
+        r"^hello@",  # Matches "hello@" (often automated)
+        r"@smartrecruiters\.com$",  # Matches specific automated domains
+    ]
+
+    # Check against the patterns
+    for pattern in automated_patterns:
+        if re.search(pattern, email, re.IGNORECASE):
+            return True  # It's an automated email
+
+    return False  # It's likely from a person
+
+
+def is_valid_email(email: str) -> bool:
+    try:
+        validate_email(email)
+        return True
+    except EmailNotValidError as e:
+        # email is not valid, exception message is human-readable
+        print(str(e))
+        return False
+
+
 def get_message(id: str, gmail_instance=None):
     if gmail_instance:
         return gmail_instance.users().messages().get(userId="me", id=id).execute()
+
+
+def get_id(msg):
+    return msg.get("id", None)
 
 
 def get_email_payload(msg):

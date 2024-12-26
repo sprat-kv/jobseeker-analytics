@@ -3,6 +3,36 @@ import email_utils
 from unittest import mock
 
 
+def test_get_email_id():
+    id = email_utils.get_id(SAMPLE_MESSAGE)
+    assert id == "abc123"
+
+
+def test_is_valid_email():
+    email_test_cases = {
+        "no-reply@gmail.com": True,
+        "no-reply@example.com": False,  # Invalid domain
+        "no-reply.com": False,  # Missing @
+    }
+    for email, expected_value in email_test_cases.items():
+        is_valid = email_utils.is_valid_email(email)
+        assert is_valid == expected_value, f" email: {email}"
+
+
+def test_is_email_automated():
+    email_test_cases = {
+        "no-reply@example.com": True,
+        "team@hi.wellfound.com": True,
+        "hello@otta.com": True,
+        "do-not-reply@example.com": True,
+        "notifications@smartrecruiters.com": True,
+        "person@yesimreal.com": False,
+    }
+    for email, expected_value in email_test_cases.items():
+        is_automated = email_utils.is_automated_email(email)
+        assert is_automated == expected_value, f" email: {email}"
+
+
 def test_get_email_subject_line():
     subject_line = email_utils.get_email_subject_line(SAMPLE_MESSAGE)
     assert (
