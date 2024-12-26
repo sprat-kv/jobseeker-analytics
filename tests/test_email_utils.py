@@ -3,6 +3,12 @@ import email_utils
 from unittest import mock
 
 
+def test_get_top_consecutive_capitalized_words():
+    word_list = [("Hello", 10), ("World", 10), ("How", 5), ("Are", 5), ("You", 5)]
+    result = email_utils.get_top_consecutive_capitalized_words(word_list)
+    assert result == "Hello World"
+
+
 def test_get_email_id():
     id = email_utils.get_id(SAMPLE_MESSAGE)
     assert id == "abc123"

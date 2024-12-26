@@ -234,3 +234,27 @@ def get_company_name(id, msg):
         from_address = get_email_from_address(msg)
         return get_email_domain_from_address(from_address).split(".")[0]
     return top_word
+
+
+def get_top_consecutive_capitalized_words(tuples_list):
+    """
+    Helper function to parse company name from an email.
+    We only want the top capitalized words that appear consecutively and with the same frequency.
+    """
+    result = []
+    temp_group = []
+    max = float("-inf")
+    for i, (first, second) in enumerate(tuples_list):
+        is_capitalized = first and first[0].isupper()
+
+        if is_capitalized:
+            if not temp_group:
+                max = second
+                temp_group.append((first, second))
+            if temp_group and temp_group[-1][1] == second:
+                # Add to the current group if criteria match
+                temp_group.append((first, second))
+            if second < max:
+                break
+        result.append(first)
+    return " ".join(result)
