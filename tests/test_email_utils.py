@@ -60,14 +60,14 @@ def test_get_email_domain():
 
 
 def test_get_company_name_returns_email_domain():
-    company_name = email_utils.get_company_name(SAMPLE_MESSAGE)
+    company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE)
     assert company_name == "testcompanyname"
 
 
 def test_get_company_name_returns_top_word():
     """Default behavior for company name is to return the highest frequency word that appears in the email body."""
     with mock.patch("email_utils.get_top_word_in_email_body", return_value="fake"):
-        company_name = email_utils.get_company_name(SAMPLE_MESSAGE)
+        company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE)
         assert company_name == "fake"
 
 
