@@ -43,15 +43,29 @@ def write_emails(emails: list):
 
 
 def export_to_csv(main_filepath: str, message_data: dict):
-    if os.path.exists(main_filepath):   # TODO: dedupe records
-        with open(main_filepath, "a") as f:                  
-            values = ",".join(f'"{str(message_data[key][0])}"' if ',' in str(message_data[key][0]) else str(message_data[key][0]) for key in message_data)
+    if os.path.exists(main_filepath):  # TODO: dedupe records
+        with open(main_filepath, "a") as f:
+            values = ",".join(
+                (
+                    f'"{str(message_data[key][0])}"'
+                    if "," in str(message_data[key][0])
+                    else str(message_data[key][0])
+                )
+                for key in message_data
+            )
             f.write(values + "\n")
     else:
         with open(main_filepath, "w") as f:
             headers = ",".join(message_data.keys())
             f.write(headers + "\n")
-            values = ",".join(f'"{str(message_data[key][0])}"' if ',' in str(message_data[key][0]) else str(message_data[key][0]) for key in message_data)
+            values = ",".join(
+                (
+                    f'"{str(message_data[key][0])}"'
+                    if "," in str(message_data[key][0])
+                    else str(message_data[key][0])
+                )
+                for key in message_data
+            )
             f.write(values + "\n")
 
 
@@ -68,7 +82,9 @@ def get_response_rate():
     df.to_sql("jobs", conn, if_exists="replace", index=False)
 
     # Query the data
-    cursor.execute("""SELECT DISTINCT CASE WHEN subject like '%interview%' then 1 ELSE 0 END as success, received_at FROM jobs WHERE top_word_company_proxy = 'Retool'""")
+    cursor.execute(
+        """SELECT DISTINCT CASE WHEN subject like '%interview%' then 1 ELSE 0 END as success, received_at FROM jobs WHERE top_word_company_proxy = 'Retool'"""
+    )
     print(cursor.fetchall())
 
     # Close connection
