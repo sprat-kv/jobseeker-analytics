@@ -1,5 +1,6 @@
 import re
 from email_validator import validate_email, EmailNotValidError
+from constants import QUERY_APPLIED_EMAIL_FILTER
 
 
 def get_gmail_credentials():
@@ -81,7 +82,19 @@ def is_valid_email(email: str) -> bool:
         return False
 
 
-def get_message(id: str, gmail_instance=None):
+def get_emails(
+    query: tuple = QUERY_APPLIED_EMAIL_FILTER, days_ago: int = 90, gmail_instance=None
+):
+    if gmail_instance:
+        return (
+            gmail_instance.users()
+            .messages()
+            .list(userId="me", q=query, includeSpamTrash=True)
+            .execute()  # TODO: default date days_ago filter, last 90 days?
+        )
+
+
+def get_email_body(id: str, gmail_instance=None):
     if gmail_instance:
         return gmail_instance.users().messages().get(userId="me", id=id).execute()
 

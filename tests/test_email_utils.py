@@ -1,4 +1,4 @@
-from tests.constants import SAMPLE_MESSAGE
+from test_constants import SAMPLE_MESSAGE
 import email_utils
 from unittest import mock
 
