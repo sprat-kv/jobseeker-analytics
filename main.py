@@ -2,12 +2,12 @@ import os.path
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
+from constants import QUERY_APPLIED_EMAIL_FILTER
 from db_utils import write_emails, export_to_csv
 from email_utils import (
     get_gmail_credentials,
-    get_emails,
-    get_email_body,
+    get_email_ids,
+    get_email,
     get_company_name,
     get_received_at_timestamp,
     get_email_subject_line,
@@ -21,7 +21,9 @@ def main():
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)
-        results = get_emails(gmail_instance=service)
+        results = get_email_ids(
+            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
+        )
         messages = results.get("messages", [])
         next_page_token = results.get("nextPageToken", "")
         size_estimate = results.get("resultSizeEstimate", 0)
@@ -45,7 +47,7 @@ def main():
             message_data = {}
             # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
-            msg = get_email_body(id=msg_id, gmail_instance=service)
+            msg = get_email(id=msg_id, gmail_instance=service)
             # Constructing the object which will be written into db
             message_data["msg_id"] = [msg_id]
             message_data["threadId"] = [message["threadId"]]
@@ -61,7 +63,7 @@ def main():
                     else message_data["from_name"]
                 )
             ]
-            message_data["top_word_company_proxy"] = [get_company_name(msg)]
+            message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg)]
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
             # Exporting the email data to a CSV file

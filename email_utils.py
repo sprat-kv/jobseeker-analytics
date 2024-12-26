@@ -1,6 +1,5 @@
 import re
 from email_validator import validate_email, EmailNotValidError
-from constants import QUERY_APPLIED_EMAIL_FILTER
 
 
 def get_gmail_credentials():
@@ -82,21 +81,23 @@ def is_valid_email(email: str) -> bool:
         return False
 
 
-def get_emails(
-    query: tuple = QUERY_APPLIED_EMAIL_FILTER, days_ago: int = 90, gmail_instance=None
-):
+def get_email(id: str, gmail_instance=None):
+    if gmail_instance:
+        return gmail_instance.users().messages().get(userId="me", id=id).execute()
+
+
+def get_email_ids(query: tuple = None, days_ago: int = 90, gmail_instance=None):
     if gmail_instance:
         return (
             gmail_instance.users()
             .messages()
-            .list(userId="me", q=query, includeSpamTrash=True)
-            .execute()  # TODO: default date days_ago filter, last 90 days?
+            .list(
+                userId="me",
+                q=query,
+                includeSpamTrash=True,
+            )
+            .execute()
         )
-
-
-def get_email_body(id: str, gmail_instance=None):
-    if gmail_instance:
-        return gmail_instance.users().messages().get(userId="me", id=id).execute()
 
 
 def get_id(msg):
@@ -188,7 +189,7 @@ def get_word_frequency(cleaned_email):
     return word_dict_sorted
 
 
-def get_top_word_in_email_body(msg):
+def get_top_word_in_email_body(msg_id, msg):
     import base64
     from bs4 import BeautifulSoup
 
@@ -212,6 +213,9 @@ def get_top_word_in_email_body(msg):
                 # Extract the plain text from the HTML content
                 email_text = soup.get_text()
                 cleaned_text = clean_email(email_text)
+                # write to file for debugging
+                with open(f"data/{msg_id}.txt", "w") as f:
+                    f.write(cleaned_text[0])
                 if cleaned_text:
                     word_frequency = get_word_frequency(cleaned_text)
                     # print(word_frequency)
@@ -221,8 +225,8 @@ def get_top_word_in_email_body(msg):
     return ""
 
 
-def get_company_name(msg):
-    top_word = get_top_word_in_email_body(msg)
+def get_company_name(id, msg):
+    top_word = get_top_word_in_email_body(id, msg)
     if not top_word:
         # likely a calendar invite, haven't parsed these yet
         # return email domain instead as shortcut

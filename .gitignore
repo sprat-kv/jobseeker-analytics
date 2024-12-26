@@ -6,3 +6,6 @@ credentials.json
 token.json
 *.db
 __pycache__*
+.vscode/
+*.csv
+data/
