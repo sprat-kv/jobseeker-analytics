@@ -1,7 +1,7 @@
 import os.path
 import logging
 import datetime
-from urllib.parse import quote
+from urllib.parse import urlencode
 from fastapi import FastAPI, Request, Query
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from googleapiclient.discovery import build
@@ -112,8 +112,12 @@ async def get_jobs(request: Request):
 @app.get("/success")
 def success(request: Request):
     file_path = request.query_params.get("file")
-    encoded_file_path = quote(file_path)
+    query_params = {"file_path": f"{file_path}"}
+    encoded_query = urlencode(query_params)
+    logging.info(f"Encoded query: {encoded_query}")
+
     today = str(datetime.date.today())
+
     html_content = f"""
     <!DOCTYPE html>
     <html>
@@ -123,7 +127,7 @@ def success(request: Request):
     <body>
         <h1>Success! Your file is ready.</h1>
         <p>Click the button below to download your file.</p>
-        <a href="/download-file?file_path={encoded_file_path}" download="jobbathehuntt_export_{today}.csv">
+        <a href="/download-file?{encoded_query}" download="jobbathehuntt_export_{today}.csv">
             <button>Download File</button>
         </a>
     </body>
