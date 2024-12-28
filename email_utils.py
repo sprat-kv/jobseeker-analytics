@@ -5,6 +5,7 @@ import os
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
+import logger
 
 def get_gmail_credentials():
     """Handles the OAuth2 flow and retrieves user credentials."""
@@ -26,6 +27,8 @@ def get_gmail_credentials():
                 CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
             )
             authorization_url, state = flow.authorization_url(prompt="consent")
+            logger.info(f"Authorization URL: {authorization_url}")
+            logger.info(f"State: {state}")
             return authorization_url  # Return the authorization URL for user to visit
 
     # Save credentials for the next run

@@ -1,4 +1,5 @@
 import os.path
+import logging
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from googleapiclient.discovery import build
@@ -27,22 +28,23 @@ async def root():
 @app.get("/get-jobs")
 async def get_jobs(request: Request):
     """Handles the redirect from Google after the user grants consent."""
-    print("get_jobs call")
+    logging.info(f"Request to get_jobs: {request}")
     code = request.query_params.get("code")
     if not code:
         # If no code, redirect the user to the authorization URL
         authorization_url = get_gmail_credentials()
-        print(authorization_url)
+        logging.info(f"Redirecting to {authorization_url}")
         response = RedirectResponse(url=authorization_url)
-        print(response.headers['Location']) 
-        print(f"Status Code: {response.status_code}")
-        print(f"Headers: {response.headers}")
+        
+        logging.info(f"Response location: {response.headers['Location']}")
+        logging.info(f"Status Code: {response.status_code}")
+        logging.info(f"Headers: {response.headers}")
         return response
 
     # If modifying these scopes, delete the file token.json.
     SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
     CLIENT_SECRETS_FILE = "credentials.json"
-    
+
     # Exchange the authorization code for credentials
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
