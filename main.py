@@ -71,15 +71,6 @@ def main():
 
             emails_data.append(message_data)
             i += 1
-
-        cleaned_emails = []
-        for email_dict in emails_data:
-            cleaned_email = []
-            for key in email_dict:
-                cleaned_email.append(email_dict[key][0])
-                continue  # not sure this is necessary? What is this?
-            cleaned_emails.append(tuple(cleaned_email))
-        write_emails(cleaned_emails)
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
