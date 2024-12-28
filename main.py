@@ -4,6 +4,7 @@ import datetime
 from urllib.parse import urlencode
 from fastapi import FastAPI, Request, Query, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
@@ -21,6 +22,9 @@ from email_utils import (
 )
 
 app = FastAPI()
+# Set up Jinja2 templates
+templates = Jinja2Templates(directory="templates")
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
@@ -28,11 +32,28 @@ logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBU
 async def root():
     return {"message": "Hello from Jobba the Huntt!"}
 
-def fetch_emails(creds):
+@app.get("/processing")
+async def processing(request: Request, file: str = Query(...)):
+    # Check if the file exists (i.e., job processing completed)
+    if os.path.exists(file):
+        # Automatically redirect to the success page after processing is done
+        return RedirectResponse(url=f"/download-file?file_path={file}")
+    
+    # Show a simple message that the job is being processed
+    return templates.TemplateResponse("processing.html", {"request": request, "file": file})
+
+@app.get("/download-file")
+async def download_file(file_path: str = Query(...)):
+    # Return the file for download
+    if os.path.exists(file_path):
+        return RedirectResponse(url=f"/success?file={file_path}")
+    return {"error": "File not found"}
+
+def fetch_emails(creds, filepath):
     # # Simulate a long-running task
     # import time
     # time.sleep(5)  # Simulate processing delay
-    logger.info(f"fetch_emails called with creds: {creds}")
+    logger.info(f"fetch_emails called with creds: {creds} and filepath: {filepath}")
     # Call the Gmail API
     service = build("gmail", "v1", credentials=creds)
     results = get_email_ids(
@@ -41,13 +62,11 @@ def fetch_emails(creds):
     messages = results.get("messages", [])
 
     # Directory to save the emails
-    output_dir = "data"
+    output_dir, main_filename = filepath.split("/")
     os.makedirs(output_dir, exist_ok=True)
-
-    emails_data = []
-    main_filename = "emails.csv"
     main_filepath = os.path.join(output_dir, main_filename)
 
+    emails_data = []
     for message in messages:
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
@@ -72,8 +91,7 @@ def fetch_emails(creds):
         message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
         # Exporting the email data to a CSV file
-        jobs_export_filepath = export_to_csv(main_filepath, message_data)
-        return RedirectResponse(url=f"/success?file={jobs_export_filepath}")
+        export_to_csv(main_filepath, message_data)
 
 # Define the route for downloading CSV
 @app.get("/get-jobs")
@@ -108,8 +126,13 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     with open('token.json', 'w') as token_file:
         token_file.write(creds.to_json())
     try:
-        background_tasks.add_task(fetch_emails, creds)
-        return {"message": "Jobs are being processed. Check back later!"}
+        file_path = "data/emails.csv"
+        background_tasks.add_task(fetch_emails, creds, file_path)
+        query_params = {"file": f"{filepath}"}
+        encoded_query = urlencode(query_params)
+        # Redirect to a temporary page indicating job processing
+        return RedirectResponse(url=f"/processing?{encoded_query}")
+
         # Redirect to a download page
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
@@ -141,11 +164,11 @@ def success(request: Request):
     """
     return HTMLResponse(content=html_content, status_code=200)
 
-@app.get("/download-file")
-def download_file(filepath: str = Query(...)):
-    logger.info(f"Received file_path: {filepath}")
-    # Return the file response
-    return FileResponse(filepath)
+# @app.get("/download-file")
+# def download_file(filepath: str = Query(...)):
+#     logger.info(f"Received file_path: {filepath}")
+#     # Return the file response
+#     return FileResponse(filepath)
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
