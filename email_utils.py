@@ -33,7 +33,7 @@ def get_gmail_credentials():
                     credentials_path,
                     scopes=SCOPES,
                 )
-                creds = flow.run_local_server(port=8001)
+                creds = flow.run_console()
             except RefreshError:
                 os.remove(token_path)
                 creds.refresh(Request())
@@ -43,7 +43,7 @@ def get_gmail_credentials():
                     credentials_path,
                     scopes=SCOPES,
                 )
-                creds = flow.run_local_server(port=8001)
+                creds = flow.run_console()
             except RefreshError:
                 os.remove(token_path)
                 creds.refresh(Request())
