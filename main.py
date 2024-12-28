@@ -1,7 +1,7 @@
 import os.path
 import logging
 import datetime
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Query
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -112,7 +112,7 @@ async def get_jobs(request: Request):
 def success(request: Request):
     file_path = request.query_params.get("file")
     today = str(datetime.date.today())
-    html_content = """
+    html_content = f"""
     <!DOCTYPE html>
     <html>
     <head>
@@ -130,7 +130,7 @@ def success(request: Request):
     return HTMLResponse(content=html_content, status_code=200)
 
 @app.get("/download-file")
-def download_file(filepath: str):
+def download_file(filepath: str = Query(...)):
     # Return the file response
     return FileResponse(filepath)
 
