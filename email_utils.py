@@ -224,14 +224,14 @@ def get_top_word_in_email_body(msg_id, msg):
                 email_text = soup.get_text()
                 cleaned_text = clean_email(email_text)
                 # write to file for debugging
-                with open(f"data/{msg_id}.txt", "w") as f:
-                    f.write(email_text)
-                with open(f"data/{msg_id}_cleaned.txt", "w") as f:
-                    f.write(cleaned_text[0])
+                # with open(f"data/{msg_id}.txt", "w") as f:
+                #     f.write(email_text)
+                # with open(f"data/{msg_id}_cleaned.txt", "w") as f:
+                #     f.write(cleaned_text[0])
                 if cleaned_text:
                     word_frequency = get_word_frequency(cleaned_text)
-                    with open(f"data/{msg_id}_word_frequency.txt", "w") as f:
-                        f.write(str(word_frequency))
+                    # with open(f"data/{msg_id}_word_frequency.txt", "w") as f:
+                    #     f.write(str(word_frequency))
                     top_capitalized_word = get_top_consecutive_capitalized_words(
                         word_frequency
                     )
