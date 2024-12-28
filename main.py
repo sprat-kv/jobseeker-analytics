@@ -127,7 +127,7 @@ def success(request: Request):
     <body>
         <h1>Success! Your file is ready.</h1>
         <p>Click the button below to download your file.</p>
-        <a href="/download-file?{encoded_query}" download="jobbathehuntt_export_{today}">
+        <a href="/download-file?{encoded_query}" download="jobbathehuntt_export_{today}.csv">
             <button>Download File</button>
         </a>
     </body>
