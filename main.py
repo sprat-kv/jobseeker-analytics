@@ -128,7 +128,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     try:
         file_path = "data/emails.csv"
         background_tasks.add_task(fetch_emails, creds, file_path)
-        query_params = {"file": f"{filepath}"}
+        query_params = {"file": f"{file_path}"}
         encoded_query = urlencode(query_params)
         # Redirect to a temporary page indicating job processing
         return RedirectResponse(url=f"/processing?{encoded_query}")
