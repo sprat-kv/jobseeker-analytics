@@ -1,6 +1,6 @@
 import os.path
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import FileResponse, RedirectResponse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from constants import QUERY_APPLIED_EMAIL_FILTER
@@ -24,8 +24,31 @@ async def root():
 
 # Define the route for downloading CSV
 @app.get("/get-jobs")
-async def get_jobs():
-    creds = get_gmail_credentials()
+async def get_jobs(request: Request):
+    """Handles the redirect from Google after the user grants consent."""
+    print("get_jobs call")
+    code = request.query_params.get("code")
+    if not code:
+        # If no code, redirect the user to the authorization URL
+        authorization_url = get_gmail_credentials()
+        print(authorization_url)
+        response = RedirectResponse(url=authorization_url)
+        print(response.headers['Location']) 
+        print(f"Status Code: {response.status_code}")
+        print(f"Headers: {response.headers}")
+        return response
+
+    # Exchange the authorization code for credentials
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
+    )
+    flow.fetch_token(authorization_response=str(request.url))
+    
+    creds = flow.credentials
+
+    # Save the credentials for the next run
+    with open('token.json', 'w') as token_file:
+        token_file.write(creds.to_json())
     try:
         # Call the Gmail API
         service = build("gmail", "v1", credentials=creds)

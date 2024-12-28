@@ -1,39 +1,39 @@
 import re
 from email_validator import validate_email, EmailNotValidError
 from installation_utils import get_file_path
-
+import os
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from google.auth.transport.requests import Request
 
 def get_gmail_credentials():
-    import os
-    from google.auth.exceptions import RefreshError
-    from google.auth.transport.requests import Request
-    from google.oauth2.credentials import Credentials
-    from google_auth_oauthlib.flow import InstalledAppFlow
+    """Handles the OAuth2 flow and retrieves user credentials."""
+    creds = None
 
     # If modifying these scopes, delete the file token.json.
     SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    CLIENT_SECRETS_FILE = "credentials.json"
 
-    creds = None
-    # The file token.json stores the user's access and refresh tokens,
-    # is created automatically when authorization flow
-    # completes for the first time.
+    # Try to load existing credentials from token.json
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 
-    # Generate the authorization URL
-    auth_url, _ = flow.authorization_url(prompt='consent')
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = Flow.from_client_secrets_file(
+                CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
+            )
+            authorization_url, state = flow.authorization_url(prompt="consent")
+            return authorization_url  # Return the authorization URL for user to visit
 
-    print(f"Please visit this URL to authorize the application: {auth_url}")
-
-    # Ask the user to enter the authorization code
-    auth_code = input("Enter the authorization code: ")
-
-    # Exchange the authorization code for credentials
-    creds = flow.fetch_token(code=auth_code)
-
-    # Save the credentials for the next time
+    # Save credentials for the next run
     with open('token.json', 'w') as token_file:
         token_file.write(creds.to_json())
 
     return creds
+    
 
 
 def is_automated_email(email: str) -> bool:
