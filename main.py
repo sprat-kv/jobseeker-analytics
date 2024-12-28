@@ -2,7 +2,7 @@ import os.path
 import logging
 import datetime
 from urllib.parse import urlencode
-from fastapi import FastAPI, Request, Query
+from fastapi import FastAPI, Request, Query, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -28,9 +28,56 @@ logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBU
 async def root():
     return {"message": "Hello from Jobba the Huntt!"}
 
+def fetch_emails(creds):
+    # # Simulate a long-running task
+    # import time
+    # time.sleep(5)  # Simulate processing delay
+    logger.info(f"fetch_emails called with creds: {creds}")
+    # Call the Gmail API
+    service = build("gmail", "v1", credentials=creds)
+    results = get_email_ids(
+        query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
+    )
+    messages = results.get("messages", [])
+
+    # Directory to save the emails
+    output_dir = "data"
+    os.makedirs(output_dir, exist_ok=True)
+
+    emails_data = []
+    main_filename = "emails.csv"
+    main_filepath = os.path.join(output_dir, main_filename)
+
+    for message in messages:
+        message_data = {}
+        # (email_subject, email_from, email_domain, company_name, email_dt)
+        msg_id = message["id"]
+        msg = get_email(id=msg_id, gmail_instance=service)
+        # Constructing the object which will be written into db
+        message_data["msg_id"] = [msg_id]
+        message_data["threadId"] = [message["threadId"]]
+        message_data["subject"] = [get_email_subject_line(msg)]
+        message_data["from_name"] = [get_email_from_address(msg)]
+        message_data["fromdomain_match"] = [
+            get_email_domain_from_address(
+                message_data["from_name"][0]
+                if (
+                    isinstance(message_data["from_name"], list)
+                    and len(message_data["from_name"]) > 0
+                )
+                else message_data["from_name"]
+            )
+        ]
+        message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg)]
+        message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
+
+        # Exporting the email data to a CSV file
+        jobs_export_filepath = export_to_csv(main_filepath, message_data)
+        return RedirectResponse(url=f"/success?file={jobs_export_filepath}")
+
 # Define the route for downloading CSV
 @app.get("/get-jobs")
-async def get_jobs(request: Request):
+def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
     logger.info(f"Request to get_jobs: {request}")
     code = request.query_params.get("code")
@@ -61,50 +108,9 @@ async def get_jobs(request: Request):
     with open('token.json', 'w') as token_file:
         token_file.write(creds.to_json())
     try:
-        # Call the Gmail API
-        service = build("gmail", "v1", credentials=creds)
-        results = get_email_ids(
-            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
-        )
-        messages = results.get("messages", [])
-
-        # Directory to save the emails
-        output_dir = "data"
-        os.makedirs(output_dir, exist_ok=True)
-
-        emails_data = []
-        main_filename = "emails.csv"
-        main_filepath = os.path.join(output_dir, main_filename)
-
-        for message in messages:
-            message_data = {}
-            # (email_subject, email_from, email_domain, company_name, email_dt)
-            msg_id = message["id"]
-            msg = get_email(id=msg_id, gmail_instance=service)
-            # Constructing the object which will be written into db
-            message_data["msg_id"] = [msg_id]
-            message_data["threadId"] = [message["threadId"]]
-            message_data["subject"] = [get_email_subject_line(msg)]
-            message_data["from_name"] = [get_email_from_address(msg)]
-            message_data["fromdomain_match"] = [
-                get_email_domain_from_address(
-                    message_data["from_name"][0]
-                    if (
-                        isinstance(message_data["from_name"], list)
-                        and len(message_data["from_name"]) > 0
-                    )
-                    else message_data["from_name"]
-                )
-            ]
-            message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg)]
-            message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
-
-            # Exporting the email data to a CSV file
-        # Export CSV
-            jobs_export_filepath = export_to_csv(main_filepath, message_data)
+        background_tasks.add_task(fetch_emails, creds)
+        return {"message": "Jobs are being processed. Check back later!"}
         # Redirect to a download page
-            return RedirectResponse(url=f"/success?file={jobs_export_filepath}")
-
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
