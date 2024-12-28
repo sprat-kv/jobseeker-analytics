@@ -98,7 +98,7 @@ async def get_jobs(request: Request):
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
             # Exporting the email data to a CSV file
-            return FileResponse(export_to_csv(main_filepath, message_data))
+        return FileResponse(export_to_csv(main_filepath, message_data))
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
