@@ -1,5 +1,6 @@
 import re
 from email_validator import validate_email, EmailNotValidError
+from installation_utils import get_file_path
 
 
 def get_gmail_credentials():
@@ -13,32 +14,41 @@ def get_gmail_credentials():
     SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 
     creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # The file token.json stores the user's access and refresh tokens,
+    # is created automatically when authorization flow
+    # completes for the first time.
+    token_path = get_file_path("token.json")
+    credentials_path = get_file_path("credentials.json")
+
+    if os.path.exists(token_path):
+        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
     # If there are no (valid) credentials available, let the user log in.
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             try:
-                creds.refresh(Request())
-            except RefreshError:
-                os.remove("token.json")
-                creds.refresh(Request())
-        else:
-            try:
+                # creds.refresh(Request())
+                os.remove(token_path)
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    "credentials.json",
+                    credentials_path,
                     scopes=SCOPES,
                 )
                 creds = flow.run_local_server(port=8001)
             except RefreshError:
-                os.remove("token.json")
+                os.remove(token_path)
+                creds.refresh(Request())
+        else:
+            try:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    credentials_path,
+                    scopes=SCOPES,
+                )
+                creds = flow.run_local_server(port=8001)
+            except RefreshError:
+                os.remove(token_path)
                 creds.refresh(Request())
         # Save the credentials for the next run
-        with open("token.json", "w") as token:
+        with open(token_path, "w") as token:
             token.write(creds.to_json())
     return creds
 
