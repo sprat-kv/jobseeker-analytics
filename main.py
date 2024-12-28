@@ -28,19 +28,22 @@ templates = Jinja2Templates(directory="templates")
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
+api_call_finished = False
+
 @app.get("/")
 async def root():
     return {"message": "Hello from Jobba the Huntt!"}
 
 @app.get("/processing")
 async def processing(request: Request, file: str = Query(...)):
+    global api_call_finished
     # Check if the file exists (i.e., job processing completed)
-    if os.path.exists(file):
-        # Automatically redirect to the success page after processing is done
+    if api_call_finished:
+            # Automatically redirect to the success page after processing is done
         return RedirectResponse(url=f"/download-file?file_path={file}")
-    
-    # Show a simple message that the job is being processed
-    return templates.TemplateResponse("processing.html", {"request": request, "file": file})
+    else:
+        # Show a message that the job is still processing
+        return templates.TemplateResponse("processing.html", {"request": request, "file": file})
 
 @app.get("/download-file")
 async def download_file(file_path: str = Query(...)):
@@ -50,6 +53,7 @@ async def download_file(file_path: str = Query(...)):
     return {"error": "File not found"}
 
 def fetch_emails(creds, filepath):
+    global api_call_finished
     # # Simulate a long-running task
     # import time
     # time.sleep(5)  # Simulate processing delay
@@ -92,6 +96,7 @@ def fetch_emails(creds, filepath):
 
         # Exporting the email data to a CSV file
         export_to_csv(main_filepath, message_data)
+        api_call_finished = True  #TODO: move to outside of the loop after testing
 
 # Define the route for downloading CSV
 @app.get("/get-jobs")
