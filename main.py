@@ -111,8 +111,8 @@ async def get_jobs(request: Request):
 
 @app.get("/success")
 def success(request: Request):
-    file_path = request.query_params.get("file")
-    query_params = {"file_path": f"{file_path}"}
+    filepath = request.query_params.get("file")
+    query_params = {"filepath": f"{filepath}"}
     encoded_query = urlencode(query_params)
     logging.info(f"Encoded query: {encoded_query}")
 
