@@ -17,39 +17,22 @@ def get_gmail_credentials():
     # The file token.json stores the user's access and refresh tokens,
     # is created automatically when authorization flow
     # completes for the first time.
-    token_path = get_file_path("token.json")
-    credentials_path = get_file_path("credentials.json")
 
-    if os.path.exists(token_path):
-        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
-    # If there are no (valid) credentials available, let the user log in.
+    # Generate the authorization URL
+    auth_url, _ = flow.authorization_url(prompt='consent')
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            try:
-                # creds.refresh(Request())
-                os.remove(token_path)
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    credentials_path,
-                    scopes=SCOPES,
-                )
-                creds = flow.run_console()
-            except RefreshError:
-                os.remove(token_path)
-                creds.refresh(Request())
-        else:
-            try:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    credentials_path,
-                    scopes=SCOPES,
-                )
-                creds = flow.run_console()
-            except RefreshError:
-                os.remove(token_path)
-                creds.refresh(Request())
-        # Save the credentials for the next run
-        with open(token_path, "w") as token:
-            token.write(creds.to_json())
+    print(f"Please visit this URL to authorize the application: {auth_url}")
+
+    # Ask the user to enter the authorization code
+    auth_code = input("Enter the authorization code: ")
+
+    # Exchange the authorization code for credentials
+    creds = flow.fetch_token(code=auth_code)
+
+    # Save the credentials for the next time
+    with open('token.json', 'w') as token_file:
+        token_file.write(creds.to_json())
+
     return creds
 
 
