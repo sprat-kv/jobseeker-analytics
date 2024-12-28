@@ -39,6 +39,10 @@ async def get_jobs(request: Request):
         print(f"Headers: {response.headers}")
         return response
 
+    # If modifying these scopes, delete the file token.json.
+    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    CLIENT_SECRETS_FILE = "credentials.json"
+    
     # Exchange the authorization code for credentials
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
