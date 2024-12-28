@@ -67,6 +67,7 @@ def export_to_csv(main_filepath: str, message_data: dict):
                 for key in message_data
             )
             f.write(values + "\n")
+    return main_filepath
 
 
 def get_response_rate():

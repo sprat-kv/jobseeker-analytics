@@ -1,9 +1,10 @@
 import os.path
-
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from constants import QUERY_APPLIED_EMAIL_FILTER
-from db_utils import write_emails, export_to_csv
+from db_utils import export_to_csv
 from email_utils import (
     get_gmail_credentials,
     get_email_ids,
@@ -15,8 +16,15 @@ from email_utils import (
     get_email_from_address,
 )
 
+app = FastAPI()
 
-def main():
+@app.get("/")
+async def root():
+    return {"message": "Hello from Jobba the Huntt!"}
+
+# Define the route for downloading CSV
+@app.get("/get-jobs")
+async def get_jobs():
     creds = get_gmail_credentials()
     try:
         # Call the Gmail API
@@ -25,14 +33,6 @@ def main():
             query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
         )
         messages = results.get("messages", [])
-        next_page_token = results.get("nextPageToken", "")
-        size_estimate = results.get("resultSizeEstimate", 0)
-        print("next page token {}".format(next_page_token))  # TODO: handle pagination
-        print("size estimate {}".format(size_estimate))
-
-        if not results:
-            print("No message found.")
-            return
 
         # Directory to save the emails
         output_dir = "data"
@@ -42,7 +42,6 @@ def main():
         main_filename = "emails.csv"
         main_filepath = os.path.join(output_dir, main_filename)
 
-        i = 0
         for message in messages:
             message_data = {}
             # (email_subject, email_from, email_domain, company_name, email_dt)
@@ -67,14 +66,15 @@ def main():
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
             # Exporting the email data to a CSV file
-            export_to_csv(main_filepath, message_data)
+            return FileResponse(export_to_csv(main_filepath, message_data))
 
-            emails_data.append(message_data)
-            i += 1
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
 
 
+# Run the app using Uvicorn
 if __name__ == "__main__":
-    main()
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
