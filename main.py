@@ -100,9 +100,9 @@ async def get_jobs(request: Request):
 
             # Exporting the email data to a CSV file
         # Export CSV
-        jobs_export_filepath = export_to_csv(main_filepath, message_data)
+            jobs_export_filepath = export_to_csv(main_filepath, message_data)
         # Redirect to a download page
-        return RedirectResponse(url=f"/success?file={jobs_export_filepath}")
+            return RedirectResponse(url=f"/success?file={jobs_export_filepath}")
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
