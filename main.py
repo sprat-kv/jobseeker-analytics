@@ -19,6 +19,8 @@ from email_utils import (
 )
 
 app = FastAPI()
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
 @app.get("/")
 async def root():
