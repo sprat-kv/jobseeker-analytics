@@ -1,5 +1,7 @@
 # Job Seeker Response Rate Calculator
 
+## Want to beta test? Check out install instructions here: https://plant-colt-383.notion.site/#:~:text=Installation%20Instructions
+
 *As a job seeker with a gmail account, I want to be able to calculate  my initial application  response rate with the touch of a button*
 
 ## Example
