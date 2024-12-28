@@ -1,5 +1,6 @@
 import os.path
 import logging
+import datetime
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, RedirectResponse
 from googleapiclient.discovery import build
@@ -98,12 +99,40 @@ async def get_jobs(request: Request):
             message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
             # Exporting the email data to a CSV file
-        return FileResponse(export_to_csv(main_filepath, message_data))
+        # Export CSV
+        jobs_export_filepath = export_to_csv(main_filepath, message_data)
+        # Redirect to a download page
+        return RedirectResponse(url=f"/success?file={jobs_export_filepath}")
 
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         print(f"An error occurred: {error}")
 
+@app.get("/success")
+def success(request: Request):
+    file_path = request.query_params.get("file")
+    today = str(datetime.date.today())
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Success</title>
+    </head>
+    <body>
+        <h1>Success! Your file is ready.</h1>
+        <p>Click the button below to download your file.</p>
+        <a href="/download-file?file_path={file_path}" download="jobbathehuntt_export_{today}.csv">
+            <button>Download File</button>
+        </a>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content, status_code=200)
+
+@app.get("/download-file")
+def download_file(filepath: str):
+    # Return the file response
+    return FileResponse(filepath)
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
