@@ -30,17 +30,17 @@ async def root():
 @app.get("/get-jobs")
 async def get_jobs(request: Request):
     """Handles the redirect from Google after the user grants consent."""
-    logging.info(f"Request to get_jobs: {request}")
+    logger.info(f"Request to get_jobs: {request}")
     code = request.query_params.get("code")
     if not code:
         # If no code, redirect the user to the authorization URL
         authorization_url = get_gmail_credentials()
-        logging.info(f"Redirecting to {authorization_url}")
+        logger.info(f"Redirecting to {authorization_url}")
         response = RedirectResponse(url=authorization_url)
         
-        logging.info(f"Response location: {response.headers['Location']}")
-        logging.info(f"Status Code: {response.status_code}")
-        logging.info(f"Headers: {response.headers}")
+        logger.info(f"Response location: {response.headers['Location']}")
+        logger.info(f"Status Code: {response.status_code}")
+        logger.info(f"Headers: {response.headers}")
         return response
 
     # If modifying these scopes, delete the file token.json.
