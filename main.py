@@ -146,7 +146,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
 @app.get("/success")
 def success(request: Request):
     filepath = request.query_params.get("file")
-    query_params = {"filepath": f"{filepath}"}
+    query_params = {"file_path": f"{filepath}"}
     encoded_query = urlencode(query_params)
     logging.info(f"Encoded query: {encoded_query}")
 
