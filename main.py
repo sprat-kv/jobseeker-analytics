@@ -40,7 +40,7 @@ async def processing(request: Request, file: str = Query(...)):
     # Check if the file exists (i.e., job processing completed)
     if api_call_finished:
             # Automatically redirect to the success page after processing is done
-        return RedirectResponse(url=f"/download-file?file_path={file}")
+        return RedirectResponse(url=f"/success?file={file}")
     else:
         # Show a message that the job is still processing
         return templates.TemplateResponse("processing.html", {"request": request, "file": file})
@@ -48,9 +48,7 @@ async def processing(request: Request, file: str = Query(...)):
 @app.get("/download-file")
 async def download_file(file_path: str = Query(...)):
     # Return the file for download
-    if os.path.exists(file_path):
-        return RedirectResponse(url=f"/success?file={file_path}")
-    return {"error": "File not found"}
+    return FileResponse(file_path)
 
 def fetch_emails(creds, filepath):
     global api_call_finished
