@@ -97,8 +97,8 @@ def fetch_emails(creds, filepath):
 
         # Exporting the email data to a CSV file
         export_to_csv(main_filepath, message_data)
-        api_call_finished = True  #TODO: move to outside of the loop after testing
-        return
+    api_call_finished = True 
+    return
 
 # Define the route for downloading CSV
 @app.get("/get-jobs")
