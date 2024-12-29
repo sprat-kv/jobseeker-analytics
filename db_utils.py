@@ -43,6 +43,7 @@ def write_emails(emails: list):
 
 
 def export_to_csv(main_filepath: str, message_data: dict):
+    logger.info(f"Exporting to CSV: {main_filepath}")
     if os.path.exists(main_filepath):  # TODO: dedupe records
         with open(main_filepath, "a") as f:
             values = ",".join(
@@ -55,6 +56,7 @@ def export_to_csv(main_filepath: str, message_data: dict):
             )
             f.write(values + "\n")
     else:
+        logger.info(f"Creating new CSV file: {main_filepath}")
         with open(main_filepath, "w") as f:
             headers = ",".join(message_data.keys())
             f.write(headers + "\n")
