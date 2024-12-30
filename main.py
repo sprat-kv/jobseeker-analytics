@@ -26,7 +26,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
 
 api_call_finished = False
 
