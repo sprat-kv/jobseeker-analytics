@@ -50,8 +50,16 @@ async def processing(request: Request, file: str = Query(...)):
 @app.get("/download-file")
 async def download_file(file_path: str = Query(...)):
     logger.info(f"Downloading from file_path: {file_path}")
+    # Define the safe root directory
+    safe_root = os.path.abspath("safe_directory")
+    # Normalize the file path
+    normalized_path = os.path.normpath(os.path.join(safe_root, file_path))
+    # Check if the normalized path is within the safe root directory
+    if not normalized_path.startswith(safe_root):
+        logger.error(f"Attempt to access unauthorized file: {file_path}")
+        raise Exception("Unauthorized file access")
     # Return the file for download
-    return FileResponse(file_path)
+    return FileResponse(normalized_path)
 
 def fetch_emails(creds, filepath):
     global api_call_finished
