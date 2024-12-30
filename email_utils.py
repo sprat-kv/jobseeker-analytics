@@ -8,7 +8,6 @@ from google.auth.transport.requests import Request
 import logging
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
 
 def get_gmail_credentials():
     """Handles the OAuth2 flow and retrieves user credentials."""
