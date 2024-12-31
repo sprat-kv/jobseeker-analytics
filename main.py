@@ -36,27 +36,21 @@ async def root():
     return {"message": "Hello from Jobba the Huntt!"}
 
 @app.get("/processing")
-async def processing(request: Request, file: str = Query(...)):
+async def processing(request: Request):
     global api_call_finished
-    # List of valid file names and corresponding redirect targets
-    valid_files = {"data/emails.csv": "/success?file=data/emails.csv"}
-    # Check if the file exists (i.e., job processing completed)
     if api_call_finished:
-        if file in valid_files:
-            logger.info(f"Processing complete for file: {file}")
-            # Automatically redirect to the success page after processing is done
-            return RedirectResponse(url=valid_files[file])
-        else:
-            logger.error(f"Invalid file: {file}")
-            return RedirectResponse(url="/")
+        logger.info(f"Processing complete for file")
+        # Automatically redirect to the success page after processing is done
+        return RedirectResponse("/success")
     else:
-        logger.info(f"Processing not complete for file: {file}")
+        logger.info(f"Processing not complete for file")
         # Show a message that the job is still processing
-        return templates.TemplateResponse("processing.html", {"request": request, "file": file})
+        return templates.TemplateResponse("processing.html", {"request": request})
 
 @app.get("/download-file")
-async def download_file(file_path: str = Query(...)):
-    logger.info(f"Downloading from file_path: {file_path}")
+async def download_file(user_id: str):
+    # TODO: get authenticated user object from user_id
+    logger.info(f"Downloading from file_path")
     # Define the safe root directory
     safe_root = os.path.abspath("/opt/render/project/src")
     # Normalize the file path
@@ -155,12 +149,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
         print(f"An error occurred: {error}")
 
 @app.get("/success")
-def success(request: Request):
-    filepath = request.query_params.get("file")
-    query_params = {"file_path": f"{filepath}"}
-    encoded_query = urlencode(query_params)
-    logging.info(f"Encoded query: {encoded_query}")
-
+def success():
     today = str(datetime.date.today())
 
     html_content = f"""
@@ -172,7 +161,7 @@ def success(request: Request):
     <body>
         <h1>Success! Your file is ready.</h1>
         <p>Click the button below to download your file.</p>
-        <a href="/download-file?{encoded_query}" download="jobbathehuntt_export_{today}.csv">
+        <a href="/download-file" download="jobbathehuntt_export_{today}.csv">
             <button>Download File</button>
         </a>
     </body>
@@ -180,11 +169,6 @@ def success(request: Request):
     """
     return HTMLResponse(content=html_content, status_code=200)
 
-# @app.get("/download-file")
-# def download_file(filepath: str = Query(...)):
-#     logger.info(f"Received file_path: {filepath}")
-#     # Return the file response
-#     return FileResponse(filepath)
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
