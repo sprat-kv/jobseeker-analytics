@@ -20,6 +20,7 @@ from email_utils import (
     get_email_domain_from_address,
     get_email_from_address,
 )
+from auth_utils import AuthenticatedUser
 
 app = FastAPI()
 # Set up Jinja2 templates
@@ -67,21 +68,17 @@ async def download_file(file_path: str = Query(...)):
     # Return the file for download
     return FileResponse(normalized_path)
 
-def fetch_emails(creds, filepath):
+def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
-    # # Simulate a long-running task
-    # import time
-    # time.sleep(5)  # Simulate processing delay
-    logger.info(f"fetch_emails called with creds: {creds} and filepath: {filepath}")
-    # Call the Gmail API
-    service = build("gmail", "v1", credentials=creds)
+    logger.info(f"user_id:{user.user_id} fetch_emails")
+    service = build("gmail", "v1", credentials=user.creds)
     results = get_email_ids(
         query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
     )
     messages = results.get("messages", [])
 
     # Directory to save the emails
-    output_dir, main_filename = filepath.split("/")
+    output_dir, main_filename = user.filepath.split("/")
     os.makedirs(output_dir, exist_ok=True)
     main_filepath = os.path.join(output_dir, main_filename)
 
@@ -122,9 +119,9 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     code = request.query_params.get("code")
     if not code:
         # If no code, redirect the user to the authorization URL
-        authorization_url = get_gmail_credentials()
+        user = get_user()
         logger.info(f"Redirecting to {authorization_url}")
-        response = RedirectResponse(url=authorization_url)
+        response = RedirectResponse(url=user.creds)
         
         logger.info(f"Response location: {response.headers['Location']}")
         logger.info(f"Status Code: {response.status_code}")
@@ -142,17 +139,15 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     flow.fetch_token(authorization_response=str(request.url))
     
     creds = flow.credentials
+    user = AuthenticatedUser(creds)
+    # Save the credentials for the next run in user's directory
+    with open(f"{user.filepath}/token.json", "w") as token:
+        token.write(creds.to_json())
 
-    # Save the credentials for the next run
-    with open('token.json', 'w') as token_file:
-        token_file.write(creds.to_json())
     try:
-        file_path = "data/emails.csv"
-        background_tasks.add_task(fetch_emails, creds, file_path)
-        query_params = {"file": f"{file_path}"}
-        encoded_query = urlencode(query_params)
+        background_tasks.add_task(fetch_emails, user)
         # Redirect to a temporary page indicating job processing
-        return RedirectResponse(url=f"/processing?{encoded_query}")
+        return RedirectResponse(url=f"/processing")
 
         # Redirect to a download page
     except HttpError as error:

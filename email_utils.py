@@ -6,10 +6,11 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 import logging
+from auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
 
-def get_gmail_credentials():
+def get_user() -> User:
     """Handles the OAuth2 flow and retrieves user credentials."""
     creds = None
     logger.info("Checking for existing credentials...")
@@ -41,7 +42,7 @@ def get_gmail_credentials():
         logger.info("Saving credentials...")
         token_file.write(creds.to_json())
 
-    return creds
+    return AuthenticatedUser(creds)
     
 
 
