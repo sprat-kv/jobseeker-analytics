@@ -57,7 +57,7 @@ async def processing(request: Request, file: str = Query(...)):
 async def download_file(file_path: str = Query(...)):
     logger.info(f"Downloading from file_path: {file_path}")
     # Define the safe root directory
-    safe_root = os.path.abspath("data")
+    safe_root = os.path.abspath("/opt/render/project/src")
     # Normalize the file path
     normalized_path = os.path.normpath(os.path.join(safe_root, file_path))
     # Check if the normalized path is within the safe root directory
