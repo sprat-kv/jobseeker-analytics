@@ -10,7 +10,7 @@ from auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
 
-def get_user() -> User:
+def get_user() -> AuthenticatedUser:
     """Handles the OAuth2 flow and retrieves user credentials."""
     creds = None
     logger.info("Checking for existing credentials...")
