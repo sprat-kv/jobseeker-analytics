@@ -36,6 +36,7 @@ class AuthenticatedUser:
             return user_id
         except (KeyError, TypeError):
             logger.error("User ID not found in %s", self.creds)
+            logger.info("available attributes: %s", dir(self.creds))
             return str(uuid.uuid4()) # Generate a random ID
         
 
