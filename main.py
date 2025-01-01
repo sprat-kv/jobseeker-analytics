@@ -39,18 +39,18 @@ async def root():
 async def processing(request: Request):
     global api_call_finished
     if api_call_finished:
-        logger.info(f"Processing complete for file")
+        logger.info("Processing complete for file")
         # Automatically redirect to the success page after processing is done
         return RedirectResponse("/success")
     else:
-        logger.info(f"Processing not complete for file")
+        logger.info("Processing not complete for file")
         # Show a message that the job is still processing
         return templates.TemplateResponse("processing.html", {"request": request})
 
 @app.get("/download-file")
 async def download_file(user_id: str):
     # TODO: get authenticated user object from user_id
-    logger.info(f"Downloading from file_path")
+    logger.info("Downloading from file_path")
     file_path = AuthenticatedUser(user_id).filepath
     # Return the file for download
     return FileResponse(file_path)
@@ -128,18 +128,18 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     creds = flow.credentials
     user = AuthenticatedUser(creds)
     # Save the credentials for the next run in user's directory
-    with open(f"{user.filepath}/token.json", "w") as token:
+    with open(f"{user.filepath}/token.json", "w", encoding="utf-8") as token:
         token.write(creds.to_json())
 
     try:
         background_tasks.add_task(fetch_emails, user)
         # Redirect to a temporary page indicating job processing
-        return RedirectResponse(url=f"/processing")
+        return RedirectResponse(url="/processing")
 
         # Redirect to a download page
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
-        print(f"An error occurred: {error}")
+        logger.error("An error occurred: %s" % error)
 
 @app.get("/success")
 def success():

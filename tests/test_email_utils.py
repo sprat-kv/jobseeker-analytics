@@ -41,7 +41,7 @@ def test_is_valid_email():
     }
     for email, expected_value in email_test_cases.items():
         is_valid = email_utils.is_valid_email(email)
-        assert is_valid == expected_value, f" email: {email}"
+        assert is_valid == expected_value, "email: %s" % email
 
 
 def test_is_email_automated():
@@ -55,7 +55,7 @@ def test_is_email_automated():
     }
     for email, expected_value in email_test_cases.items():
         is_automated = email_utils.is_automated_email(email)
-        assert is_automated == expected_value, f" email: {email}"
+        assert is_automated == expected_value, "email: %s" % email
 
 
 def test_get_email_subject_line():

@@ -97,7 +97,7 @@ def get_email_subject_line(msg):
                 if key == "Subject":
                     return header.get("value", "")
     except Exception as e:
-        logger.error(f"Error getting email subject line: {e}")
+        logger.error("Error getting email subject line: %s", e)
     return ""
 
 
@@ -114,11 +114,11 @@ def get_email_from_address(msg):
                         return from_address.split("<")[1].split(">")[0]
                     return from_address
     except Exception as e:
-        logger.error(f"Error getting email from address: {e}")
+        logger.error("Error getting email from address: %s", e)
     return ""
 
 
-def get_received_at_timestamp(id, msg):
+def get_received_at_timestamp(message_id, msg):
     import datetime
 
     try:
@@ -129,7 +129,7 @@ def get_received_at_timestamp(id, msg):
                 if key == "Date":
                     return header.get("value")
     except Exception as e:
-        print(f"msg_{id}: {e}")
+        print("msg_%s: %s" % (message_id, e))
     return datetime.datetime.now()  # default if trouble parsing
 
 
@@ -151,7 +151,7 @@ def clean_email(email_body: str) -> list:
         )
         return pipeline.clean([email_body])
     except Exception as e:
-        logger.error(f"Error cleaning email: {e}")
+        logger.error("Error cleaning email: %s", e)
     return []
 
 
@@ -167,7 +167,7 @@ def get_word_frequency(cleaned_email):
         word_dict_sorted = sorted(word_dict.items(), key=lambda item: item[1], reverse=True)
         return word_dict_sorted
     except Exception as e:
-        logger.error(f"Error getting word frequency: {e}")
+        logger.error("Error getting word frequency: %s", e)
     return []
 
 
@@ -196,15 +196,9 @@ def get_top_word_in_email_body(msg_id, msg):
                     # Extract the plain text from the HTML content
                     email_text = soup.get_text()
                     cleaned_text = clean_email(email_text)
-                    # write to file for debugging
-                    # with open(f"data/{msg_id}.txt", "w") as f:
-                    #     f.write(email_text)
-                    # with open(f"data/{msg_id}_cleaned.txt", "w") as f:
-                    #     f.write(cleaned_text[0])
+
                     if cleaned_text:
                         word_frequency = get_word_frequency(cleaned_text)
-                        # with open(f"data/{msg_id}_word_frequency.txt", "w") as f:
-                        #     f.write(str(word_frequency))
                         top_capitalized_word = get_top_consecutive_capitalized_words(
                             word_frequency
                         )
@@ -213,7 +207,7 @@ def get_top_word_in_email_body(msg_id, msg):
                                 return cleaned_text[0]
                         return top_capitalized_word or cleaned_text[0][0]
     except Exception as e:
-        logger.error(f"Error getting top word: {e}")
+        logger.error("Error getting top word: %s", e)
     return ""
 
 
@@ -228,7 +222,7 @@ def get_company_name(id, msg):
             return get_email_domain_from_address(from_address).split(".")[0]
         return top_word
     except Exception as e:
-        logger.error(f"Error getting company name: {e}")
+        logger.error("Error getting company name: %s", e)
     return ""
 
 
@@ -256,5 +250,5 @@ def get_top_consecutive_capitalized_words(tuples_list):
                 result.append(first)
         return " ".join(result)
     except Exception as e:
-        logger.error(f"Error getting top consecutive capitalized words: {e}")
+        logger.error("Error getting top consecutive capitalized words: %s", e)
     return ""
