@@ -30,8 +30,13 @@ class AuthenticatedUser:
         - user_id: The unique user ID.
         """
         user_info = self.creds.id_token
-        user_id = user_info['sub']  # 'sub' is the unique user ID
-        return user_id
+        try:
+            user_id = user_info['sub']  # 'sub' is the unique user ID
+            return user_id
+        except KeyError, TypeError:
+            logger.error("User ID not found in %s", user_info)
+            return None
+        
 
     def get_user_filepath(self) -> str:
         """

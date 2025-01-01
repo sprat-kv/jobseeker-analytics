@@ -103,6 +103,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
     logger.info("Request to get_jobs: %s", request)
     code = request.query_params.get("code")
+    logger.debug("Code: %s", code)
 
     SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
     CLIENT_SECRETS_FILE = "credentials.json"
