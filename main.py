@@ -128,7 +128,11 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     flow.fetch_token(authorization_response=str(request.url))
     
     creds = flow.credentials
+    logger.debug("Credentials fetched: %s", creds)
     user = AuthenticatedUser(creds)
+    logger.debug("User: %s", user)
+    logger.debug("User ID: %s", user.user_id)
+    logger.debug("User Filepath: %s", user.filepath)
     # Save the credentials for the next run in user's directory
     os.makedirs(user.filepath, exist_ok=True)
     with open(f"{user.filepath}/token.json", "w", encoding="utf-8") as token:

@@ -31,15 +31,24 @@ class AuthenticatedUser:
         Returns:
         - user_id: The unique user ID.
         """
-        user_info = self.creds.id_token
+        user_id_token = self.creds.id_token
+        logger.debug("self.creds.id_token: %s", user_id_token)
+        logger.debug("self.creds: %s", self.creds)
+        decoded_token = user_id_token.verify_oauth2_token(user_id_token, Request(), audience=os.getenv("GOOGLE_CLIENT_ID"))
+        logger.debug("decoded_otken: %s", decoded_token)
         try:
             user_id = user_info['sub']  # 'sub' is the unique user ID
             return user_id
         except (KeyError, TypeError):
             logger.error("User ID not found in %s", self.creds)
             logger.info("available attributes: %s", dir(self.creds))
-            return str(uuid.uuid4()) # Generate a random ID
-        
+            self.creds = self.creds.refresh(Request())
+            logger.info("Refreshed ID Token:", self.creds.id_token)
+            if not self.creds.id_token:
+                proxy_user_id = str(uuid.uuid4())
+                logger.error("Could not retrieve user ID. Using proxy ID: %s", proxy_user_id)
+                return proxy_user_id # Generate a random ID
+            return self.creds.id_token.get('sub')
 
     def get_user_filepath(self) -> str:
         """
