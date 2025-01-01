@@ -11,7 +11,6 @@ from google_auth_oauthlib.flow import Flow
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from db_utils import export_to_csv
 from email_utils import (
-    get_gmail_credentials,
     get_email_ids,
     get_email,
     get_company_name,
@@ -74,7 +73,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
         msg_id = message["id"]
-        msg = get_email(id=msg_id, gmail_instance=service)
+        msg = get_email(message_id=msg_id, gmail_instance=service)
         # Constructing the object which will be written into db
         message_data["msg_id"] = [msg_id]
         message_data["threadId"] = [message["threadId"]]
