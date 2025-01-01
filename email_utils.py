@@ -1,11 +1,11 @@
-import re
-from email_validator import validate_email, EmailNotValidError
-from installation_utils import get_file_path
+import logging
 import os
+import re
+
+from email_validator import validate_email, EmailNotValidError
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
-import logging
 from auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
