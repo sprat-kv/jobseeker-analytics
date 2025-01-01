@@ -70,10 +70,6 @@ def get_email_ids(query: tuple = None, days_ago: int = 90, gmail_instance=None):
     return {}
 
 
-def get_id(msg):
-    return msg.get("id", None)
-
-
 def get_email_payload(msg):
     return msg.get("payload", None)
 
