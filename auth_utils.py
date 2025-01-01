@@ -32,3 +32,38 @@ class AuthenticatedUser:
         """
         return f"users/{self.user_id}/"
 
+
+def get_user() -> AuthenticatedUser:
+    """Handles the OAuth2 flow and retrieves user credentials."""
+    creds = None
+    logger.info("Checking for existing credentials...")
+    # If modifying these scopes, delete the file token.json.
+    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    CLIENT_SECRETS_FILE = "credentials.json"
+
+    # Try to load existing credentials from token.json
+    if os.path.exists('token.json'):
+        logger.info("Loading existing credentials...")
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            logger.info("Refreshing expired credentials...")
+            creds.refresh(Request())
+        else:
+            logger.info("No valid credentials found. Redirecting to authorization URL...")
+            flow = Flow.from_client_secrets_file(
+                CLIENT_SECRETS_FILE, SCOPES, 
+                redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
+            )
+            authorization_url, state = flow.authorization_url(prompt="consent")
+            logger.info("Authorization URL: %s", authorization_url)
+            logger.info("State: %s", state)
+            return authorization_url  # Return the authorization URL for user to visit
+
+    # Save credentials for the next run
+    with open('token.json', 'w', encoding='utf-8') as token_file:
+        logger.info("Saving credentials...")
+        token_file.write(creds.to_json())
+
+    return AuthenticatedUser(creds)

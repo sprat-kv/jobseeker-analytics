@@ -20,7 +20,7 @@ from email_utils import (
     get_email_domain_from_address,
     get_email_from_address,
 )
-from auth_utils import AuthenticatedUser
+from auth_utils import AuthenticatedUser, get_user
 
 app = FastAPI()
 # Set up Jinja2 templates
@@ -51,16 +51,9 @@ async def processing(request: Request):
 async def download_file(user_id: str):
     # TODO: get authenticated user object from user_id
     logger.info(f"Downloading from file_path")
-    # Define the safe root directory
-    safe_root = os.path.abspath("/opt/render/project/src")
-    # Normalize the file path
-    normalized_path = os.path.normpath(os.path.join(safe_root, file_path))
-    # Check if the normalized path is within the safe root directory
-    if not normalized_path.startswith(safe_root):
-        logger.error(f"Attempt to access unauthorized file: {file_path}")
-        raise Exception("Unauthorized file access")
+    file_path = AuthenticatedUser(user_id).filepath
     # Return the file for download
-    return FileResponse(normalized_path)
+    return FileResponse(file_path)
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished

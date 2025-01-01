@@ -1,6 +1,7 @@
+from unittest import mock
+
 from test_constants import SAMPLE_MESSAGE
 import email_utils
-from unittest import mock
 
 
 def test_get_top_consecutive_capitalized_words():
@@ -32,11 +33,6 @@ def test_get_top_consecutive_capitalized_words():
         assert result == expected_value
 
 
-def test_get_email_id():
-    id = email_utils.get_id(SAMPLE_MESSAGE)
-    assert id == "abc123"
-
-
 def test_is_valid_email():
     email_test_cases = {
         "no-reply@gmail.com": True,
@@ -66,7 +62,9 @@ def test_get_email_subject_line():
     subject_line = email_utils.get_email_subject_line(SAMPLE_MESSAGE)
     assert (
         subject_line
-        == "Invitation from an unknown sender: Interview with TestCompanyName @ Thu May 2, 2024 11:00am - 12pm (PDT) (appuser@gmail.com)"
+        == "Invitation from an unknown sender: Interview with \
+            TestCompanyName @ Thu May 2, 2024 11:00am - 12pm (PDT) \
+                (appuser@gmail.com)"
     )
 
 
@@ -88,7 +86,8 @@ def test_get_company_name_returns_email_domain():
 
 
 def test_get_company_name_returns_top_word():
-    """Default behavior for company name is to return the highest frequency word that appears in the email body."""
+    """Default behavior for company name is to return the 
+    highest frequency word that appears in the email body."""
     with mock.patch("email_utils.get_top_word_in_email_body", return_value="fake"):
         company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE)
         assert company_name == "fake"

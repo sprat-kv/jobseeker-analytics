@@ -10,41 +10,6 @@ from auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
 
-def get_user() -> AuthenticatedUser:
-    """Handles the OAuth2 flow and retrieves user credentials."""
-    creds = None
-    logger.info("Checking for existing credentials...")
-    # If modifying these scopes, delete the file token.json.
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-    CLIENT_SECRETS_FILE = "credentials.json"
-
-    # Try to load existing credentials from token.json
-    if os.path.exists('token.json'):
-        logger.info("Loading existing credentials...")
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            logger.info("Refreshing expired credentials...")
-            creds.refresh(Request())
-        else:
-            logger.info("No valid credentials found. Redirecting to authorization URL...")
-            flow = Flow.from_client_secrets_file(
-                CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
-            )
-            authorization_url, state = flow.authorization_url(prompt="consent")
-            logger.info("Authorization URL: %s", authorization_url)
-            logger.info("State: %s", state)
-            return authorization_url  # Return the authorization URL for user to visit
-
-    # Save credentials for the next run
-    with open('token.json', 'w') as token_file:
-        logger.info("Saving credentials...")
-        token_file.write(creds.to_json())
-
-    return AuthenticatedUser(creds)
-    
-
 
 def is_automated_email(email: str) -> bool:
     """
@@ -84,9 +49,10 @@ def is_valid_email(email: str) -> bool:
         return False
 
 
-def get_email(id: str, gmail_instance=None):
+def get_email(message_id: str, gmail_instance=None):
     if gmail_instance:
-        return gmail_instance.users().messages().get(userId="me", id=id).execute()
+        return gmail_instance.users().messages().get(userId="me", id=message_id).execute()
+    return {}
 
 
 def get_email_ids(query: tuple = None, days_ago: int = 90, gmail_instance=None):
@@ -101,6 +67,7 @@ def get_email_ids(query: tuple = None, days_ago: int = 90, gmail_instance=None):
             )
             .execute()
         )
+    return {}
 
 
 def get_id(msg):
@@ -130,7 +97,7 @@ def get_email_subject_line(msg):
         email_headers = get_email_headers(msg)
         if email_headers:
             for header in email_headers:
-                key = header.get("name")  # convert to dict for O(1) lookup ?
+                key = header.get("name")
                 if key == "Subject":
                     return header.get("value", "")
     except Exception as e:
