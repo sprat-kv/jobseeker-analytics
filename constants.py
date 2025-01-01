@@ -1,3 +1,7 @@
+"""
+This file contains the main constants used in the application.
+"""
+
 QUERY_APPLIED_EMAIL_FILTER = (
     '(subject:"thank" AND from:"no-reply@ashbyhq.com") OR '
     '(subject:"thank" AND from:"careers@") OR '
