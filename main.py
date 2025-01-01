@@ -64,7 +64,7 @@ async def download_file(user_id: str):
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
-    logger.info(f"user_id:{user.user_id} fetch_emails")
+    logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
     results = get_email_ids(
         query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
@@ -109,17 +109,17 @@ def fetch_emails(user: AuthenticatedUser) -> None:
 @app.get("/get-jobs")
 def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
-    logger.info(f"Request to get_jobs: {request}")
+    logger.info("Request to get_jobs: %s", request)
     code = request.query_params.get("code")
     if not code:
         # If no code, redirect the user to the authorization URL
         user = get_user()
-        logger.info(f"Redirecting to {authorization_url}")
+        logger.info("Redirecting to %s", user.creds)
         response = RedirectResponse(url=user.creds)
         
-        logger.info(f"Response location: {response.headers['Location']}")
-        logger.info(f"Status Code: {response.status_code}")
-        logger.info(f"Headers: {response.headers}")
+        logger.info("Response location: %s", response.headers["location"])
+        logger.info("Status Code: %s", response.status_code)
+        logger.info("Headers: %s", response.headers)")
         return response
 
     # If modifying these scopes, delete the file token.json.

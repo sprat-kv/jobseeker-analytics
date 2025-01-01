@@ -33,8 +33,8 @@ def get_user() -> AuthenticatedUser:
                 CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
             )
             authorization_url, state = flow.authorization_url(prompt="consent")
-            logger.info(f"Authorization URL: {authorization_url}")
-            logger.info(f"State: {state}")
+            logger.info("Authorization URL: %s", authorization_url)
+            logger.info("State: %s", state)
             return authorization_url  # Return the authorization URL for user to visit
 
     # Save credentials for the next run
