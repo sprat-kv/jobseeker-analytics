@@ -103,30 +103,33 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
     logger.info("Request to get_jobs: %s", request)
     code = request.query_params.get("code")
+
+    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    CLIENT_SECRETS_FILE = "credentials.json"
+    REDIRECT_URI = "https://jobseeker-analytics.onrender.com/get-jobs"
+
+    flow = Flow.from_client_secrets_file(
+        CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
+    )
+
     if not code:
         # If no code, redirect the user to the authorization URL
-        user = get_user()
-        logger.info("Redirecting to %s", user.creds)
-        response = RedirectResponse(url=user.creds)
+        authorization_url, state = flow.authorization_url(prompt="consent")
+        logger.info("Redirecting to %s", authorization_url)
+        response = RedirectResponse(url=authorization_url)
         
         logger.info("Response location: %s", response.headers["location"])
         logger.info("Status Code: %s", response.status_code)
         logger.info("Headers: %s", response.headers)
         return response
 
-    # If modifying these scopes, delete the file token.json.
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
-    CLIENT_SECRETS_FILE = "credentials.json"
-
     # Exchange the authorization code for credentials
-    flow = Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, SCOPES, redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
-    )
     flow.fetch_token(authorization_response=str(request.url))
     
     creds = flow.credentials
     user = AuthenticatedUser(creds)
     # Save the credentials for the next run in user's directory
+    os.makedirs(user.filepath, exist_ok=True)
     with open(f"{user.filepath}/token.json", "w", encoding="utf-8") as token:
         token.write(creds.to_json())
 
@@ -134,11 +137,10 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
         background_tasks.add_task(fetch_emails, user)
         # Redirect to a temporary page indicating job processing
         return RedirectResponse(url="/processing")
-
-        # Redirect to a download page
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         logger.error("An error occurred: %s" % error)
+        return HTMLResponse(content=f"An error occurred: {error}", status_code=500)
 
 @app.get("/success")
 def success():
