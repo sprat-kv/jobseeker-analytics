@@ -1,5 +1,6 @@
 import logging
 import os
+import uuid
 
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
@@ -34,8 +35,8 @@ class AuthenticatedUser:
             user_id = user_info['sub']  # 'sub' is the unique user ID
             return user_id
         except (KeyError, TypeError):
-            logger.error("User ID not found in %s", user_info)
-            return None
+            logger.error("User ID not found in %s", self.creds)
+            return str(uuid.uuid4()) # Generate a random ID
         
 
     def get_user_filepath(self) -> str:
