@@ -33,7 +33,7 @@ class AuthenticatedUser:
         try:
             user_id = user_info['sub']  # 'sub' is the unique user ID
             return user_id
-        except KeyError, TypeError:
+        except (KeyError, TypeError):
             logger.error("User ID not found in %s", user_info)
             return None
         
