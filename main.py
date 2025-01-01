@@ -112,7 +112,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
         
         logger.info("Response location: %s", response.headers["location"])
         logger.info("Status Code: %s", response.status_code)
-        logger.info("Headers: %s", response.headers)")
+        logger.info("Headers: %s", response.headers)
         return response
 
     # If modifying these scopes, delete the file token.json.

@@ -1,4 +1,7 @@
+import logging
 from google.oauth2.credentials import Credentials
+
+logger = logging.getLogger(__name__)
 
 class AuthenticatedUser:
     """
