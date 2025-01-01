@@ -52,7 +52,7 @@ def get_user() -> AuthenticatedUser:
     creds = None
     logger.info("Checking for existing credentials...")
     # If modifying these scopes, delete the file token.json.
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly", "openid"]
     CLIENT_SECRETS_FILE = "credentials.json"
 
     # Try to load existing credentials from token.json
