@@ -62,8 +62,9 @@ def get_user() -> AuthenticatedUser:
     creds = None
     logger.info("Checking for existing credentials...")
     # If modifying these scopes, delete the file token.json.
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly", "openid"]
+    SCOPES = json.loads(os.getenv("GOOGLE_SCOPES"))
     CLIENT_SECRETS_FILE = "credentials.json"
+    REDIRECT_URI = os.getenv("REDIRECT_URI")
 
     # Try to load existing credentials from token.json
     if os.path.exists('token.json'):
@@ -78,7 +79,7 @@ def get_user() -> AuthenticatedUser:
             logger.info("No valid credentials found. Redirecting to authorization URL...")
             flow = Flow.from_client_secrets_file(
                 CLIENT_SECRETS_FILE, SCOPES, 
-                redirect_uri="https://jobseeker-analytics.onrender.com/get-jobs"
+                redirect_uri=REDIRECT_URI
             )
             authorization_url, state = flow.authorization_url(prompt="consent")
             logger.info("Authorization URL: %s", authorization_url)

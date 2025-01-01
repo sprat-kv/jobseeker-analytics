@@ -1,4 +1,5 @@
 import os.path
+import json
 import logging
 import datetime
 from urllib.parse import urlencode
@@ -50,7 +51,7 @@ async def processing(request: Request):
 async def download_file(user_id: str):
     # TODO: get authenticated user object from user_id
     logger.info("Downloading from file_path")
-    file_path = AuthenticatedUser(user_id).filepath
+    file_path = AuthenticatedUser(user_id).filepath # TODO: use creds isntead of user_id
     # Return the file for download
     return FileResponse(file_path)
 
@@ -105,9 +106,9 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     code = request.query_params.get("code")
     logger.debug("Code: %s", code)
 
-    SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+    SCOPES = json.loads(os.getenv("GOOGLE_SCOPES"))
     CLIENT_SECRETS_FILE = "credentials.json"
-    REDIRECT_URI = "https://jobseeker-analytics.onrender.com/get-jobs"
+    REDIRECT_URI = os.getenv("REDIRECT_URI")
 
     flow = Flow.from_client_secrets_file(
         CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
