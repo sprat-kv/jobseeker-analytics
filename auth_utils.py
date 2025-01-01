@@ -1,7 +1,12 @@
-import os
 from google.oauth2.credentials import Credentials
 
 class AuthenticatedUser:
+    """
+    The AuthenticatedUser class is used to 
+    store information about the user. This
+    class is instantiated after the user has
+    successfully authenticated with Google.
+    """
     def __init__(self, creds: Credentials):
         self.creds = creds
         self.user_id = self.get_user_id()
@@ -27,5 +32,3 @@ class AuthenticatedUser:
         """
         return f"users/{self.user_id}/"
 
-        
-    
