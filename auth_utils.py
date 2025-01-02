@@ -74,9 +74,13 @@ def get_user() -> AuthenticatedUser:
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
 
     if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
+        if not creds.valid:
             logger.info("Refreshing expired credentials...")
             creds.refresh(Request())
+            # Save refreshed credentials for the next run
+            with open('token.json', 'w', encoding='utf-8') as token_file:
+                logger.info("Saving credentials...")
+                token_file.write(creds.to_json())
         else:
             logger.info("No valid credentials found. Redirecting to authorization URL...")
             flow = Flow.from_client_secrets_file(
@@ -87,10 +91,5 @@ def get_user() -> AuthenticatedUser:
             logger.info("Authorization URL: %s", authorization_url)
             logger.info("State: %s", state)
             return authorization_url  # Return the authorization URL for user to visit
-
-    # Save credentials for the next run
-    with open('token.json', 'w', encoding='utf-8') as token_file:
-        logger.info("Saving credentials...")
-        token_file.write(creds.to_json())
 
     return AuthenticatedUser(creds)
