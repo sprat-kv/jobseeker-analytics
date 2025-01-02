@@ -2,6 +2,8 @@ import logging
 import os
 import uuid
 
+from constants import SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, GOOGLE_CLIENT_ID
+
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
@@ -34,7 +36,7 @@ class AuthenticatedUser:
         user_id_token = self.creds.id_token
         logger.debug("self.creds.id_token: %s", user_id_token)
         logger.debug("self.creds: %s", self.creds)
-        decoded_token = user_id_token.verify_oauth2_token(user_id_token, Request(), audience=os.getenv("GOOGLE_CLIENT_ID"))
+        decoded_token = id_token.verify_oauth2_token(user_id_token, Request(), audience=GOOGLE_CLIENT_ID)
         logger.debug("decoded_otken: %s", decoded_token)
         try:
             user_id = user_info['sub']  # 'sub' is the unique user ID
@@ -61,10 +63,6 @@ def get_user() -> AuthenticatedUser:
     """Handles the OAuth2 flow and retrieves user credentials."""
     creds = None
     logger.info("Checking for existing credentials...")
-    # If modifying these scopes, delete the file token.json.
-    SCOPES = json.loads(os.getenv("GOOGLE_SCOPES"))
-    CLIENT_SECRETS_FILE = "credentials.json"
-    REDIRECT_URI = os.getenv("REDIRECT_URI")
 
     # Try to load existing credentials from token.json
     if os.path.exists('token.json'):

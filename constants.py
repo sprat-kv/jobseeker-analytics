@@ -1,6 +1,13 @@
 """
 This file contains the main constants used in the application.
 """
+import os
+import json
+
+SCOPES = json.loads(os.getenv("GOOGLE_SCOPES").strip("'\""))
+CLIENT_SECRETS_FILE = "credentials.json"
+REDIRECT_URI = os.getenv("REDIRECT_URI")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 QUERY_APPLIED_EMAIL_FILTER = (
     '(subject:"thank" AND from:"no-reply@ashbyhq.com") OR '
