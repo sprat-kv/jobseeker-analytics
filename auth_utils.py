@@ -28,29 +28,33 @@ class AuthenticatedUser:
         Retrieves the user ID from Google OAuth2 credentials.
 
         Parameters:
-        - credentials: The Google OAuth2 credentials object.
 
         Returns:
         - user_id: The unique user ID.
         """
-        user_id_token = self.creds.id_token
-        logger.debug("self.creds.id_token: %s", user_id_token)
-        logger.debug("self.creds: %s", self.creds)
-        decoded_token = id_token.verify_oauth2_token(user_id_token, Request(), audience=GOOGLE_CLIENT_ID)
-        logger.debug("decoded_otken: %s", decoded_token)
         try:
-            user_id = user_info['sub']  # 'sub' is the unique user ID
+            decoded_token = id_token.verify_oauth2_token(self.creds.id_token, Request(), audience=GOOGLE_CLIENT_ID)
+            user_id = decoded_token['sub']  # 'sub' is the unique user ID
             return user_id
         except (KeyError, TypeError):
-            logger.error("User ID not found in %s", self.creds)
-            logger.info("available attributes: %s", dir(self.creds))
             self.creds = self.creds.refresh(Request())
-            logger.info("Refreshed ID Token:", self.creds.id_token)
             if not self.creds.id_token:
                 proxy_user_id = str(uuid.uuid4())
                 logger.error("Could not retrieve user ID. Using proxy ID: %s", proxy_user_id)
                 return proxy_user_id # Generate a random ID
-            return self.creds.id_token.get('sub')
+            if not hasattr(self, '_retry'):
+                self._retry = True
+                return self.get_user_id()
+            else:
+                proxy_user_id = str(uuid.uuid4())
+                logger.error("Could not retrieve user ID after retry. Using proxy ID: %s", proxy_user_id)
+                return proxy_user_id
+        except Exception as e:
+            logger.error("Error verifying ID token: %s", e)
+            proxy_user_id = str(uuid.uuid4())
+            logger.error("Could not verify ID token. Using proxy ID: %s", proxy_user_id)
+            return proxy_user_id # Generate a random ID
+    
 
     def get_user_filepath(self) -> str:
         """
