@@ -48,12 +48,15 @@ async def processing(request: Request):
         return templates.TemplateResponse("processing.html", {"request": request})
 
 @app.get("/download-file")
-async def download_file(user_id: str):
-    # TODO: get authenticated user object from user_id
-    logger.info("Downloading from file_path")
-    file_path = AuthenticatedUser(user_id).filepath # TODO: use creds isntead of user_id
-    # Return the file for download
-    return FileResponse(file_path)
+async def download_file():
+    logger.info("Calling download_file")
+    logger.info("Getting authenticated user")
+    user = await get_user()
+    logger.info("Downloading from filepath %s", user.filepath)
+    if os.path.exists(user.filepath + "/emails.csv"):
+        return FileResponse(user.filepath + "/emails.csv")
+    else:
+        return HTMLResponse(content="File not found :( ", status_code=404)
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
