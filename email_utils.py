@@ -1,12 +1,7 @@
 import logging
-import os
 import re
 
 from email_validator import validate_email, EmailNotValidError
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
-from google.auth.transport.requests import Request
-from auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
 
@@ -204,8 +199,11 @@ def get_top_word_in_email_body(msg_id, msg):
                         )
                         if not top_capitalized_word:
                             if len(cleaned_text) > 0:
-                                return cleaned_text[0]
-                        return top_capitalized_word or cleaned_text[0][0]
+                                try:
+                                    return cleaned_text[0][0]
+                                except IndexError:
+                                    return cleaned_text[0]
+                        return top_capitalized_word
     except Exception as e:
         logger.error("Error getting top word: %s", e)
     return ""
