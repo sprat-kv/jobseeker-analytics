@@ -65,9 +65,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     messages = results.get("messages", [])
 
     # Directory to save the emails
-    output_dir, main_filename = user.filepath.split("/")
-    os.makedirs(output_dir, exist_ok=True)
-    main_filepath = os.path.join(output_dir, main_filename)
+    os.makedirs(user.filepath, exist_ok=True)
 
     emails_data = []
     for message in messages:
@@ -94,7 +92,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
         # Exporting the email data to a CSV file
-        export_to_csv(main_filepath, message_data)
+        export_to_csv(user.filepath, user.user_id, message_data)
     api_call_finished = True 
     return
 

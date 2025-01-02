@@ -60,7 +60,7 @@ class AuthenticatedUser:
         """
         Each user has their own directory to store their data.
         """
-        return f"users/{self.user_id}/"
+        return f"users/{self.user_id}"
 
 
 def get_user() -> AuthenticatedUser:
