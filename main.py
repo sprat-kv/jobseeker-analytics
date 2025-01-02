@@ -104,13 +104,13 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
     logger.info("Request to get_jobs: %s", request)
     code = request.query_params.get("code")
-    google_scopes = os.getenv("GOOGLE_SCOPES")
+    SCOPES = os.getenv("GOOGLE_SCOPES").strip("'\"")
     logger.debug("Code: %s", code)
     logger.debug("env variables sc: %s", os.getenv("GOOGLE_SCOPES"))
     logger.debug("env variable red: %s", os.getenv("REDIRECT_URI"))
     logger.debug("env variable scope with .get: %s", os.environ.get("GOOGLE_SCOPES"))
     try:
-        SCOPES = json.loads(google_scopes)
+        SCOPES = json.loads(SCOPES)
         logger.debug("SCOPES: %s", SCOPES)
     except json.JSONDecodeError as e:
         logger.error("Error decoding JSON: %s", e)
