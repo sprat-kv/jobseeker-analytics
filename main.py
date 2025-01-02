@@ -143,7 +143,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     except HttpError as error:
         # TODO(developer) - Handle errors from gmail API.
         logger.error("An error occurred: %s" % error)
-        return HTMLResponse(content=f"An error occurred: {error}", status_code=500)
+        return HTMLResponse(content="An error occurred, sorry!", status_code=500)
 
 @app.get("/success")
 def success():
