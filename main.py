@@ -104,10 +104,17 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
     logger.info("Request to get_jobs: %s", request)
     code = request.query_params.get("code")
+    google_scopes = os.getenv("GOOGLE_SCOPES")
     logger.debug("Code: %s", code)
     logger.debug("env variables sc: %s", os.getenv("GOOGLE_SCOPES"))
     logger.debug("env variable red: %s", os.getenv("REDIRECT_URI"))
-    SCOPES = json.loads(os.getenv("GOOGLE_SCOPES"))
+    logger.debug("env variable scope with .get: %s", os.environ.get("GOOGLE_SCOPES"))
+    try:
+        SCOPES = json.loads(google_scopes)
+        logger.debug("SCOPES: %s", SCOPES)
+    except json.JSONDecodeError as e:
+        logger.error("Error decoding JSON: %s", e)
+        logger.error("repr(google_scopes)): %s", repr(google_scopes))
     CLIENT_SECRETS_FILE = "credentials.json"
     REDIRECT_URI = os.getenv("REDIRECT_URI")
 
