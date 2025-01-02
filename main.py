@@ -1,4 +1,4 @@
-import os.path
+import os
 import json
 import logging
 import datetime
@@ -105,7 +105,8 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks):
     logger.info("Request to get_jobs: %s", request)
     code = request.query_params.get("code")
     logger.debug("Code: %s", code)
-
+    logger.debug("env variables sc: %s", os.getenv("GOOGLE_SCOPES"))
+    logger.debug("env variable red: %s", os.getenv("REDIRECT_URI"))
     SCOPES = json.loads(os.getenv("GOOGLE_SCOPES"))
     CLIENT_SECRETS_FILE = "credentials.json"
     REDIRECT_URI = os.getenv("REDIRECT_URI")
