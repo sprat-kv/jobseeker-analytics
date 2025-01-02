@@ -8,7 +8,7 @@
         // Polling every 3 seconds to check if the file is ready for download
         function checkFileReady() {
             const file = "{{ file }}"; // File path from the URL
-            fetch(`/processing?file=${file}`)
+            fetch(`/processing`)
                 .then(response => {
                     if (response.redirected) {
                         // If the response is redirected, the file is ready
