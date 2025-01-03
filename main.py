@@ -9,14 +9,15 @@ from urllib.parse import urlencode
 from fastapi import FastAPI, Request, Query, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from fastapi_sessions import SessionCookie, SessionInfo
-from fastapi_sessions.backends import InMemoryBackend
+from starlette.middleware.sessions import SessionMiddleware
+from app.session.session_layer import validate_session
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
 
 from constants import QUERY_APPLIED_EMAIL_FILTER, SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, COOKIE_SECRET
+from auth_utils import AuthenticatedUser, get_user, validate_google_token
 from db_utils import export_to_csv
 from email_utils import (
     get_email_ids,
@@ -27,9 +28,10 @@ from email_utils import (
     get_email_domain_from_address,
     get_email_from_address,
 )
-from auth_utils import AuthenticatedUser, get_user, validate_google_token
+from session.session_layer import create_random_session_string, validate_session, is_token_expired
 
 app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key=COOKIE_SECRET)
 
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="templates")
@@ -39,21 +41,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
 
 api_call_finished = False
 
-# Define the session data
-class SessionData(BaseModel):
-    user_id: str  # Store only the Google `sub` (unique user ID)
-
-
-# Configure session cookie
-session_cookie = SessionCookie(
-    name="session",
-    secret_key=COOKIE_SECRET,
-    backend=InMemoryBackend(),
-    data_model=SessionData,
-    scheme_name="Google Auth Session",
-    auto_error=False,
-)
-
 
 @app.get("/")
 async def root():
@@ -61,13 +48,10 @@ async def root():
 
 
 @app.get("/processing", response_class=HTMLResponse)
-async def processing(session_info: Optional[SessionInfo] = Depends(session_cookie)):
+async def processing(request: Request, is_valid_session: bool = Depends(validate_session)):
     global api_call_finished
-    if session_info is None:
-        raise HTTPException(
-            status_code=403,
-            detail="Oops! Try logging in again to access this page.",
-        )
+    if not is_valid_session:
+        return RedirectResponse("/logout", status_code=303)
     if api_call_finished:
         logger.info("user_id: %s processing complete", session_info[1].user_id)
         return templates.TemplateResponse("success.html")
@@ -78,12 +62,9 @@ async def processing(session_info: Optional[SessionInfo] = Depends(session_cooki
 
 
 @app.get("/download-file")
-async def download_file(session_info: Optional[SessionInfo] = Depends(session_cookie)):
-    if session_info is None:
-        raise HTTPException(
-            status_code=403,
-            detail="Oops! Try logging in again to download your file.",
-        )
+async def download_file(request: Request, is_valid_session: bool = Depends(validate_session)):
+    if not is_valid_session:
+        return RedirectResponse("/logout", status_code=303)
     directory = get_user_filepath(session_info[1].user_id)
     filename = "emails.csv"
     filepath = f"{directory}/{filename}"
@@ -92,8 +73,14 @@ async def download_file(session_info: Optional[SessionInfo] = Depends(session_co
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
 
+@app.get("/logout")
+async def logout(request: Request, response: RedirectResponse):
+    request.session.clear()
+    response.delete_cookie(key="Authorization")
+    return RedirectResponse("/login", status_code=303)
 
-def fetch_emails(user: AuthenticatedUser, session_info: Optional[SessionInfo] = Depends(session_cookie)) -> None:
+
+def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
     logger.info("user_id:%s fetch_emails", user.user_id)
     if session_info is None:
@@ -141,8 +128,8 @@ def fetch_emails(user: AuthenticatedUser, session_info: Optional[SessionInfo] = 
     api_call_finished = True
 
 # Define the route for OAuth2 flow
-@app.get("/get-jobs")
-def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: Optional[SessionInfo] = Depends(session_cookie)):
+@app.get("/login")
+def login(request: Request, background_tasks: BackgroundTasks, response: RedirectResponse):
     """Handles the redirect from Google after the user grants consent."""
     try:
         code = request.query_params.get("code")
@@ -165,16 +152,10 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: 
         creds = flow.credentials
         user = AuthenticatedUser(creds)
 
-        # Handle existing session
-        old_session = None
-        if session_info:
-            old_session = session_info[0]
-            logger.info("user_id:%s found old session", user.user_id)
-        
-        # Create a new session
-        session_data = SessionData(user_id=user.user_id)
-        await session_cookie.create_session(session_data, response, old_session)
-        logger.info("user_id:%s create_session", user.user_id)
+        # Create a session for the user
+        session_id = request.session["session_id"] = create_random_session_string()
+        request.session["token_expiry"] = some_expiry_time  # Token expiry logic
+        response.set_cookie(key="Authorization", value=session_id)
 
         background_tasks.add_task(fetch_emails, user)
         logger.info("user_id:%s background_tasks.add_task fetch_emails", user.user_id)
