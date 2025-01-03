@@ -92,9 +92,15 @@ async def download_file(session_info: Optional[SessionInfo] = Depends(session_co
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
 
-def fetch_emails(user: AuthenticatedUser) -> None:
+
+def fetch_emails(user: AuthenticatedUser, session_info: Optional[SessionInfo] = Depends(session_cookie)) -> None:
     global api_call_finished
     logger.info("user_id:%s fetch_emails", user.user_id)
+    if session_info is None:
+        raise HTTPException(
+            status_code=403,
+            detail="Oops! Try logging in again to refresh your email data.",
+        )
     service = build("gmail", "v1", credentials=user.creds)
     results = get_email_ids(
         query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
