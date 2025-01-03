@@ -16,7 +16,7 @@ from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
 
 from constants import QUERY_APPLIED_EMAIL_FILTER, SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, COOKIE_SECRET
-from auth_utils import AuthenticatedUser, get_user, validate_google_token
+from auth_utils import AuthenticatedUser, get_user
 from db_utils import export_to_csv
 from email_utils import (
     get_email_ids,
