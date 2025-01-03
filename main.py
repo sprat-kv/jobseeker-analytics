@@ -6,7 +6,7 @@ import requests
 
 from urllib.parse import urlencode
 
-from fastapi import FastAPI, Request, Query, BackgroundTasks
+from fastapi import FastAPI, Request, Query, BackgroundTasks, Depends
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
