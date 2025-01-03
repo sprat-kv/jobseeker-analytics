@@ -137,56 +137,54 @@ def fetch_emails(user: AuthenticatedUser, session_info: Optional[SessionInfo] = 
         # Exporting the email data to a CSV file
         export_to_csv(user.filepath, user.user_id, message_data)
         api_call_finished = True    # TODO: remove after debugging. only processes 1 email now
+        return
     api_call_finished = True
 
-# Define the route for downloading CSV
+# Define the route for OAuth2 flow
 @app.get("/get-jobs")
 def get_jobs(request: Request, background_tasks: BackgroundTasks):
     """Handles the redirect from Google after the user grants consent."""
-    logger.info("Request to get_jobs: %s", request)
-    code = request.query_params.get("code")
-    logger.debug("Code: %s", code)
-
-    flow = Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
-    )
-
-    if not code:
-        # If no code, redirect the user to the authorization URL
-        authorization_url, state = flow.authorization_url(prompt="consent")
-        logger.info("Redirecting to %s", authorization_url)
-        response = RedirectResponse(url=authorization_url)
-        
-        logger.info("Response location: %s", response.headers["location"])
-        logger.info("Status Code: %s", response.status_code)
-        logger.info("Headers: %s", response.headers)
-        return response
-
-    # Exchange the authorization code for credentials
-    flow.fetch_token(authorization_response=str(request.url))
-    
-    creds = flow.credentials
-    logger.debug("Credentials fetched: %s", creds)
-    user = AuthenticatedUser(creds)
-    logger.debug("User: %s", user)
-    logger.debug("User ID: %s", user.user_id)
-    logger.debug("User Filepath: %s", user.filepath)
-    # Save the credentials for the next run in user's directory
-    os.makedirs(user.filepath, exist_ok=True)
-    with open(f"{user.filepath}/token.json", "w", encoding="utf-8") as token:
-        token.write(creds.to_json())
-
     try:
+        code = request.query_params.get("code")
+        flow = Flow.from_client_secrets_file(
+            CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
+        )
+        if not code:
+            # If no code, redirect the user to the authorization URL
+            authorization_url, state = flow.authorization_url(prompt="consent")
+            logger.info("Redirecting to %s", authorization_url)
+            response = RedirectResponse(url=authorization_url)
+            
+            logger.info("Response location: %s", response.headers["location"])
+            logger.info("Status Code: %s", response.status_code)
+            logger.info("Headers: %s", response.headers)
+            return response
+
+        # Exchange the authorization code for credentials
+        flow.fetch_token(authorization_response=str(request.url))
+        creds = flow.credentials
+        user = AuthenticatedUser(creds)
+
+        # Handle existing session
+        old_session = None
+        if session_info:
+            old_session = session_info[0]
+            logger.info("user_id:%s found old session")
+        
+        # Create a new session
+        session_data = SessionData(user_id=user.user_id)
+        await session_cookie.create_session(session_data, response, old_session)
+        logger.info("user_id:%s create_session", user.user_id)
+
         background_tasks.add_task(fetch_emails, user)
-        # Redirect to a temporary page indicating job processing
-        return RedirectResponse(url="/processing")
-    except HttpError as error:
-        # TODO(developer) - Handle errors from gmail API.
-        logger.error("An error occurred: %s" % error)
+        logger.info("user_id:%s background_tasks.add_task fetch_emails", user.user_id)
+
+        return RedirectResponse(url="/processing", status_code=303)
+    except Exception as e:
+        logger.error("user_id:%s an error occurred: %s" % user_id, e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
 
-@app.get("/success")
-def success():
+
     today = str(datetime.date.today())
 
     html_content = f"""
