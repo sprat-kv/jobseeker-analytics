@@ -142,7 +142,7 @@ def fetch_emails(user: AuthenticatedUser, session_info: Optional[SessionInfo] = 
 
 # Define the route for OAuth2 flow
 @app.get("/get-jobs")
-def get_jobs(request: Request, background_tasks: BackgroundTasks):
+def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: Optional[SessionInfo] = Depends(session_cookie)):
     """Handles the redirect from Google after the user grants consent."""
     try:
         code = request.query_params.get("code")
