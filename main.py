@@ -169,7 +169,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: 
         old_session = None
         if session_info:
             old_session = session_info[0]
-            logger.info("user_id:%s found old session")
+            logger.info("user_id:%s found old session", user.user_id)
         
         # Create a new session
         session_data = SessionData(user_id=user.user_id)
@@ -181,7 +181,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: 
 
         return RedirectResponse(url="/processing", status_code=303)
     except Exception as e:
-        logger.error("user_id:%s an error occurred: %s" % user_id, e)
+        logger.error("user_id:%s an error occurred: %s", user_id, e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
 
 
