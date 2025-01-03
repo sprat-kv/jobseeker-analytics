@@ -47,28 +47,28 @@ async def root():
 
 
 @app.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, is_valid_session: bool = Depends(validate_session)):
+async def processing(request: Request, user_id: str = Depends(validate_session)):
     global api_call_finished
-    if not is_valid_session:
+    if not user_id:
         return RedirectResponse("/logout", status_code=303)
     if api_call_finished:
-        logger.info("user_id: %s processing complete", session_info[1].user_id)
+        logger.info("user_id: %s processing complete", user_id)
         return templates.TemplateResponse("success.html")
     else:
-        logger.info("Processing not complete for file")
+        logger.info("user_id: %s processing not complete for file", user_id)
         # Show a message that the job is still processing
         return templates.TemplateResponse("processing.html")
 
 
 @app.get("/download-file")
-async def download_file(request: Request, is_valid_session: bool = Depends(validate_session)):
-    if not is_valid_session:
+async def download_file(request: Request, user_id: str = Depends(validate_session)):
+    if not user_id:
         return RedirectResponse("/logout", status_code=303)
-    directory = get_user_filepath(session_info[1].user_id)
+    directory = get_user_filepath(user_id)
     filename = "emails.csv"
     filepath = f"{directory}/{filename}"
     if os.path.exists(filepath):
-        logger.info("user_id:%s downloading from filepath %s" % session_info[1].user_id, filepath)
+        logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
 
@@ -82,11 +82,6 @@ async def logout(request: Request, response: RedirectResponse):
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
     logger.info("user_id:%s fetch_emails", user.user_id)
-    if session_info is None:
-        raise HTTPException(
-            status_code=403,
-            detail="Oops! Try logging in again to refresh your email data.",
-        )
     service = build("gmail", "v1", credentials=user.creds)
     results = get_email_ids(
         query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
@@ -156,6 +151,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
         request.session["token_expiry"] = creds.expiry  # Token expiry logic
+        request.session["user_id"] = user.user_id
         response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
 
         background_tasks.add_task(fetch_emails, user)
@@ -168,13 +164,10 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
 
 
 @app.get("/success", response_class=HTMLResponse)
-def success(request: Request, session_info: Optional[SessionInfo] = Depends(session_cookie)):
-    if session_info is None:
-        raise HTTPException(
-            status_code=403,
-            detail="Oops! Try logging in again to view your file.",
-        )
-    
+def success(request: Request, user_id: str = Depends(validate_session)):
+    if not user_id:
+        return RedirectResponse("/logout", status_code=303)
+
     today = str(datetime.date.today())
 
     html_content = f"""
@@ -192,7 +185,7 @@ def success(request: Request, session_info: Optional[SessionInfo] = Depends(sess
     </body>
     </html>
     """
-    return HTMLResponse(content=html_content, status_code=200, headers={"session_info": session_info})
+    return HTMLResponse(content=html_content, status_code=200)
 
 
 # Run the app using Uvicorn
