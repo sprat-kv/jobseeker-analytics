@@ -154,7 +154,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
         request.session["token_expiry"] = some_expiry_time  # Token expiry logic
-        response.set_cookie(key="Authorization", value=session_id)
+        response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
 
         background_tasks.add_task(fetch_emails, user)
         logger.info("user_id:%s background_tasks.add_task fetch_emails", user.user_id)
