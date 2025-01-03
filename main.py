@@ -59,17 +59,22 @@ session_cookie = SessionCookie(
 async def root():
     return {"message": "Hello from Jobba the Huntt!"}
 
-@app.get("/processing")
-async def processing(request: Request):
+
+@app.get("/processing", response_class=HTMLResponse)
+async def processing(session_info: Optional[SessionInfo] = Depends(session_cookie)):
     global api_call_finished
+    if session_info is None:
+        raise HTTPException(
+            status_code=403,
+            detail="Oops! Try logging in again to access this page.",
+        )
     if api_call_finished:
-        logger.info("Processing complete for file")
-        # Automatically redirect to the success page after processing is done
-        return RedirectResponse("/success")
+        logger.info("user_id: %s processing complete", session_info[1].user_id)
+        return templates.TemplateResponse("success.html")
     else:
         logger.info("Processing not complete for file")
         # Show a message that the job is still processing
-        return templates.TemplateResponse("processing.html", {"request": request})
+        return templates.TemplateResponse("processing.html")
 
 
 @app.post("/download-file")
