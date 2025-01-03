@@ -1,15 +1,22 @@
-import os
+import datetime
 import json
 import logging
-import datetime
+import os
+import requests
+
 from urllib.parse import urlencode
+
 from fastapi import FastAPI, Request, Query, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from fastapi_sessions import SessionCookie, SessionInfo
+from fastapi_sessions.backends import InMemoryBackend
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
-from constants import QUERY_APPLIED_EMAIL_FILTER, SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI
+
+from constants import QUERY_APPLIED_EMAIL_FILTER, SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, COOKIE_SECRET
 from db_utils import export_to_csv
 from email_utils import (
     get_email_ids,
@@ -20,9 +27,10 @@ from email_utils import (
     get_email_domain_from_address,
     get_email_from_address,
 )
-from auth_utils import AuthenticatedUser, get_user
+from auth_utils import AuthenticatedUser, get_user, validate_google_token
 
 app = FastAPI()
+
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
@@ -30,6 +38,22 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
 
 api_call_finished = False
+
+# Define the session data
+class SessionData(BaseModel):
+    user_id: str  # Store only the Google `sub` (unique user ID)
+
+
+# Configure session cookie
+session_cookie = SessionCookie(
+    name="session",
+    secret_key=COOKIE_SECRET,
+    backend=InMemoryBackend(),
+    data_model=SessionData,
+    scheme_name="Google Auth Session",
+    auto_error=False,
+)
+
 
 @app.get("/")
 async def root():
@@ -47,16 +71,21 @@ async def processing(request: Request):
         # Show a message that the job is still processing
         return templates.TemplateResponse("processing.html", {"request": request})
 
-@app.get("/download-file")
-async def download_file():
-    logger.info("Calling download_file")
-    logger.info("Getting authenticated user")
-    user = await get_user()
-    logger.info("Downloading from filepath %s", user.filepath)
-    if os.path.exists(user.filepath + "/emails.csv"):
-        return FileResponse(user.filepath + "/emails.csv")
-    else:
-        return HTMLResponse(content="File not found :( ", status_code=404)
+
+@app.post("/download-file")
+async def download_file(session_info: Optional[SessionInfo] = Depends(session_cookie)):
+    if session_info is None:
+        raise HTTPException(
+            status_code=403,
+            detail="Oops! Try logging in again to download your file.",
+        )
+    directory = get_user_filepath(session_info[1].user_id)
+    filename = "emails.csv"
+    filepath = f"{directory}/{filename}"
+    if os.path.exists(filepath):
+        logger.info("user_id:%s downloading from filepath %s" % session_info[1].user_id, filepath)
+        return FileResponse(filepath)
+    return HTMLResponse(content="File not found :( ", status_code=404)
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
