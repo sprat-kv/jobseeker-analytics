@@ -10,7 +10,6 @@ from fastapi import FastAPI, Request, Query, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-from app.session.session_layer import validate_session
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
