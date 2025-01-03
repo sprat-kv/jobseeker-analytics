@@ -150,10 +150,12 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         flow.fetch_token(authorization_response=str(request.url))
         creds = flow.credentials
         user = AuthenticatedUser(creds)
-
+        # user the flow response to set an expiry time for the session
+        logging.info("dir(creds): %s", dir(creds))
+        logging.info("creds.expiry: %s", creds.expiry)
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
-        request.session["token_expiry"] = some_expiry_time  # Token expiry logic
+        request.session["token_expiry"] = creds.expiry  # Token expiry logic
         response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
 
         background_tasks.add_task(fetch_emails, user)
