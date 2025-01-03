@@ -1,6 +1,7 @@
 # app/session/session_layer.py
 import logging
 import secrets
+import time
 from datetime import datetime
 from fastapi import Request
 
@@ -37,16 +38,17 @@ def validate_session(request: Request) -> str:
     return user_id
 
 
-def is_token_expired(unix_timestamp: int) -> bool:
+def is_token_expired(iso_expiry: str) -> bool:
     """
-    Converts unix timestamp (which serves as the expiry time of the token) to datetime.
+    Converts ISO format timestamp (which serves as the expiry time of the token) to datetime.
     If the current time is greater than the expiry time, 
     the token is expired.
     """
-    if unix_timestamp:
-        datetime_from_unix = datetime.fromtimestamp(unix_timestamp)
-        current_time = datetime.now()
-        difference_in_minutes = (datetime_from_unix - current_time).total_seconds() / 60
+    if timestamp:
+        unix_expiry = time.mktime(datetime.fromisoformat(iso_expiry).timetuple()) # UTC time
+        datetime_expiry = datetime.fromtimestamp(unix_expiry)
+        datetime_now = time.mktime(datetime.utcnow().timetuple()) # UTC time
+        difference_in_minutes = (datetime_expiry - datetime_now).total_seconds() / 60
         return difference_in_minutes <= 0
     
     return True
