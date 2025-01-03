@@ -3,6 +3,7 @@ import os
 import uuid
 
 from constants import SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, GOOGLE_CLIENT_ID
+from file_utils import get_user_filepath
 
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
@@ -21,7 +22,7 @@ class AuthenticatedUser:
     def __init__(self, creds: Credentials):
         self.creds = creds
         self.user_id = self.get_user_id()
-        self.filepath = self.get_user_filepath()
+        self.filepath = get_user_filepath(self.user_id)
 
     def get_user_id(self) -> str:
         """
@@ -54,7 +55,7 @@ class AuthenticatedUser:
             proxy_user_id = str(uuid.uuid4())
             logger.error("Could not verify ID token. Using proxy ID: %s", proxy_user_id)
             return proxy_user_id # Generate a random ID
-    
+
 
     def get_user_filepath(self) -> str:
         """
