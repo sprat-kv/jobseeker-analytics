@@ -136,8 +136,8 @@ def fetch_emails(user: AuthenticatedUser, session_info: Optional[SessionInfo] = 
 
         # Exporting the email data to a CSV file
         export_to_csv(user.filepath, user.user_id, message_data)
-    api_call_finished = True 
-    return
+        api_call_finished = True    # TODO: remove after debugging. only processes 1 email now
+    api_call_finished = True
 
 # Define the route for downloading CSV
 @app.get("/get-jobs")
