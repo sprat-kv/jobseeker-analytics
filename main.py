@@ -77,7 +77,7 @@ async def processing(session_info: Optional[SessionInfo] = Depends(session_cooki
         return templates.TemplateResponse("processing.html")
 
 
-@app.post("/download-file")
+@app.get("/download-file")
 async def download_file(session_info: Optional[SessionInfo] = Depends(session_cookie)):
     if session_info is None:
         raise HTTPException(
@@ -185,6 +185,14 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: 
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
 
 
+@app.get("/success", response_class=HTMLResponse)
+def success(request: Request, session_info: Optional[SessionInfo] = Depends(session_cookie)):
+    if session_info is None:
+        raise HTTPException(
+            status_code=403,
+            detail="Oops! Try logging in again to view your file.",
+        )
+    
     today = str(datetime.date.today())
 
     html_content = f"""
@@ -202,7 +210,7 @@ def get_jobs(request: Request, background_tasks: BackgroundTasks, session_info: 
     </body>
     </html>
     """
-    return HTMLResponse(content=html_content, status_code=200)
+    return HTMLResponse(content=html_content, status_code=200, headers={"session_info": session_info})
 
 
 # Run the app using Uvicorn
