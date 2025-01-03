@@ -57,13 +57,6 @@ class AuthenticatedUser:
             return proxy_user_id # Generate a random ID
 
 
-    def get_user_filepath(self) -> str:
-        """
-        Each user has their own directory to store their data.
-        """
-        return f"users/{self.user_id}"
-
-
 def get_user() -> AuthenticatedUser:
     """Handles the OAuth2 flow and retrieves user credentials."""
     creds = None
