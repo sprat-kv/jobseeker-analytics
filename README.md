@@ -1,8 +1,19 @@
-# Job Seeker Response Rate Calculator
+# Jobba the Huntt
 
-## Want to beta test? Check out install instructions here: https://plant-colt-383.notion.site/#:~:text=Installation%20Instructions
+## Want to beta test? 
 
-*As a job seeker with a gmail account, I want to be able to calculate  my initial application  response rate with the touch of a button*
+- To beta test, [send me an email](mailto:jobbathehuntt@gmail.com?subject=Jobba%20The%20Huntt%20Installation%20Instructions&body=Subscribe).
+    1. Mention how you heard about Jobba the Huntt (which community, friend’s name)
+    2. I’ll respond as soon as I can to give you access (depends on Google’s beta testing user limits)
+
+## Do you code and want to volunteer?
+- Take a look at the issues [list](https://github.com/lnovitz/jobseeker-analytics/issues) and comment on the issue you're interested in fixing.
+- _Note_: you do not have to know Python.
+- I hope to create a safe environment for contributors to this open source project. Beginners welcome!
+
+## Vision
+
+As a job seeker with a gmail account, I want to be able to calculate  my initial application response rate with the touch of a button
 
 ## Example
 
