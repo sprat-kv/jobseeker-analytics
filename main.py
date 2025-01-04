@@ -153,14 +153,11 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         session_id = request.session["session_id"] = create_random_session_string()
         logger.info("creds.expiry: %s", creds.expiry)
         try:
-            logger.info("datetime.strptime.isoformat() " % datetime.strptime(creds.expiry, "%Y-%m-%d %H:%M:%S.%f").isoformat())
+            logger.info("datetime.strptime.isoformat() " % datetime.datetime.strptime(creds.expiry, "%Y-%m-%d %H:%M:%S.%f").isoformat())
+            token_expiry = datetime.datetime.strptime(creds.expiry, "%Y-%m-%d %H:%M:%S.%f").isoformat()
         except Exception as e:
-            logger.error("creds.expiry.isoformat() failed: %s", e)
-            try:
-                logger.info("str(creds.expiry).isoformat() " % str(creds.expiry).isoformat())
-            except Exception as e:
-                logger.error("creds.expiry.isoformat() failed: %s", e)
-        request.session["token_expiry"] = creds.expiry.isoformat()  # Token expiry logic
+            logger.error("datetime.striptime.isoformat() failed: %s", e)
+        request.session["token_expiry"] = token_expiry  # Token expiry logic
         request.session["user_id"] = user.user_id
 
         response = RedirectResponse(url="/processing", status_code=303)
