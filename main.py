@@ -161,6 +161,12 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         logger.info("code found, starting fetch_token...")
         flow.fetch_token(code=code)
         creds = flow.credentials
+
+        if not creds.valid:
+            logger.info("creds not valid. refreshing...")
+            creds.refresh(Request())
+            return RedirectResponse("/login", status_code=303)
+        
         user = AuthenticatedUser(creds)
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()

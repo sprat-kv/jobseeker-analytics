@@ -34,6 +34,7 @@ class AuthenticatedUser:
         - user_id: The unique user ID.
         """
         try:
+            logger.info("Verifying ID token...")
             decoded_token = id_token.verify_oauth2_token(self.creds.id_token, Request(), audience=GOOGLE_CLIENT_ID)
             user_id = decoded_token['sub']  # 'sub' is the unique user ID
             return user_id
