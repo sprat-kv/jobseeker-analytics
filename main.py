@@ -48,8 +48,10 @@ async def root():
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
+    logging.info("user_id: %s processing", user_id)
     global api_call_finished
     if not user_id:
+        logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
     if api_call_finished:
         logger.info("user_id: %s processing complete", user_id)
@@ -132,6 +134,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
             CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
         )
         if not code:
+            logger.info("No code in request, redirecting to authorization URL")
             # If no code, redirect the user to the authorization URL
             authorization_url, state = flow.authorization_url(prompt="consent")
             logger.info("Redirecting to %s", authorization_url)
@@ -143,12 +146,10 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
             return response
 
         # Exchange the authorization code for credentials
+        logging.info("flow.fetch_token")
         flow.fetch_token(authorization_response=str(request.url))
         creds = flow.credentials
         user = AuthenticatedUser(creds)
-        # user the flow response to set an expiry time for the session
-        logging.info("dir(creds): %s", dir(creds))
-        logging.info("creds.expiry: %s", creds.expiry)
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
         request.session["token_expiry"] = datetime.datetime.strptime(str(creds.expiry).rstrip("Z").split(".")[0], "%Y-%m-%d %H:%M:%S").isoformat()  # Token expiry logic
