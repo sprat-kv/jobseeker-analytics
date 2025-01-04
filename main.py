@@ -55,11 +55,11 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
         return RedirectResponse("/logout", status_code=303)
     if api_call_finished:
         logger.info("user_id: %s processing complete", user_id)
-        return templates.TemplateResponse("success.html")
+        return templates.TemplateResponse("success.html", {"request": request})
     else:
         logger.info("user_id: %s processing not complete for file", user_id)
         # Show a message that the job is still processing
-        return templates.TemplateResponse("processing.html")
+        return templates.TemplateResponse("processing.html", {"request": request})
 
 
 @app.get("/download-file")
