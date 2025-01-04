@@ -153,12 +153,14 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         session_id = request.session["session_id"] = create_random_session_string()
         request.session["token_expiry"] = datetime.datetime.strptime(str(creds.expiry).rstrip("Z").split(".")[0], "%Y-%m-%d %H:%M:%S").isoformat()  # Token expiry logic
         request.session["user_id"] = user.user_id
+
+        response = RedirectResponse(url="/processing", status_code=303)
+        logger.info("user_id:%s set_cookie", user.user_id)
         response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
 
         background_tasks.add_task(fetch_emails, user)
         logger.info("user_id:%s background_tasks.add_task fetch_emails", user.user_id)
-
-        return RedirectResponse(url="/processing", status_code=303)
+        return response
     except Exception as e:
         logger.error("login: an error occurred: %s", e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
