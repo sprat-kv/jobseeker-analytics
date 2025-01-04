@@ -45,10 +45,8 @@ def is_token_expired(iso_expiry: str) -> bool:
     the token is expired.
     """
     if iso_expiry:
-        unix_expiry = time.mktime(datetime.fromisoformat(iso_expiry).timetuple()) # UTC time
-        datetime_expiry = datetime.fromtimestamp(unix_expiry)
-        datetime_now = time.mktime(datetime.utcnow().timetuple()) # UTC time
-        difference_in_minutes = (datetime_expiry - datetime_now).total_seconds() / 60
+        datetime_expiry = datetime.fromisoformat(iso_expiry) # UTC time
+        difference_in_minutes = (datetime_expiry - datetime.datetime.utcnow()).total_seconds() / 60
         return difference_in_minutes <= 0
     
     return True
