@@ -129,10 +129,10 @@ def fetch_emails(user: AuthenticatedUser) -> None:
 def login(request: Request, background_tasks: BackgroundTasks, response: RedirectResponse):
     """Handles the redirect from Google after the user grants consent."""
     code = request.query_params.get("code")
+    flow = Flow.from_client_secrets_file(
+            CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI)
     try:
         if not code:
-            flow = Flow.from_client_secrets_file(
-            CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI)
             logger.info("No code in request, redirecting to authorization URL")
             # If no code, redirect the user to the authorization URL
             authorization_url, state = flow.authorization_url(prompt="consent")
