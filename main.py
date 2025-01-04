@@ -150,7 +150,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         logging.info("creds.expiry: %s", creds.expiry)
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
-        request.session["token_expiry"] = datetime.datetime.strptime(creds.expiry.rstrip("Z").split(".")[0], "%Y-%m-%d %H:%M:%S").isoformat()  # Token expiry logic
+        request.session["token_expiry"] = datetime.datetime.strptime(str(creds.expiry).rstrip("Z").split(".")[0], "%Y-%m-%d %H:%M:%S").isoformat()  # Token expiry logic
         request.session["user_id"] = user.user_id
         response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
 
