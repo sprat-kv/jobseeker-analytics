@@ -159,7 +159,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
 
         return RedirectResponse(url="/processing", status_code=303)
     except Exception as e:
-        logger.error("user_id:%s an error occurred: %s", user_id, e)
+        logger.error("login: an error occurred: %s", e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
 
 
