@@ -57,34 +57,3 @@ class AuthenticatedUser:
             logger.error("Could not verify ID token. Using proxy ID: %s", proxy_user_id)
             return proxy_user_id # Generate a random ID
 
-
-def get_user() -> AuthenticatedUser:
-    """Handles the OAuth2 flow and retrieves user credentials."""
-    creds = None
-    logger.info("Checking for existing credentials...")
-
-    # Try to load existing credentials from token.json
-    if os.path.exists('token.json'):
-        logger.info("Loading existing credentials...")
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-
-    if not creds or not creds.valid:
-        if not creds.valid:
-            logger.info("Refreshing expired credentials...")
-            creds.refresh(Request())
-            # Save refreshed credentials for the next run
-            with open('token.json', 'w', encoding='utf-8') as token_file:
-                logger.info("Saving credentials...")
-                token_file.write(creds.to_json())
-        else:
-            logger.info("No valid credentials found. Redirecting to authorization URL...")
-            flow = Flow.from_client_secrets_file(
-                CLIENT_SECRETS_FILE, SCOPES, 
-                redirect_uri=REDIRECT_URI
-            )
-            authorization_url, state = flow.authorization_url(prompt="consent")
-            logger.info("Authorization URL: %s", authorization_url)
-            logger.info("State: %s", state)
-            return authorization_url  # Return the authorization URL for user to visit
-
-    return AuthenticatedUser(creds)
