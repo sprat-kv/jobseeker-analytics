@@ -44,8 +44,22 @@ api_call_finished = False
 
 @app.get("/")
 async def root():
-    return {"message": "Hello from Jobba the Huntt!"}
-
+    html_content = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Jobba the Huntt</title>
+    </head>
+    <body>
+        <h1>Welcome to Jobba the Huntt!</h1>
+        <p>Want to download your job search with 1 click?</p>
+        <a href="/login">
+            <button>Let's go</button>
+        </a>
+    </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content, status_code=200)
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
@@ -80,7 +94,7 @@ async def logout(request: Request, response: RedirectResponse):
     logger.info("Logging out")
     request.session.clear()
     response.delete_cookie(key="Authorization")
-    return RedirectResponse("/login", status_code=303)
+    return RedirectResponse("/", status_code=303)
 
 
 def fetch_emails(user: AuthenticatedUser) -> None:
@@ -192,6 +206,10 @@ def success(request: Request, user_id: str = Depends(validate_session)):
         <p>Click the button below to download your file.</p>
         <a href="/download-file" download="jobbathehuntt_export_{today}.csv">
             <button>Download File</button>
+        </a>
+        <p>Want to logout? May the hunt be with you</p>
+        <a href="/logout">
+            <button>Logout</button>
         </a>
     </body>
     </html>
