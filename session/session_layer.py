@@ -44,7 +44,7 @@ def is_token_expired(iso_expiry: str) -> bool:
     If the current time is greater than the expiry time, 
     the token is expired.
     """
-    if timestamp:
+    if iso_expiry:
         unix_expiry = time.mktime(datetime.fromisoformat(iso_expiry).timetuple()) # UTC time
         datetime_expiry = datetime.fromtimestamp(unix_expiry)
         datetime_now = time.mktime(datetime.utcnow().timetuple()) # UTC time
