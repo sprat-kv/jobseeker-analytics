@@ -153,7 +153,6 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         session_id = request.session["session_id"] = create_random_session_string()
         logger.info("creds.expiry: %s", creds.expiry)
         try:
-            logger.info("datetime.strptime.isoformat() " % datetime.datetime.strptime(creds.expiry, "%Y-%m-%d %H:%M:%S.%f").isoformat())
             token_expiry = datetime.datetime.strptime(creds.expiry, "%Y-%m-%d %H:%M:%S.%f").isoformat()
         except Exception as e:
             logger.error("datetime.striptime.isoformat() failed: %s", e)
