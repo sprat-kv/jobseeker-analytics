@@ -46,7 +46,7 @@ def is_token_expired(iso_expiry: str) -> bool:
     """
     if iso_expiry:
         datetime_expiry = datetime.fromisoformat(iso_expiry) # UTC time
-        difference_in_minutes = (datetime_expiry - datetime.datetime.utcnow()).total_seconds() / 60
+        difference_in_minutes = (datetime_expiry - datetime.utcnow()).total_seconds() / 60
         return difference_in_minutes <= 0
     
     return True
