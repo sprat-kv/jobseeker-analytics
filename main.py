@@ -128,8 +128,8 @@ def fetch_emails(user: AuthenticatedUser) -> None:
 @app.get("/login")
 def login(request: Request, background_tasks: BackgroundTasks, response: RedirectResponse):
     """Handles the redirect from Google after the user grants consent."""
+    code = request.query_params.get("code")
     try:
-        code = request.query_params.get("code")
         flow = Flow.from_client_secrets_file(
             CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
         )
@@ -146,8 +146,8 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
             return response
 
         # Exchange the authorization code for credentials
-        logging.info("flow.fetch_token")
-        flow.fetch_token(authorization_response=str(request.url))
+        logger.info("code found, starting fetch_token...")
+        flow.fetch_token(code=code)
         creds = flow.credentials
         user = AuthenticatedUser(creds)
         # Create a session for the user
