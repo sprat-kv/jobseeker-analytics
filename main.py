@@ -153,7 +153,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         session_id = request.session["session_id"] = create_random_session_string()
         logger.info("creds.expiry: %s", creds.expiry)
         try:
-            logger.info("creds.expiry.isoformat() " % creds.expiry.isoformat())
+            logger.info("datetime.strptime.isoformat() " % datetime.strptime(creds.expiry, "%Y-%m-%d %H:%M:%S.%f").isoformat())
         except Exception as e:
             logger.error("creds.expiry.isoformat() failed: %s", e)
             try:
