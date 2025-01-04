@@ -207,10 +207,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
         <a href="/download-file" download="jobbathehuntt_export_{today}.csv">
             <button>Download File</button>
         </a>
-        <p>Want to logout? May the hunt be with you</p>
-        <a href="/logout">
-            <button>Logout</button>
-        </a>
+        <p>Want to logout? Click <a href="/logout">here.</a> \nMay the hunt be with you.</p>
     </body>
     </html>
     """
