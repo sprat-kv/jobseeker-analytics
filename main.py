@@ -27,6 +27,7 @@ from email_utils import (
     get_email_domain_from_address,
     get_email_from_address,
 )
+from file_utils import get_user_filepath
 from session.session_layer import create_random_session_string, validate_session, is_token_expired
 
 app = FastAPI()
@@ -152,11 +153,13 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
         logger.info("creds.expiry: %s", creds.expiry)
+        token_expiry = (datetime.datetime.utcnow() + datetime.timedelta(hours=1)).isoformat()   
+        # Default expiry time 1 hour from now in case creds.expiry is not available
         try:
             token_expiry = creds.expiry.isoformat()
         except Exception as e:
             logger.error("datetime.striptime.isoformat() failed: %s", e)
-        request.session["token_expiry"] = token_expiry  # Token expiry logic
+        request.session["token_expiry"] = token_expiry
         request.session["user_id"] = user.user_id
 
         response = RedirectResponse(url="/processing", status_code=303)
