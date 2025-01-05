@@ -8,7 +8,7 @@ You login with Google, and bam! The spreadsheet is generated for you.
 
 ## Want to beta test? 
 
-- To beta test, [send me an email](mailto:jobbathehuntt@gmail.com?subject=Jobseeker%20Analytics%20Trial%20Request%20Instructions&body=jobbathehunt).
+- To beta test, [send me an email](mailto:jobbathehuntt@gmail.com?subject=Jobseeker%20Analytics%20Trial%20Request&body=jobbathehunt).
     1. Mention how you heard about the app (which community, friend’s name)
     2. I’ll respond as soon as I can to give you access (depends on Google’s beta testing user limits)
 
