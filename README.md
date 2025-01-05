@@ -1,4 +1,5 @@
-# Jobba the Huntt
+![DALL·E 2025-01-04 20 25 49 - A clean and simple text-based spreadsheet concept for an automated job tracker  The design features columns such as 'Subject Line of Email,' 'From Nam](https://github.com/user-attachments/assets/e642412f-e9dd-4716-86fe-780e4e93b84a)
+
 
 ## Want to beta test? 
 
