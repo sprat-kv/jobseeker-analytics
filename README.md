@@ -8,8 +8,9 @@
 
 ## Do you code and want to volunteer?
 - Take a look at the issues [list](https://github.com/lnovitz/jobseeker-analytics/issues) and comment on the issue you're interested in fixing.
-- _Note_: you do not have to know Python.
-- I hope to create a safe environment for contributors to this open source project. Beginners welcome!
+- _Note_: beginners are welcome!
+- I hope to create a safe space for new open source contributors.
+- No question is dumb
 
 ## Vision
 
