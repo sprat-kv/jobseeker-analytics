@@ -1,11 +1,20 @@
-![DALL·E 2025-01-04 20 25 49 - A clean and simple text-based spreadsheet concept for an automated job tracker  The design features columns such as 'Subject Line of Email,' 'From Nam](https://github.com/user-attachments/assets/e642412f-e9dd-4716-86fe-780e4e93b84a)
+## _"um... what's so special about another job tracker spreadsheet?"_
 
+What's special is that the spreadsheet is automagically updated.
+
+You do not have to update the spreadsheet.
+
+You login with Google, and bam! The spreadsheet is generated for you.
 
 ## Want to beta test? 
 
 - To beta test, [send me an email](mailto:jobbathehuntt@gmail.com?subject=Jobba%20The%20Huntt%20Installation%20Instructions&body=Subscribe).
-    1. Mention how you heard about Jobba the Huntt (which community, friend’s name)
+    1. Mention how you heard about the app (which community, friend’s name)
     2. I’ll respond as soon as I can to give you access (depends on Google’s beta testing user limits)
+
+## Your export will look something like this:
+
+![Screenshot 2024-12-29 at 7 41 17_PM (1) (1)](https://github.com/user-attachments/assets/951ae900-c875-4745-9d4b-ac77d313d281)
 
 ## Do you code and want to volunteer?
 - Take a look at the issues [list](https://github.com/lnovitz/jobseeker-analytics/issues) and comment on the issue you're interested in fixing.
