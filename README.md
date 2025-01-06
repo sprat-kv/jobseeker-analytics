@@ -1,8 +1,30 @@
-# Job Seeker Response Rate Calculator
+## _"um... what's so special about another job tracker spreadsheet?"_
 
-## Want to beta test? Check out install instructions here: https://plant-colt-383.notion.site/#:~:text=Installation%20Instructions
+What's special is that the spreadsheet is automagically updated.
 
-*As a job seeker with a gmail account, I want to be able to calculate  my initial application  response rate with the touch of a button*
+You do not have to update the spreadsheet.
+
+You login with Google, and bam! The spreadsheet is generated for you.
+
+## Want to beta test? 
+
+- To beta test, [send me an email](mailto:jobbathehuntt@gmail.com?subject=Jobseeker%20Analytics%20Free%20Trial&body=my%20google%20gmail%20address%20is).
+    1. Mention how you heard about the app (which community, friend’s name)
+    2. I’ll respond as soon as I can to give you access (depends on Google’s beta testing user limits)
+
+## Your export will look something like this:
+
+![Screenshot 2024-12-29 at 7 41 17_PM (1) (1)](https://github.com/user-attachments/assets/951ae900-c875-4745-9d4b-ac77d313d281)
+
+## Do you code and want to volunteer?
+- Take a look at the issues [list](https://github.com/lnovitz/jobseeker-analytics/issues) and comment on the issue you're interested in fixing.
+- _Note_: beginners are welcome!
+- I hope to create a safe space for new open source contributors.
+- No question is dumb
+
+## Vision
+
+As a job seeker with a gmail account, I want to be able to calculate  my initial application response rate with the touch of a button
 
 ## Example
 
