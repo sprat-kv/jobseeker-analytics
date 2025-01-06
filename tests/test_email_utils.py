@@ -80,6 +80,12 @@ def test_get_email_domain():
     assert from_email_domain == "testcompanyname.com"
 
 
+def test_get_last_capitalized_words_in_line():
+    last_capitalized_words = email_utils.get_last_capitalized_words_in_line(
+        "Thank you for your application to CompanyName"
+    )
+    assert last_capitalized_words == "CompanyName"
+
 def test_get_company_name_returns_email_domain():
     company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE)
     assert company_name == "testcompanyname"

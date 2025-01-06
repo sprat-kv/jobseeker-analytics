@@ -96,6 +96,21 @@ def get_email_subject_line(msg):
     return ""
 
 
+def get_last_capitalized_words_in_line(line):
+    try:
+        words = line.split()
+        last_capitalized_words = []
+        for word in reversed(words):
+            if word[0].isupper():
+                last_capitalized_words.append(word)
+            else:
+                break
+        return " ".join(reversed(last_capitalized_words))
+    except Exception as e:
+        logger.error("Error getting last capitalized words in email subject: %s", e)
+    return ""
+
+
 def get_email_from_address(msg):
     try:
         email_headers = get_email_headers(msg)
