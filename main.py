@@ -43,23 +43,8 @@ api_call_finished = False
 
 
 @app.get("/")
-async def root():
-    html_content = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Jobba the Huntt</title>
-    </head>
-    <body>
-        <h1>Welcome to Jobba the Huntt!</h1>
-        <p>Want to download your job search with 1 click?</p>
-        <a href="/login">
-            <button>Let's go</button>
-        </a>
-    </body>
-    </html>
-    """
-    return HTMLResponse(content=html_content, status_code=200)
+async def root(request: Request, response_class=HTMLResponse):
+    return templates.TemplateResponse("homepage.html", {"request": request})
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
