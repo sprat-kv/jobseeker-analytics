@@ -103,7 +103,8 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         # Constructing the object which will be written into db
         message_data["msg_id"] = [msg_id]
         message_data["threadId"] = [message["threadId"]]
-        message_data["subject"] = [get_email_subject_line(msg)]
+        subject_line = get_email_subject_line(msg)
+        message_data["subject"] = [subject_line]
         message_data["from_name"] = [get_email_from_address(msg)]
         message_data["fromdomain_match"] = [
             get_email_domain_from_address(
@@ -115,7 +116,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
                 else message_data["from_name"]
             )
         ]
-        message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg, message_data["subject"])]
+        message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg, subject_line)]
         message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
         # Exporting the email data to a CSV file
