@@ -4,19 +4,11 @@ This file contains the main constants used in the application.
 import os
 import json
 
-
-try:
-    IS_LOCAL = os.popen('hostname').read().strip().endswith('local')
-    SCOPES = os.getenv("GOOGLE_SCOPES", "" if IS_LOCAL else None)
-    CLIENT_SECRETS_FILE = "credentials.json"
-    REDIRECT_URI = os.getenv("REDIRECT_URI", "" if IS_LOCAL else None)
-    GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "" if IS_LOCAL else None)
-    COOKIE_SECRET = os.getenv("COOKIE_SECRET", "" if IS_LOCAL else None)
-except Exception as e:
-    raise Exception("Error loading environment variables")
-
-if not IS_LOCAL:
-    SCOPES = json.loads(SCOPES) # if none, will raise an error
+SCOPES = json.loads(os.getenv("GOOGLE_SCOPES").strip("'\""))
+CLIENT_SECRETS_FILE = "credentials.json"
+REDIRECT_URI = os.getenv("REDIRECT_URI")
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+COOKIE_SECRET = os.getenv("COOKIE_SECRET")
 
 GENERIC_ATS_DOMAINS = ["us.greenhouse-mail.io", "smartrecruiters.com", "linkedin.com", "ashbyhq.com", "hire.lever.co", "hi.wellfound.com", "talent.icims.com", "myworkday.com", "otta.com"]
 
