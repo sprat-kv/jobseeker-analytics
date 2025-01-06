@@ -1,3 +1,4 @@
+SUBJECT_LINE = "Invitation from an unknown sender: Interview with TestCompanyName @ Thu May 2, 2024 11:00am - 12pm (PDT) (appuser@gmail.com)"
 SAMPLE_MESSAGE = {
     "id": "abc123",
     "threadId": "abc123",

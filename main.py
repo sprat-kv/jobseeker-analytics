@@ -130,7 +130,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
                 else message_data["from_name"]
             )
         ]
-        message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg)]
+        message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg, message_data["subject"])]
         message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
 
         # Exporting the email data to a CSV file

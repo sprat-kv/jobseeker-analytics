@@ -3,6 +3,8 @@ import re
 
 from email_validator import validate_email, EmailNotValidError
 
+from constants import GENERIC_ATS_DOMAINS
+
 logger = logging.getLogger(__name__)
 
 
@@ -142,6 +144,9 @@ def get_received_at_timestamp(message_id, msg):
         print("msg_%s: %s" % (message_id, e))
     return datetime.datetime.now()  # default if trouble parsing
 
+def is_generic_email_domain(domain):
+    # input expects return value of get_email_domain_from_address
+    return domain in GENERIC_ATS_DOMAINS
 
 def get_email_domain_from_address(email_address):
     return email_address.split("@")[1] if "@" in email_address else ""
@@ -224,15 +229,18 @@ def get_top_word_in_email_body(msg_id, msg):
     return ""
 
 
-def get_company_name(id, msg):
+def get_company_name(id, msg, subject_line):
     try:
         top_word = get_top_word_in_email_body(id, msg)
-        if not top_word:
-            # likely a calendar invite, haven't parsed these yet
-            # return email domain instead as shortcut
-            # TODO: compare email domain and top word to decide
-            from_address = get_email_from_address(msg)
-            return get_email_domain_from_address(from_address).split(".")[0]
+        from_address = get_email_from_address(msg)
+        domain = get_email_domain_from_address(from_address)
+        if not top_word or top_word[0].islower():
+            # no top word, or top word is not capitalized
+            if is_generic_email_domain(domain):
+                # if generic ATS domain like workday, greenhouse, etc., 
+                # check the last capitalized word(s) in the subject line
+                return get_last_capitalized_words_in_line(subject_line) or ""
+            return domain.split(".")[0]
         return top_word
     except Exception as e:
         logger.error("Error getting company name: %s", e)

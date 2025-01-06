@@ -1,6 +1,6 @@
 from unittest import mock
 
-from test_constants import SAMPLE_MESSAGE
+from test_constants import SAMPLE_MESSAGE, SUBJECT_LINE
 import email_utils
 
 
@@ -62,9 +62,7 @@ def test_get_email_subject_line():
     subject_line = email_utils.get_email_subject_line(SAMPLE_MESSAGE)
     assert (
         subject_line
-        == "Invitation from an unknown sender: Interview with \
-            TestCompanyName @ Thu May 2, 2024 11:00am - 12pm (PDT) \
-                (appuser@gmail.com)"
+        == "Invitation from an unknown sender: Interview with TestCompanyName @ Thu May 2, 2024 11:00am - 12pm (PDT) (appuser@gmail.com)"
     )
 
 
@@ -79,6 +77,12 @@ def test_get_email_domain():
     )
     assert from_email_domain == "testcompanyname.com"
 
+def test_is_generic_email_domain():
+    assert email_utils.is_generic_email_domain(
+        "hire.lever.co"
+    )  == True
+    assert email_utils.is_generic_email_domain(
+        "us.greenhouse-mail.io") == True
 
 def test_get_last_capitalized_words_in_line():
     last_capitalized_words = email_utils.get_last_capitalized_words_in_line(
@@ -87,16 +91,24 @@ def test_get_last_capitalized_words_in_line():
     assert last_capitalized_words == "CompanyName"
 
 def test_get_company_name_returns_email_domain():
-    company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE)
+    company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE, subject_line=SUBJECT_LINE)
     assert company_name == "testcompanyname"
 
 
 def test_get_company_name_returns_top_word():
     """Default behavior for company name is to return the 
     highest frequency word that appears in the email body."""
-    with mock.patch("email_utils.get_top_word_in_email_body", return_value="fake"):
-        company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE)
-        assert company_name == "fake"
+    with mock.patch("email_utils.get_top_word_in_email_body", return_value="FakeCompany"):
+        company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE, subject_line=SUBJECT_LINE)
+        assert company_name == "FakeCompany"
+
+def test_get_company_name_returns_last_capital_word_in_subject_line():
+    """Default behavior for company name is to return the 
+    highest frequency word that appears in the email body."""
+    with mock.patch("email_utils.get_top_word_in_email_body", return_value="interview"), \
+        mock.patch("email_utils.get_email_from_address", return_value="no-reply@us.greenhouse-mail.io"):
+            company_name = email_utils.get_company_name(id="abc123", msg=SAMPLE_MESSAGE, subject_line="Thanks for interviewing with CoolCompany")
+            assert company_name == "CoolCompany"
 
 
 def test_get_email_received_at_timestamp():
