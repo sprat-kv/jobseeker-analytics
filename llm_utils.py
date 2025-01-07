@@ -22,7 +22,7 @@ def process_email(email_text):
         Note that "follow up" means that a company representative personally responded with confirmation of the application without defining next steps.
         Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status" 
         Remove backticks. Only use double quotes. Enclose key and value pairs in a single pair of curly braces.
-        If the email is obviously not related to a job application, return "na".
+        If the email is obviously not related to a job application, return "null".
         Email: {email_text}
     """
     

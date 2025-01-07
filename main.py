@@ -103,7 +103,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
             result = process_email(msg['text_content'])
-            if result:
+            if not isinstance(result, str) and result:
                 logger.info("user_id:%s  successfully extracted email", user.user_id)
             else:
                 result = {}
