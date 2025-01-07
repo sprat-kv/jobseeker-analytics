@@ -34,7 +34,12 @@ def process_email(email_text):
             response: GenerateTextResponse = model.generate_content(prompt)
             response.resolve()
             response_json: str = response.text
-            return json.loads(response_json)
+            if response_json.strip():
+                logger.info("Received response from model: %s", response_json)
+                return json.loads(response_json)
+            else:
+                logger.error("Empty response received from the model.")
+                return None
         except Exception as e:
             if hasattr(e, 'status_code') and e.status_code == 429:
                 logger.warning(f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1}).")
