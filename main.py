@@ -106,6 +106,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
             if result:
                 logger.info("user_id:%s  successfully extracted email", user.user_id)
             else:
+                result = {}
                 logger.info(f"user_id:%s failed to extract email", user.user_id)
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
