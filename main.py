@@ -110,11 +110,11 @@ def fetch_emails(user: AuthenticatedUser) -> None:
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
             message_data["received_at"] = [msg.get("date", "")]
-            message_data["email_subject"] = [msg.get("subject", "")]
+            message_data["subject"] = [msg.get("subject", "")]
+            message_data["from"] = [msg.get("from", "")]
             # Exporting the email data to a CSV file
             export_to_csv(user.filepath, user.user_id, message_data)
-            api_call_finished = True    # TODO: reset indent after testing
-            return  # TODO: delete after testing
+    api_call_finished = True
 
 # Define the route for OAuth2 flow
 @app.get("/login")
