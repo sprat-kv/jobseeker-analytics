@@ -18,14 +18,14 @@ def process_email(email_text):
         Extract the company name and job application status from the following email. 
         Job application status can be a value from the following list: 
         ["received", "rejected", "need to schedule technical interview", "need to schedule behavioral interview", "waiting for response", "technical interview scheduled", "behavioral interview scheduled"]
-        Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status"
+        Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status" 
         Do not add extra formatting, just return the keys and values surrounded by a single pair of curly braces.
-        If the email is obviously not related to a job application, return null.
+        If the email is obviously not related to a job application, return "null".
         Email: {email_text}
     """
     
     retries = 3  # Max retries
-    delay = 1  # Initial delay
+    delay = 30  # Initial delay
     for attempt in range(retries):
         try:
             logger.info("Calling generate_content")
@@ -39,7 +39,7 @@ def process_email(email_text):
                 logger.error("Empty response received from the model.")
                 return None
         except Exception as e:
-            if hasattr(e, 'status_code') and e.status_code == 429:
+            if "429" in str(e):
                 logger.warning(f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1}).")
                 time.sleep(delay)
                 delay *= 2  # Exponential backoff
