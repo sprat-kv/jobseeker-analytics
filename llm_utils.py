@@ -17,9 +17,10 @@ def process_email(email_text):
     prompt = f"""
         Extract the company name and job application status from the following email. 
         Job application status can be a value from the following list:
-        ["rejected", "need to schedule technical interview", "need to schedule behavioral interview", "no response", "follow up", "technical interview scheduled", "behavioral interview scheduled"]
-        Note that "no response" means that there is only an automated confirmation of the application being received.
-        Note that "follow up" means that a company representative personally responded with confirmation of the application without defining next steps.
+        ["rejected", "no response", "request for availability", "interview scheduled", "offer"]
+        Note that "no response" means that there is only a neutral, automated or human confirmation of the application being received.
+        Note that "interview scheduled" implies a calendar invite with a meeting date and time has been sent.
+        Note that "request for availability" implies waiting on the candidate to provide their availability.
         Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status" 
         Remove backticks. Only use double quotes. Enclose key and value pairs in a single pair of curly braces.
         If the email is obviously not related to a job application, return "null".
