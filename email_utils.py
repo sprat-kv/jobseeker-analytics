@@ -55,7 +55,8 @@ def get_email(message_id: str, gmail_instance=None):
             message = gmail_instance.users().messages().get(userId="me", id=message_id, format='raw').execute()
             msg_str = base64.urlsafe_b64decode(message['raw'].encode('ASCII')).decode('utf-8')
             mime_msg = email.message_from_string(msg_str)
-            
+            logger.info("mime_msg: %s", mime_msg)
+            logger.info("msg_str: %s", msg_str)
             email_data = {
                 'id': message_id,
                 'threadId': message.get('threadId', None),
