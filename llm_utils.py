@@ -16,11 +16,13 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 def process_email(email_text):
     prompt = f"""
         Extract the company name and job application status from the following email. 
-        Job application status can be a value from the following list: 
-        ["received", "rejected", "need to schedule technical interview", "need to schedule behavioral interview", "waiting for response", "technical interview scheduled", "behavioral interview scheduled"]
+        Job application status can be a value from the following list:
+        ["rejected", "need to schedule technical interview", "need to schedule behavioral interview", "no response", "follow up", "technical interview scheduled", "behavioral interview scheduled"]
+        Note that "no response" means that there is only an automated confirmation of the application being received.
+        Note that "follow up" means that a company representative personally responded with confirmation of the application without defining next steps.
         Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status" 
-        Do not add extra formatting, just return the keys and values surrounded by a single pair of curly braces.
-        If the email is obviously not related to a job application, return "null".
+        Remove backticks. Only use double quotes. Enclose key and value pairs in a single pair of curly braces.
+        If the email is obviously not related to a job application, return "na".
         Email: {email_text}
     """
     
@@ -32,9 +34,11 @@ def process_email(email_text):
             response: GenerateTextResponse = model.generate_content(prompt)
             response.resolve()
             response_json: str = response.text
-            if response_json.strip():
-                logger.info("Received response from model: %s", response_json)
-                return json.loads(response_json)
+            logger.info("Received response from model: %s", response_json)
+            if response_json:
+                cleaned_response_json = response_json.replace("`", "").replace("'", '"').strip()
+                logger.info("Cleaned response: %s", cleaned_response_json)
+                return json.loads(cleaned_response_json)
             else:
                 logger.error("Empty response received from the model.")
                 return None
