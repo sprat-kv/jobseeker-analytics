@@ -81,8 +81,7 @@ def get_email(message_id: str, gmail_instance=None):
                     if content_type == 'text/plain' and 'attachment' not in content_disposition:
                         email_data['text_content'] = part.get_payload(decode=True).decode()
                     elif content_type == 'text/html' and 'attachment' not in content_disposition:
-                    email_data['html_content'] = part.get_payload(decode=True).decode()
-
+                        email_data['html_content'] = part.get_payload(decode=True).decode()
             else:
                 content_type = mime_msg.get_content_type()
                 if content_type == 'text/plain':
