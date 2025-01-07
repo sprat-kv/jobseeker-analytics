@@ -37,7 +37,7 @@ def process_email(email_text):
             response_json: str = response.text
             logger.info("Received response from model: %s", response_json)
             if response_json:
-                cleaned_response_json = response_json.replace("`", "").replace("'", '"').strip()
+                cleaned_response_json = response_json.replace("json","").replace("`", "").replace("'", '"').strip()
                 logger.info("Cleaned response: %s", cleaned_response_json)
                 return json.loads(cleaned_response_json)
             else:
