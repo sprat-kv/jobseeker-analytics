@@ -15,14 +15,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def process_email(email_text):
     prompt = f"""
-        Extract the company name, job application status, received timestamp, and email subject line from the following email. 
-        Provide the output in JSON format.
-        {{
-           "company_name": "company_name",
-           "application_status": "status"
-           "received_at": "timestamp"
-           "subject": "subject"
-        }}
+        Extract the company name and job application status from the following email. 
+        Job application status can be a value from the following list: 
+        ["received", "rejected", "need to schedule technical interview", "need to schedule behavioral interview", "waiting for response", "technical interview scheduled", "behavioral interview scheduled"]
+        Provide the output in JSON format, for example: {"company_name": "company_name", "application_status": "status"} 
+        Do not add extra formatting, just return the curly braces and the keys and values.
         Email: {email_text}
     """
     
