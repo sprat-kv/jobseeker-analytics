@@ -28,7 +28,7 @@ def process_email(email_text):
     """
     
     retries = 3  # Max retries
-    delay = 30  # Initial delay
+    delay = 60  # Initial delay
     for attempt in range(retries):
         try:
             logger.info("Calling generate_content")
@@ -47,7 +47,6 @@ def process_email(email_text):
             if "429" in str(e):
                 logger.warning(f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1}).")
                 time.sleep(delay)
-                delay *= 2  # Exponential backoff
             else:
                 logger.error(f"Error processing email: {e}")
                 return None
