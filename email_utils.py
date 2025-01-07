@@ -1,6 +1,9 @@
+import base64
+import email
 import logging
 import re
 
+from bs4 import BeautifulSoup
 from email_validator import validate_email, EmailNotValidError
 
 from constants import GENERIC_ATS_DOMAINS
@@ -48,7 +51,54 @@ def is_valid_email(email: str) -> bool:
 
 def get_email(message_id: str, gmail_instance=None):
     if gmail_instance:
-        return gmail_instance.users().messages().get(userId="me", id=message_id).execute()
+        try:
+            message = gmail_instance.users().messages().get(userId="me", id=message_id, format='raw').execute()
+            msg_str = base64.urlsafe_b64decode(message['raw'].encode('ASCII')).decode('utf-8')
+            mime_msg = email.message_from_string(msg_str)
+            
+            email_data = {
+                'id': message_id,
+                'threadId': message.get('threadId', None),
+                'from': None,
+                'to': None,
+                'subject': None,
+                'date': None,
+                'text_content': None,
+                'html_content': None
+            }
+            
+            # Getting email headers
+            email_data['from'] = mime_msg.get("From")
+            email_data['to'] = mime_msg.get("To")
+            email_data['subject'] = mime_msg.get("Subject")
+            email_data['date'] = mime_msg.get("Date")
+
+            # Extract body of the email
+            if mime_msg.is_multipart():
+                for part in mime_msg.walk():
+                    content_type = part.get_content_type()
+                    content_disposition = str(part.get("Content-Disposition"))
+                    if content_type == 'text/plain' and 'attachment' not in content_disposition:
+                        email_data['text_content'] = part.get_payload(decode=True).decode()
+                    elif content_type == 'text/html' and 'attachment' not in content_disposition:
+                    email_data['html_content'] = part.get_payload(decode=True).decode()
+
+            else:
+                content_type = mime_msg.get_content_type()
+                if content_type == 'text/plain':
+                    email_data['text_content'] = mime_msg.get_payload(decode=True).decode()
+                elif content_type == 'text/html':
+                    email_data['html_content'] = mime_msg.get_payload(decode=True).decode()
+                    
+            
+            if email_data['html_content'] and not email_data['text_content']:
+                soup = BeautifulSoup(email_data['html_content'], "html.parser")
+                email_data['text_content'] = soup.get_text(separator=" ", strip=True)
+
+            return email_data
+        except Exception as e:
+            print(f"Error retrieving email: {e}")
+            return {}
     return {}
 
 
@@ -187,9 +237,6 @@ def get_word_frequency(cleaned_email):
 
 
 def get_top_word_in_email_body(msg_id, msg):
-    import base64
-    from bs4 import BeautifulSoup
-
     try:
         parts = get_email_parts(msg)
         if parts:

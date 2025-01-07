@@ -9,6 +9,7 @@ CLIENT_SECRETS_FILE = "credentials.json"
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 COOKIE_SECRET = os.getenv("COOKIE_SECRET")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 GENERIC_ATS_DOMAINS = ["us.greenhouse-mail.io", "smartrecruiters.com", "linkedin.com", "ashbyhq.com", "hire.lever.co", "hi.wellfound.com", "talent.icims.com", "myworkday.com", "otta.com"]
 

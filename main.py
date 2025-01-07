@@ -28,6 +28,7 @@ from email_utils import (
     get_email_from_address,
 )
 from file_utils import get_user_filepath
+from llm_utils import process_email
 from session.session_layer import create_random_session_string, validate_session, is_token_expired
 
 app = FastAPI()
@@ -100,28 +101,19 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         # (email_subject, email_from, email_domain, company_name, email_dt)
         msg_id = message["id"]
         msg = get_email(message_id=msg_id, gmail_instance=service)
-        # Constructing the object which will be written into db
-        message_data["msg_id"] = [msg_id]
-        message_data["threadId"] = [message["threadId"]]
-        subject_line = get_email_subject_line(msg)
-        message_data["subject"] = [subject_line]
-        message_data["from_name"] = [get_email_from_address(msg)]
-        message_data["fromdomain_match"] = [
-            get_email_domain_from_address(
-                message_data["from_name"][0]
-                if (
-                    isinstance(message_data["from_name"], list)
-                    and len(message_data["from_name"]) > 0
-                )
-                else message_data["from_name"]
-            )
-        ]
-        message_data["top_word_company_proxy"] = [get_company_name(msg_id, msg, subject_line)]
-        message_data["received_at"] = [get_received_at_timestamp(msg_id, msg)]
-
-        # Exporting the email data to a CSV file
-        export_to_csv(user.filepath, user.user_id, message_data)
-    api_call_finished = True
+        if msg:
+            result = process_email(msg['text_content'])
+            if result:
+                logger.info("user_id:%s  successfully extracted email", user.user_id)
+            else:
+                logger.info(f"user_id:%s failed to extract email", user.user_id)
+            message_data["company_name"] = result.get("company_name", "")
+            message_data["application_status"] = result.get("application_status", "")
+            message_data["received_at"] = result.get("received_at", "")
+            message_data["email_subject"] = result.get("subject_line", "")
+            # Exporting the email data to a CSV file
+            export_to_csv(user.filepath, user.user_id, message_data)
+            api_call_finished = True    # TODO: reset indent after testing
 
 # Define the route for OAuth2 flow
 @app.get("/login")
