@@ -18,8 +18,9 @@ def process_email(email_text):
         Extract the company name and job application status from the following email. 
         Job application status can be a value from the following list: 
         ["received", "rejected", "need to schedule technical interview", "need to schedule behavioral interview", "waiting for response", "technical interview scheduled", "behavioral interview scheduled"]
-        Provide the output in JSON format, for example: {"company_name": "company_name", "application_status": "status"} 
-        Do not add extra formatting, just return the curly braces and the keys and values.
+        Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status"
+        Do not add extra formatting, just return the keys and values surrounded by a single pair of curly braces.
+        If the email is obviously not related to a job application, return null.
         Email: {email_text}
     """
     
