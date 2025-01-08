@@ -102,19 +102,31 @@ def get_email(message_id: str, gmail_instance=None):
     return {}
 
 
-def get_email_ids(query: tuple = None, days_ago: int = 90, gmail_instance=None):
-    if gmail_instance:
-        return (
+def get_email_ids(query: tuple = None, gmail_instance=None):
+    email_ids = []
+    page_token = None
+
+    while True:
+        response = (
             gmail_instance.users()
             .messages()
             .list(
                 userId="me",
                 q=query,
                 includeSpamTrash=True,
+                pageToken=page_token,
             )
             .execute()
         )
-    return {}
+
+        if 'messages' in response:
+            email_ids.extend(response['messages'])
+
+        page_token = response.get('nextPageToken')
+        if not page_token:
+            break
+
+    return email_ids
 
 
 def get_email_payload(msg):

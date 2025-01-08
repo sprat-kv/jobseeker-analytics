@@ -4,6 +4,8 @@ This file contains the main constants used in the application.
 import os
 import json
 
+from datetime import datetime, timedelta
+
 SCOPES = json.loads(os.getenv("GOOGLE_SCOPES").strip("'\""))
 CLIENT_SECRETS_FILE = "credentials.json"
 REDIRECT_URI = os.getenv("REDIRECT_URI")
@@ -12,6 +14,16 @@ COOKIE_SECRET = os.getenv("COOKIE_SECRET")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 GENERIC_ATS_DOMAINS = ["us.greenhouse-mail.io", "smartrecruiters.com", "linkedin.com", "ashbyhq.com", "hire.lever.co", "hi.wellfound.com", "talent.icims.com", "myworkday.com", "otta.com"]
+
+DEFAULT_DAYS_AGO = 365 * 2
+# Get the current date
+current_date = datetime.now()
+
+# Subtract 30 days
+date_days_ago = current_date - timedelta(days=DEFAULT_DAYS_AGO)
+
+# Format the date in the required format (YYYY/MM/DD)
+formatted_date = date_days_ago.strftime('%Y/%m/%d')
 
 QUERY_APPLIED_EMAIL_FILTER = (
     '(subject:"thank" AND from:"no-reply@ashbyhq.com") OR '
@@ -46,5 +58,7 @@ QUERY_APPLIED_EMAIL_FILTER = (
     'subject:"thanks for your application" OR '
     'subject:"job application confirmation" OR '
     'subject:"ve been referred" OR '
-    '(subject:"we received your" AND subject:"application")'
+    '(subject:"we received your" AND subject:"application") '
+    '-subject:"watering"'
+    f'after:{formatted_date}'
 )  # label:jobs -label:query4
