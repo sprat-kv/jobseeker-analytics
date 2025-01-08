@@ -87,11 +87,9 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
     logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
-    results = get_email_ids(
+    messages = get_email_ids(
         query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
     )
-    messages = results.get("messages", [])
-
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
 
