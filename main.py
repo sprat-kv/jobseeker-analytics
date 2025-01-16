@@ -174,76 +174,8 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
 def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
-
     today = str(datetime.date.today())
-
-    html_content = f"""
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Success</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    text-align: center;
-                    background-color: #f9f9f9;
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                }
-
-                h1 {
-                    color: #28a745;
-                }
-
-                p {
-                    font-size: 1.2em;
-                }
-
-                a button {
-                    background-color: #007bff;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    font-size: 1em;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    transition: background-color 0.3s;
-                }
-
-                a button:hover {
-                    background-color: #0056b3;
-                }
-
-                a {
-                    text-decoration: none;
-                }
-
-                .logout-link {
-                    margin-top: 20px;
-                    font-size: 1em;
-                }
-            </style>
-        </head>
-        <body>
-            <h1>Success! Your file is ready.</h1>
-            <p>Click the button below to download your file.</p>
-            <a href="/download-file" download="jobbathehuntt_export_{today}.csv">
-                <button>Download File</button>
-            </a>
-            <p class="logout-link">Want to logout? Click <a href="/logout">here</a>.</p>
-            <p>May the hunt be with you.</p>
-        </body>
-        </html>
-    """
-    return HTMLResponse(content=html_content, status_code=200)
+    return templates.TemplateResponse("success.html", {"request": request, "today": today})
 
 
 # Run the app using Uvicorn
