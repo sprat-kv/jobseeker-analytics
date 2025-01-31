@@ -33,11 +33,9 @@ This Code of Conduct applies to both within project spaces and in public spaces 
 
 ## How Can I Contribute?
 
-## 🚀 Setting Up Google OAuth Locally  
-
 This project uses **Google OAuth** for authentication. To run the app locally, you’ll need to configure your own Google API credentials.  
 
-### **1️⃣ Create a Google OAuth App**  
+### Create a Google OAuth App 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
 3. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
@@ -49,7 +47,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 
 ---
 
-### **2️⃣ Set Up Environment Variables**  
+### Set Up Environment Variables
 1. Copy `.env.example` to `.env`:  
    ```sh
    cp .env.example .env
@@ -67,7 +65,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 
 ---
 
-### **3️⃣ Running the App**  
+### Run the App  
 Once your `.env` file is set up, start the app:  
 ```sh
 # Install dependencies
@@ -80,7 +78,7 @@ Then, visit `http://localhost:8000/login` to test the authentication flow.
 
 ---
 
-### **4️⃣ Troubleshooting**  
+### Troubleshooting Tips
 - **Not redirected after login?**  
   Double-check your `REDIRECT_URI` in both `.env` and Google Cloud settings.  
 - **Missing `credentials.json`?**  
@@ -88,7 +86,9 @@ Then, visit `http://localhost:8000/login` to test the authentication flow.
 - **Invalid API key errors?**  
   Some Google APIs require API key restrictions—try generating a new unrestricted key for local testing.  
 
-### **4️⃣ Submitting Changes**  
+---
+
+### Submit Changes  
 1. **Fork** this repository.  
 2. **Clone** your fork:  
    ```sh
