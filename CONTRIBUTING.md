@@ -33,9 +33,91 @@ This Code of Conduct applies to both within project spaces and in public spaces 
 
 ## How Can I Contribute?
 
-### Submit Changes
+## 🚀 Setting Up Google OAuth Locally  
 
-*Currently being developed*
+This project uses **Google OAuth** for authentication. To run the app locally, you’ll need to configure your own Google API credentials.  
+
+### **1️⃣ Create a Google OAuth App**  
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
+2. Navigate to **APIs & Services** → **Credentials**.  
+3. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
+4. Set the application type to **Web Application**.  
+5. Under "Authorized redirect URIs," add:  
+- https://jobseeker-analytics.onrender.com/login
+- http://localhost:8000/login
+6. Copy the **Client ID** and **Client Secret** for later.  
+
+---
+
+### **2️⃣ Set Up Environment Variables**  
+1. Copy `.env.example` to `.env`:  
+   ```sh
+   cp .env.example .env
+   ```
+2. Fill in the `.env` file with your credentials:  
+   ```ini
+   GOOGLE_SCOPES=https://www.googleapis.com/auth/userinfo.email
+   GOOGLE_CLIENT_ID=your-client-id-here
+   GOOGLE_CLIENT_SECRET=your-client-secret-here
+   COOKIE_SECRET=your-random-secret-here
+   GOOGLE_API_KEY=your-api-key-here
+   REDIRECT_URI=https://jobseeker-analytics.onrender.com/login
+   ```
+   **🔒 Never share your `.env` file or commit it to Git!**  
+
+---
+
+### **3️⃣ Running the App**  
+Once your `.env` file is set up, start the app:  
+```sh
+# Install dependencies
+pip install -r requirements.txt  # or equivalent for your project
+
+# Run locally
+uvicorn main:app --reload
+```
+Then, visit `http://localhost:8000/login` to test the authentication flow.  
+
+---
+
+### **4️⃣ Troubleshooting**  
+- **Not redirected after login?**  
+  Double-check your `REDIRECT_URI` in both `.env` and Google Cloud settings.  
+- **Missing `credentials.json`?**  
+  The OAuth flow should generate it if configured correctly. If not, ensure you’ve enabled the right API permissions.  
+- **Invalid API key errors?**  
+  Some Google APIs require API key restrictions—try generating a new unrestricted key for local testing.  
+
+### **4️⃣ Submitting Changes**  
+1. **Fork** this repository.  
+2. **Clone** your fork:  
+   ```sh
+   git clone https://github.com/your-username/repo-name.git
+   cd repo-name
+   ```
+3. **Create a new branch** for your changes:
+- use branch convention <feature|bugfix|hotfix|docs>/<issueNumber>-<issueDescription>
+   ```sh
+   git checkout -b docs/65-add-contribution-guidelines
+   ```
+4. **Make your changes** and commit them:  
+   ```sh
+   git add .
+   git commit -m "Add submission guidelines and env setup"
+   ```
+5. **Push to your fork**:  
+   ```sh
+   git push origin docs/65-add-contribution-guidelines
+   ```
+6. **Open a Pull Request** on GitHub.  
+
+Please ensure your changes align with the project's goals and do your best to follow the below coding style guides.
+- Python: https://google.github.io/styleguide/pyguide.html
+- TypeScript: https://google.github.io/styleguide/tsguide.html
+- HTML/CSS: https://google.github.io/styleguide/htmlcssguide.html
+
+---
+
 
 ### Report a Bug
 
