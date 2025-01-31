@@ -56,7 +56,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    ```
 2. Fill in the `.env` file with your credentials:  
    ```ini
-   GOOGLE_SCOPES=https://www.googleapis.com/auth/userinfo.email
+   GOOGLE_SCOPES='["https://www.googleapis.com/auth/gmail.readonly", "openid"]'
    GOOGLE_CLIENT_ID=your-client-id-here
    GOOGLE_CLIENT_SECRET=your-client-secret-here
    COOKIE_SECRET=your-random-secret-here
