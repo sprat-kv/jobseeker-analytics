@@ -66,7 +66,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ---
 
 ### Run the App  
-Once your `.env` file is set up, to start the app follow the instructions below:
+Once your `.env` file is set up, start the app by following the instructions below:
 1. Create and activate virtual environment:
    ```sh
    # MAC/LINUX
