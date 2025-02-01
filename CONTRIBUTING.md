@@ -54,6 +54,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    - https://jobseeker-analytics.onrender.com/login
    - http://localhost:8000/login
 6. Copy the **Client ID** and **Client Secret** for later.  
+7. Download and save your credentials locally to the parent folder for this repo in a file named ```credentials.json```
 
 ---
 
@@ -97,8 +98,6 @@ You can view logs from the app by finding your container in Docker Desktop/Docke
 ### Troubleshooting Tips
 - **Not redirected after login?**  
   Double-check your `REDIRECT_URI` in both `.env` and Google Cloud settings.  
-- **Missing `credentials.json`?**  
-  The OAuth flow should generate it if configured correctly. If not, ensure you’ve enabled the right API permissions.  
 - **Invalid API key errors?**  
   Some Google APIs require API key restrictions—try generating a new unrestricted key for local testing.  
 
