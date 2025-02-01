@@ -66,14 +66,30 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ---
 
 ### Run the App  
-Once your `.env` file is set up, start the app:  
-```sh
-# Install dependencies
-pip install -r requirements.txt  # or equivalent for your project
-
-# Run locally
-uvicorn main:app --reload
-```
+Once your `.env` file is set up, to start the app follow the instructions below:
+1. Create and activate virtual environment:
+   ```sh
+   # MAC/LINUX
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+   ```sh
+   # WINDOWS (CMD)
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+   
+2. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. Run FastAPI Server Locally:
+   ```sh
+   uvicorn main:app --reload
+   ```
+6. Check it out @:
+   http://127.0.0.1:8000
+   
 Then, visit `http://localhost:8000/login` to test the authentication flow.  
 
 ---
