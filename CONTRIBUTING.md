@@ -55,7 +55,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
 3. If this is your first time creating credentials with this project, you will have to configure the OAuth consent screen.
-4. On the OAuth Consent Screen page, scroll to "Test Users" and add yourself.
+4. On the OAuth Consent Screen page, scroll to "Test Users" and add your gmail address.
 3. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
 4. Set the application type to **Web Application**.  
 5. Under "Authorized redirect URIs," add:  
