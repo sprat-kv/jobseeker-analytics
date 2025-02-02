@@ -84,21 +84,50 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 
 ---
 
-### Install Docker
+
+### Run the App: Two options  
+
+#### Option 1: Docker Container
+
 1. If this is your first time using Docker, install as below:
    - Install Docker. On Windows/Mac install [Docker Desktop](https://docs.docker.com/get-started/get-docker/). On Linux install [Docker Engine](https://docs.docker.com/engine/install/). 
    - Start Docker Desktop or Docker Engine
       - On Windows: make sure to select "Use the WSL 2 based engine" under Settings/general.
       - On Linux: you may need to take additional post-installation steps, see (here)[https://docs.docker.com/engine/install/linux-postinstall/]. 
-
----
-
-### Run the App  
-Start the app using Docker compose-up. The first time you run this locally it may take a few minutes to set up.
+2. Start the app using Docker compose-up. The first time you run this locally it may take a few minutes to set up.
 ```
 docker-compose up -d
 ```
-Then, visit [http://localhost:8000](http://localhost:8000) to begin testing the app locally.
+3. Then, visit [http://localhost:8000](http://localhost:8000) to begin testing the app locally.
+
+
+#### Option 2: venv and FastAPI server
+
+Once your `.env` file is set up, start the app by following the instructions below:
+1. Create and activate virtual environment:
+   ```sh
+   # MAC/LINUX
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+   ```sh
+   # WINDOWS (CMD)
+   python -m venv venv
+   venv\Scripts\activate
+   ```
+   
+2. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. Run FastAPI Server Locally:
+   ```sh
+   uvicorn main:app --reload
+   ```
+6. Check it out @:
+   http://127.0.0.1:8000
+   
+Then, visit `http://localhost:8000/login` to test the authentication flow.  
 
 You can view logs from the app by finding your container in Docker Desktop/Docker Engine and clicking on it. The app will automatically refresh when you make changes. 
 ---
