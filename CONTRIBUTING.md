@@ -137,6 +137,8 @@ You can view logs from the app by finding your container in Docker Desktop/Docke
   Double-check your `REDIRECT_URI` in both `.env` and Google Cloud settings.  
 - **Invalid API key errors?**  
   Some Google APIs require API key restrictions—try generating a new unrestricted key for local testing.  
+- **Cannot Build Docker Image?**
+   Try option 2, with venv and FastAPI server instead. 
 
 ---
 
