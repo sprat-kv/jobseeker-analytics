@@ -44,6 +44,13 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 
 ---
 
+### Get a Google AI API key
+1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+2. Click **Create and API Key**
+3. Copy your API key and save it for later
+
+---
+
 ### Create a Google OAuth App 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
