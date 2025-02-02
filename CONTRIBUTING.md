@@ -38,7 +38,8 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ### Clone the repo
 1. On Windows: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). 
 2. On Windows: start WSL 
-3. Clone this repository using ```git clone [URL copied from github]```
+3. In GIthub, fork the repository
+3. Clone this fork  using ```git clone [URL copied from fork on github]```
 4. ```cd``` into the repo you just cloned
 
 ---
