@@ -9,11 +9,10 @@ Developer: Lianna Novitz
 Author: YOUR NAME
 
 ## Context
-Lianna keeps killing her plants
+As a job seeker, I want to share my current schedule easily in order to avoid back-and-forth emails and interview timing conflicts between companies. 
 
 ### What Do We Have Now?
-<li>Connects to ESP32 and requests moisture/temperature data at regular intervals</li>
-<li>Commands ESP32 to run pump</li>
+- Nothing in the app, but cal.com is an open source calendar sharing app and might be helpful along with the Google Calendar API
 
 ## Jobs To Be Done
 
