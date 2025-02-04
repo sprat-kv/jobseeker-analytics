@@ -70,8 +70,9 @@ Need to ensure that out of bounds database requests are properly handled, and ig
 
 ## Potential Future Improvements
 These will be ordered in terms of likelihood/priority descending (i.e. iterations we are most likely to do come first).
-- 
-- 
+
+- Sharing the Statistics (By link or email)
+- Other kinds of statistics (networking based, event based, etc)
 
 ## Questions
 
