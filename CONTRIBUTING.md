@@ -35,24 +35,43 @@ This Code of Conduct applies to both within project spaces and in public spaces 
 
 This project uses **Google OAuth** for authentication. To run the app locally, you’ll need to configure your own Google API credentials.  
 
+### Clone the repo
+1. On Windows: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). 
+2. On Windows: start WSL 
+3. In Github, fork the repository
+4. Clone this fork  using ```git clone [URL copied from fork on github]```
+5. ```cd``` into the repo you just cloned
+
+---
+
+### Get a Google AI API key
+1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
+2. Click **Create and API Key**
+3. Copy your API key and save it for later
+
+---
+
 ### Create a Google OAuth App 
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
+3. If this is your first time creating credentials with this project, you will have to configure the OAuth consent screen.
+4. On the OAuth Consent Screen page, scroll to "Test Users" and add your gmail address.
 3. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
 4. Set the application type to **Web Application**.  
 5. Under "Authorized redirect URIs," add:  
-- https://jobseeker-analytics.onrender.com/login
-- http://localhost:8000/login
+   - https://jobseeker-analytics.onrender.com/login
+   - http://localhost:8000/login
 6. Copy the **Client ID** and **Client Secret** for later.  
+7. Download and save your credentials locally to the parent folder for this repo in a file named ```credentials.json```
 
 ---
 
 ### Set Up Environment Variables
-1. Copy `.env.example` to `.env`:  
+1. Copy `.env.example` to `.env`:
    ```sh
    cp .env.example .env
    ```
-2. Fill in the `.env` file with your credentials:  
+2. Edit the `.env` file with your credentials:  
    ```ini
    GOOGLE_SCOPES='["https://www.googleapis.com/auth/gmail.readonly", "openid"]'
    GOOGLE_CLIENT_ID=your-client-id-here
@@ -65,7 +84,25 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 
 ---
 
-### Run the App  
+
+### Run the App: Two options  
+
+#### Option 1: Docker Container
+
+1. If this is your first time using Docker, install as below:
+   - Install Docker. On Windows/Mac install [Docker Desktop](https://docs.docker.com/get-started/get-docker/). On Linux install [Docker Engine](https://docs.docker.com/engine/install/). 
+   - Start Docker Desktop or Docker Engine
+      - On Windows: make sure to select "Use the WSL 2 based engine" under Settings/general.
+      - On Linux: you may need to take additional post-installation steps, see (here)[https://docs.docker.com/engine/install/linux-postinstall/]. 
+2. Start the app using Docker compose-up. The first time you run this locally it may take a few minutes to set up.
+```
+docker-compose up -d
+```
+3. Then, visit [http://localhost:8000](http://localhost:8000) to begin testing the app locally.
+
+
+#### Option 2: venv and FastAPI server
+
 Once your `.env` file is set up, start the app by following the instructions below:
 1. Create and activate virtual environment:
    ```sh
@@ -92,15 +129,16 @@ Once your `.env` file is set up, start the app by following the instructions bel
    
 Then, visit `http://localhost:8000/login` to test the authentication flow.  
 
+You can view logs from the app by finding your container in Docker Desktop/Docker Engine and clicking on it. The app will automatically refresh when you make changes. 
 ---
 
 ### Troubleshooting Tips
 - **Not redirected after login?**  
   Double-check your `REDIRECT_URI` in both `.env` and Google Cloud settings.  
-- **Missing `credentials.json`?**  
-  The OAuth flow should generate it if configured correctly. If not, ensure you’ve enabled the right API permissions.  
 - **Invalid API key errors?**  
   Some Google APIs require API key restrictions—try generating a new unrestricted key for local testing.  
+- **Cannot Build Docker Image?**
+   Try option 2, with venv and FastAPI server instead. 
 
 ---
 

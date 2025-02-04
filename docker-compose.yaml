@@ -1,0 +1,10 @@
+# docker-compose.yaml
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    volumes:
+      - ./:/app # Mount the current directory for code changes to take effect immediately
+    env_file: ".env"
+    restart: always # Restart if the container crashes
