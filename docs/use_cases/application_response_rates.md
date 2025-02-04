@@ -38,9 +38,11 @@ At a high-level, here’s how statistics calculation can add value to the lives 
 **User is able to open the Stats page and view Cold Response rate**
 - Pi chart for visual
 - Different Time Period Settings (All Time, Last week, 1 Month, 3 Months)
+
 **User is able to open the Stats page and view the frequency of their applications, responses (acceptances / rejections), and interviews**
 - Graph with time on x-axis and frequency on y
 - Different Time Period Settings (All Time, Last week, 1 Month, 3 Months)
+
 **User is able to click on a section of a graph and view the data that makes up that graph.**
 - Have a pop up that lists previous applications, interviews, or responses counted towards a given statistic.
 - Compiled when a request to the database for the given user’s statistics is made (i.e. on page opening).
