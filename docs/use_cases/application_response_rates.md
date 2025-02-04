@@ -52,6 +52,8 @@ At a high-level, here’s how statistics calculation can add value to the lives 
 - Updates every week.
 - Can be checked manually, or does so automatically (depending on whether the data is known to the app).
 
+**Users can open the Stats page and see the community average statistic (or some estimate) to give context to the data.**
+- Next to each graph (or overlaid on it) display an average statistic graph.
 
 ### Edge Cases
 
