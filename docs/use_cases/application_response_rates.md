@@ -51,6 +51,23 @@ With that as the comparison, we can talk pros and cons of our chosen approach:
 
 ## How Can This Really Break?
 
+This feature is relatively safe, assuming we handle gaps in information with care, so as not to create any system errors.
+
+**Poor Data collected**
+
+Inaccurate graphs and statistics due to faulty data scraping or data processing. 
+
+Missing information in email.
+
+Attenuate by filling in gaps in data with “Unreported” or something, and testing for accuracy
+
+**No data for a specific time period or at all**
+
+If the client requests their data from the past three months but they’ve only been on the app, an error might occur. 
+
+Need to ensure that out of bounds database requests are properly handled, and ignore non-existent data.
+
+
 ## Potential Future Improvements
 These will be ordered in terms of likelihood/priority descending (i.e. iterations we are most likely to do come first).
 - 
