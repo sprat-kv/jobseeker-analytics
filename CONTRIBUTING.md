@@ -69,7 +69,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ### Set Up Environment Variables
 1. create a blank file called `.env`:  
    ```sh
-   touch .env
+   cp .env.example .env
    ```
 2. Edit the `.env` file with your credentials:  
    ```ini
