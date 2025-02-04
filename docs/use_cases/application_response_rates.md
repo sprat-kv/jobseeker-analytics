@@ -1,12 +1,8 @@
-# USE CASE Product Spec
+# Application Response Rates Product Spec
 ### Template Credit to Alex Chiou, Taro Cofounder
 
 ## Timeline
 Whenever we have time!
-
-## POCs
-Developer: Lianna Novitz
-Author: YOUR NAME
 
 ## Context
 As a job seeker, I want to calculate my cold application response rate in order to assess how well my resume is being received and determine if any improvements are needed.

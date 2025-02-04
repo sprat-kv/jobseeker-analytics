@@ -1,12 +1,9 @@
-# USE CASE Product Spec
+# Pending Tasks Product Spec
 ### Template Credit to Alex Chiou, Taro Cofounder
 
 ## Timeline
 Whenever we have time!
 
-## POCs
-Developer: Lianna Novitz
-Author: YOUR NAME
 
 ## Context
 As a job seeker, I want to see my pending or upcoming tasks related to existing job applications (such as interviews, follow-ups, and document submissions) in order to effectively plan my schedule.

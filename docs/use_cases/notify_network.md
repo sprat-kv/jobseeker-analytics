@@ -1,12 +1,9 @@
-# USE CASE Product Spec
+# Notify Network Product Spec
 ### Template Credit to Alex Chiou, Taro Cofounder
 
 ## Timeline
 Whenever we have time!
 
-## POCs
-Developer: Lianna Novitz
-Author: YOUR NAME
 
 ## Context
 As a job seeker, I want to regularly update my family, friends and acquaintances about my job search in order to receive their advice, support and referrals.

@@ -1,12 +1,9 @@
-# USE CASE Product Spec
+# Easy Interview Scheduling Product Spec
 ### Template Credit to Alex Chiou, Taro Cofounder
 
 ## Timeline
 Whenever we have time!
 
-## POCs
-Developer: Lianna Novitz
-Author: YOUR NAME
 
 ## Context
 As a job seeker, I want to share my current schedule easily in order to avoid back-and-forth emails and interview timing conflicts between companies. 

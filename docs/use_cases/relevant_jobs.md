@@ -1,12 +1,9 @@
-# USE CASE Product Spec
+# Relevant Jobs Product Spec
 ### Template Credit to Alex Chiou, Taro Cofounder
 
 ## Timeline
 Whenever we have time!
 
-## POCs
-Developer: Lianna Novitz
-Author: YOUR NAME
 
 ## Context
 As a job seeker, I want to see highly relevant job listings based on my qualifications and previous applications in order to save time on the job search. 
