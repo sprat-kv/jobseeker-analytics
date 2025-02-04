@@ -1,5 +1,5 @@
-# Easy Interview Scheduling Product Spec
-### Template Credit to Alex Chiou, Taro Cofounder
+# Product Spec: Easy Interview Scheduling
+### Template Credit to Alex Chiou, Taro Co-Founder
 
 ## Timeline
 Whenever we have time!

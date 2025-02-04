@@ -1,5 +1,5 @@
-# Notify Network Product Spec
-### Template Credit to Alex Chiou, Taro Cofounder
+# Product Spec: Notify Network
+### Template Credit to Alex Chiou, Taro Co-Founder
 
 ## Timeline
 Whenever we have time!
