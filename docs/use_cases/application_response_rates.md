@@ -36,16 +36,22 @@ At a high-level, here’s how statistics calculation can add value to the lives 
 ### Use Cases
 
 **User is able to open the Stats page and view Cold Response rate**
-- Pi chart for visual
-- Different Time Period Settings (All Time, Last week, 1 Month, 3 Months)
+- Pi chart for visual.
+- Different Time Period Settings (All Time, Last week, 1 Month, 3 Months).
 
 **User is able to open the Stats page and view the frequency of their applications, responses (acceptances / rejections), and interviews**
-- Graph with time on x-axis and frequency on y
-- Different Time Period Settings (All Time, Last week, 1 Month, 3 Months)
+- Graph with time on x-axis and frequency on y.
+- Different Time Period Settings (All Time, Last week, 1 Month, 3 Months).
 
 **User is able to click on a section of a graph and view the data that makes up that graph.**
 - Have a pop up that lists previous applications, interviews, or responses counted towards a given statistic.
 - Compiled when a request to the database for the given user’s statistics is made (i.e. on page opening).
+
+**Users are able to open Stats page and view checklists for cold response rate improvement.**
+- Checklist with weekly tasks such as attending a hiring event, attending a networking event, applying to 20 jobs, updating friends and family.
+- Updates every week.
+- Can be checked manually, or does so automatically (depending on whether the data is known to the app).
+
 
 ### Edge Cases
 
