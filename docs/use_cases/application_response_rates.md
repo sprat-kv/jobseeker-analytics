@@ -35,6 +35,26 @@ At a high-level, here’s how statistics calculation can add value to the lives 
 
 ### Use Cases
 
+**User is able to open the Stats page and view Cold Response rate**
+- Pi chart for visual.
+- Different Time Period Settings (All Time, Last week, 1 Month, 3 Months).
+
+**User is able to open the Stats page and view the frequency of their applications, responses (acceptances / rejections), and interviews**
+- Graph with time on x-axis and frequency on y.
+- Different Time Period Settings (All Time, Last week, 1 Month, 3 Months).
+
+**User is able to click on a section of a graph and view the data that makes up that graph.**
+- Have a pop up that lists previous applications, interviews, or responses counted towards a given statistic.
+- Compiled when a request to the database for the given user’s statistics is made (i.e. on page opening).
+
+**Users are able to open Stats page and view checklists for cold response rate improvement.**
+- Checklist with weekly tasks such as attending a hiring event, attending a networking event, applying to 20 jobs, updating friends and family.
+- Updates every week.
+- Can be checked manually, or does so automatically (depending on whether the data is known to the app).
+
+**Users can open the Stats page and see the community average statistic (or some estimate) to give context to the data.**
+- Next to each graph (or overlaid on it) display an average statistic graph.
+
 ### Edge Cases
 
 ## Data Model
@@ -51,10 +71,28 @@ With that as the comparison, we can talk pros and cons of our chosen approach:
 
 ## How Can This Really Break?
 
+This feature is relatively safe, assuming we handle gaps in information with care, so as not to create any system errors.
+
+**Poor Data collected**
+
+Inaccurate graphs and statistics due to faulty data scraping or data processing. 
+
+Missing information in email.
+
+Attenuate by filling in gaps in data with “Unreported” or something, and testing for accuracy
+
+**No data for a specific time period or at all**
+
+If the client requests their data from the past three months but they’ve only been on the app, an error might occur. 
+
+Need to ensure that out of bounds database requests are properly handled, and ignore non-existent data.
+
+
 ## Potential Future Improvements
 These will be ordered in terms of likelihood/priority descending (i.e. iterations we are most likely to do come first).
-- 
-- 
+
+- Sharing the Statistics (By link or email)
+- Other kinds of statistics (networking based, event based, etc)
 
 ## Questions
 
