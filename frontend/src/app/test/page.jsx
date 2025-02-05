@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function Test() {
 	const [data, setData] = useState(null);
 
 	useEffect(() => {
@@ -11,8 +11,6 @@ export default function Home() {
 			.then((data) => setData(data))
 			.catch((err) => console.error("Error fetching:", err));
 	}, []);
-
-	test = 0;
 
 	return (
 		<div>
