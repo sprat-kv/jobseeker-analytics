@@ -1,6 +1,7 @@
 # General
 .DS_Store
 *.pem
+*.pyc
 
 # Debug logs
 npm-debug.log*
