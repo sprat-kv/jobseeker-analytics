@@ -1,0 +1,19 @@
+
+
+echo "Running frontend pre-commit hook"
+
+# Check if node_modules exists
+if [ -d "frontend/node_modules" ]; then
+
+    # Run prettier.sh
+    echo "\n----- Running prettier check -----"
+    ./scripts/prettier.sh
+
+    # Run lint.sh
+    echo "\n----- Running lint check -----"
+    ./scripts/lint.sh
+else
+    # Skip frontend checks if node_modules folder not found
+    echo "Skipping frontend checks: node_modules folder not found. Cd into frontend and run 'npm install' first."
+    exit 1
+fi
