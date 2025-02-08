@@ -6,12 +6,16 @@ import json
 
 from datetime import datetime, timedelta
 
-SCOPES = json.loads(os.getenv("GOOGLE_SCOPES").strip("'\""))
+from config_utils import get_settings
+
+settings = get_settings()
+
+SCOPES = json.loads(settings.GOOGLE_SCOPES.strip("'\""))
 CLIENT_SECRETS_FILE = "credentials.json"
-REDIRECT_URI = os.getenv("REDIRECT_URI")
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-COOKIE_SECRET = os.getenv("COOKIE_SECRET")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+REDIRECT_URI = settings.REDIRECT_URI
+GOOGLE_CLIENT_ID =  settings.GOOGLE_CLIENT_ID
+COOKIE_SECRET = settings.COOKIE_SECRET
+GOOGLE_API_KEY = settings.GOOGLE_API_KEY
 
 GENERIC_ATS_DOMAINS = ["us.greenhouse-mail.io", "smartrecruiters.com", "linkedin.com", "ashbyhq.com", "hire.lever.co", "hi.wellfound.com", "talent.icims.com", "myworkday.com", "otta.com"]
 

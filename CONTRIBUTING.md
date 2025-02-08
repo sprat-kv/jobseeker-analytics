@@ -122,6 +122,7 @@ Once your `.env` file is set up, start the app by following the instructions bel
    ```
 4. Run FastAPI Server Locally:
    ```sh
+   cd backend
    uvicorn main:app --reload
    ```
 6. Check it out @:

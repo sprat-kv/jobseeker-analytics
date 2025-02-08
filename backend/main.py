@@ -15,7 +15,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
 
-from constants import QUERY_APPLIED_EMAIL_FILTER, SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, COOKIE_SECRET
+from constants import QUERY_APPLIED_EMAIL_FILTER, CLIENT_SECRETS_FILE, SCOPES
 from auth_utils import AuthenticatedUser
 from db_utils import export_to_csv
 from email_utils import (
@@ -30,9 +30,13 @@ from email_utils import (
 from file_utils import get_user_filepath
 from llm_utils import process_email
 from session.session_layer import create_random_session_string, validate_session, is_token_expired
+from config_utils import get_settings 
+
 
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key=COOKIE_SECRET)
+settings = get_settings()
+app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
+
 
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="templates")
@@ -121,7 +125,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
     """Handles the redirect from Google after the user grants consent."""
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
-            CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI)
+            CLIENT_SECRETS_FILE, SCOPES, redirect_uri=settings.REDIRECT_URI)
     try:
         if not code:
             logger.info("No code in request, redirecting to authorization URL")
