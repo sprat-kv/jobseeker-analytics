@@ -73,12 +73,13 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    ```
 2. Edit the `.env` file with your credentials:  
    ```ini
-   GOOGLE_SCOPES='["https://www.googleapis.com/auth/gmail.readonly", "openid"]'
    GOOGLE_CLIENT_ID=your-client-id-here
-   GOOGLE_CLIENT_SECRET=your-client-secret-here
    COOKIE_SECRET=your-random-secret-here
    GOOGLE_API_KEY=your-api-key-here
-   REDIRECT_URI=https://jobseeker-analytics.onrender.com/login
+   DB_HOST=your-db-host-here
+   DB_NAME=your-db-name-here
+   DB_USER=your-db-user-here
+   DB_PASSWORD=your-db-password-here
    ```
    **🔒 Never share your `.env` file or commit it to Git!**  
 
