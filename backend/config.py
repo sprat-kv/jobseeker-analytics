@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict, NoDecode
 from typing import List
 from typing_extensions import Annotated
 
+
 class Settings(BaseSettings):
     GOOGLE_SCOPES: Annotated[List[str], NoDecode]
     REDIRECT_URI: str
@@ -19,11 +20,12 @@ class Settings(BaseSettings):
     CLIENT_SECRETS_FILE: str = "credentials.json"
     ENV: str = "dev"
 
-    @field_validator('GOOGLE_SCOPES', mode='before')
+    @field_validator("GOOGLE_SCOPES", mode="before")
     @classmethod
     def decode_scopes(cls, v: str) -> List[str]:
         return json.loads(v.strip("'\""))
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
-settings = Settings(_env_file='.env', _env_file_encoding='utf-8')
+
+settings = Settings(_env_file=".env", _env_file_encoding="utf-8")

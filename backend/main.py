@@ -29,8 +29,12 @@ from email_utils import (
 )
 from file_utils import get_user_filepath
 from llm_utils import process_email
-from session.session_layer import create_random_session_string, validate_session, is_token_expired
-from config_utils import get_settings 
+from session.session_layer import (
+    create_random_session_string,
+    validate_session,
+    is_token_expired,
+)
+from config_utils import get_settings
 
 
 app = FastAPI()
@@ -42,7 +46,7 @@ app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, format='%(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
 
@@ -50,6 +54,7 @@ api_call_finished = False
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
+
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
@@ -79,6 +84,7 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
 
+
 @app.get("/logout")
 async def logout(request: Request, response: RedirectResponse):
     logger.info("Logging out")
@@ -91,9 +97,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
     logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
-    messages = get_email_ids(
-        query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
-    )
+    messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
 
@@ -104,7 +108,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         msg_id = message["id"]
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
-            result = process_email(msg['text_content'])
+            result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
                 logger.info("user_id:%s  successfully extracted email", user.user_id)
             else:
@@ -119,13 +123,19 @@ def fetch_emails(user: AuthenticatedUser) -> None:
             export_to_csv(user.filepath, user.user_id, message_data)
     api_call_finished = True
 
+
 # Define the route for OAuth2 flow
 @app.get("/login")
-def login(request: Request, background_tasks: BackgroundTasks, response: RedirectResponse):
+def login(
+    request: Request, background_tasks: BackgroundTasks, response: RedirectResponse
+):
     """Handles the redirect from Google after the user grants consent."""
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
-            settings.CLIENT_SECRETS_FILE, settings.GOOGLE_SCOPES, redirect_uri=settings.REDIRECT_URI)
+        settings.CLIENT_SECRETS_FILE,
+        settings.GOOGLE_SCOPES,
+        redirect_uri=settings.REDIRECT_URI,
+    )
     try:
         if not code:
             logger.info("No code in request, redirecting to authorization URL")
@@ -133,7 +143,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
             authorization_url, state = flow.authorization_url(prompt="consent")
             logger.info("Redirecting to %s", authorization_url)
             response = RedirectResponse(url=authorization_url)
-            
+
             logger.info("Response location: %s", response.headers["location"])
             logger.info("Status Code: %s", response.status_code)
             logger.info("Headers: %s", response.headers)
@@ -148,12 +158,14 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
             logger.info("creds not valid. refreshing...")
             creds.refresh(Request())
             return RedirectResponse("/login", status_code=303)
-        
+
         user = AuthenticatedUser(creds)
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
         logger.info("creds.expiry: %s", creds.expiry)
-        token_expiry = (datetime.datetime.utcnow() + datetime.timedelta(hours=1)).isoformat()   
+        token_expiry = (
+            datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        ).isoformat()
         # Default expiry time 1 hour from now in case creds.expiry is not available
         try:
             token_expiry = creds.expiry.isoformat()
@@ -164,7 +176,9 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
 
         response = RedirectResponse(url="/processing", status_code=303)
         logger.info("user_id:%s set_cookie", user.user_id)
-        response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
+        response.set_cookie(
+            key="Authorization", value=session_id, secure=True, httponly=True
+        )
 
         background_tasks.add_task(fetch_emails, user)
         logger.info("user_id:%s background_tasks.add_task fetch_emails", user.user_id)
@@ -179,7 +193,9 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
     today = str(datetime.date.today())
-    return templates.TemplateResponse("success.html", {"request": request, "today": today})
+    return templates.TemplateResponse(
+        "success.html", {"request": request, "today": today}
+    )
 
 
 # Run the app using Uvicorn
