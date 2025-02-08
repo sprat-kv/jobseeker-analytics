@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     DB_PORT: int
+    CLIENT_SECRETS_FILE: str = "credentials.json"
     ENV: str = "dev"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding='utf-8')

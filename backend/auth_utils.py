@@ -2,7 +2,6 @@ import logging
 import os
 import uuid
 
-from constants import SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, GOOGLE_CLIENT_ID
 from file_utils import get_user_filepath
 
 from google.oauth2.credentials import Credentials
@@ -10,8 +9,11 @@ from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 
+from config_utils import get_settings
+
 logger = logging.getLogger(__name__)
 
+settings = get_settings()
 class AuthenticatedUser:
     """
     The AuthenticatedUser class is used to 
@@ -35,7 +37,7 @@ class AuthenticatedUser:
         """
         try:
             logger.info("Verifying ID token...")
-            decoded_token = id_token.verify_oauth2_token(self.creds.id_token, Request(), audience=GOOGLE_CLIENT_ID)
+            decoded_token = id_token.verify_oauth2_token(self.creds.id_token, Request(), audience=settings.GOOGLE_CLIENT_ID)
             user_id = decoded_token['sub']  # 'sub' is the unique user ID
             return user_id
         except (KeyError, TypeError):

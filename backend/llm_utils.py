@@ -6,9 +6,12 @@ from google.ai.generativelanguage_v1beta2 import GenerateTextResponse
 from dotenv import load_dotenv
 import logging
 load_dotenv()
+from config_utils import get_settings
+
+settings = get_settings()
 
 # Configure Google Gemini API
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=settings.GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash-8b')
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

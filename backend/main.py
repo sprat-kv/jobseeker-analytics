@@ -15,7 +15,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
 
-from constants import QUERY_APPLIED_EMAIL_FILTER, CLIENT_SECRETS_FILE, SCOPES
+from constants import QUERY_APPLIED_EMAIL_FILTER
 from auth_utils import AuthenticatedUser
 from db_utils import export_to_csv
 from email_utils import (
@@ -125,7 +125,7 @@ def login(request: Request, background_tasks: BackgroundTasks, response: Redirec
     """Handles the redirect from Google after the user grants consent."""
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
-            CLIENT_SECRETS_FILE, SCOPES, redirect_uri=settings.REDIRECT_URI)
+            settings.CLIENT_SECRETS_FILE, settings.GOOGLE_SCOPES, redirect_uri=settings.REDIRECT_URI)
     try:
         if not code:
             logger.info("No code in request, redirecting to authorization URL")
