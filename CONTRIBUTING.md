@@ -107,13 +107,13 @@ Once your `.env` file is set up, start the app by following the instructions bel
 1. Create and activate virtual environment:
    ```sh
    # MAC/LINUX
-   python3 -m venv venv
-   source venv/bin/activate
+   python3 -m venv .venv
+   source .venv/bin/activate
    ```
    ```sh
    # WINDOWS (CMD)
-   python -m venv venv
-   venv\Scripts\activate
+   python -m venv .venv
+   .venv\Scripts\activate
    ```
    
 2. Install dependencies:

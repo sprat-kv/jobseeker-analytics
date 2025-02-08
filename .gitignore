@@ -6,7 +6,7 @@
 *.csv
 *.txt
 *.json
-venv/
+.venv/
 
 # Debug logs
 npm-debug.log*
