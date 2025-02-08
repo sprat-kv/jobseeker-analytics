@@ -62,7 +62,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    - https://jobseeker-analytics.onrender.com/login
    - http://localhost:8000/login
 6. Copy the **Client ID** and **Client Secret** for later.  
-7. Download and save your credentials locally to the parent folder for this repo in a file named ```credentials.json```
+7. Download and save your credentials locally to the `backend` folder for this repo in a file named ```credentials.json```
 
 ---
 
