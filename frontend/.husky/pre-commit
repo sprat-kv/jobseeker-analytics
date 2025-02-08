@@ -15,5 +15,4 @@ if [ -d "frontend/node_modules" ]; then
 else
     # Skip frontend checks if node_modules folder not found
     echo "Skipping frontend checks: node_modules folder not found. Cd into frontend and run 'npm install' first."
-    exit 1
 fi
