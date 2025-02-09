@@ -1,6 +1,5 @@
 import os
 import logging
-from auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
 

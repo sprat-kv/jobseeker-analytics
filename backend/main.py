@@ -1,18 +1,13 @@
 import datetime
-import json
 import logging
 import os
-import requests
 
-from urllib.parse import urlencode
-
-from fastapi import FastAPI, Request, Query, BackgroundTasks, Depends
+from fastapi import FastAPI, Request, BackgroundTasks, Depends
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
 
 from constants import (
@@ -27,18 +22,12 @@ from db_utils import export_to_csv
 from email_utils import (
     get_email_ids,
     get_email,
-    get_company_name,
-    get_received_at_timestamp,
-    get_email_subject_line,
-    get_email_domain_from_address,
-    get_email_from_address,
 )
 from file_utils import get_user_filepath
 from llm_utils import process_email
 from session.session_layer import (
     create_random_session_string,
     validate_session,
-    is_token_expired,
 )
 
 app = FastAPI()
@@ -103,7 +92,6 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
 
-    emails_data = []
     for message in messages:
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
@@ -115,7 +103,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
                 logger.info("user_id:%s  successfully extracted email", user.user_id)
             else:
                 result = {}
-                logger.info(f"user_id:%s failed to extract email", user.user_id)
+                logger.info("user_id:%s failed to extract email", user.user_id)
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
             message_data["received_at"] = [msg.get("date", "")]

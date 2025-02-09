@@ -1,7 +1,6 @@
 # app/session/session_layer.py
 import logging
 import secrets
-import time
 from datetime import datetime
 from fastapi import Request
 

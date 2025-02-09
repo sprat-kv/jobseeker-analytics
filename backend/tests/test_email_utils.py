@@ -79,8 +79,8 @@ def test_get_email_domain():
 
 
 def test_is_generic_email_domain():
-    assert email_utils.is_generic_email_domain("hire.lever.co") == True
-    assert email_utils.is_generic_email_domain("us.greenhouse-mail.io") == True
+    assert email_utils.is_generic_email_domain("hire.lever.co")
+    assert email_utils.is_generic_email_domain("us.greenhouse-mail.io")
 
 
 def test_get_last_capitalized_words_in_line():

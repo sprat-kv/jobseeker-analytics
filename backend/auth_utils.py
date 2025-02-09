@@ -1,12 +1,10 @@
 import logging
-import os
 import uuid
 
-from constants import SCOPES, CLIENT_SECRETS_FILE, REDIRECT_URI, GOOGLE_CLIENT_ID
+from constants import GOOGLE_CLIENT_ID
 from file_utils import get_user_filepath
 
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 
