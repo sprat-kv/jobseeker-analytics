@@ -161,6 +161,15 @@ You can view logs from the app by finding your container in Docker Desktop/Docke
    git add .
    git commit -m "Add submission guidelines and env setup"
    ```
+   Note: if you end up using a new Python library (e.g. I just added `ruff`) with `pip install`, be sure to do the following from the `backend` folder:
+   `pip freeze > requirements.txt`
+
+   You will need to add the `requirements.txt` file change as a commit, to ensure the environment has all its dependencies and production and local development environments run smoothly.
+   ```sh
+   git add requirements.txt
+   git commit -m "add python library ruff"
+   ```
+
 5. **Format your changes** and commit them:
 
 - If you're using Python, run:
