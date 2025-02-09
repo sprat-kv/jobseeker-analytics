@@ -22,7 +22,6 @@ from llm_utils import process_email
 from session.session_layer import (
     create_random_session_string,
     validate_session,
-    is_token_expired,
 )
 from config_utils import get_settings
 
@@ -45,7 +44,6 @@ api_call_finished = False
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
-
 
 
 @app.get("/processing", response_class=HTMLResponse)
@@ -75,7 +73,6 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
-
 
 
 @app.get("/logout")
@@ -118,12 +115,8 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     api_call_finished = True
 
 
-
 # Define the route for OAuth2 flow
 @app.get("/login")
-def login(
-    request: Request, background_tasks: BackgroundTasks, response: RedirectResponse
-):
 def login(
     request: Request, background_tasks: BackgroundTasks, response: RedirectResponse
 ):
@@ -142,7 +135,6 @@ def login(
             logger.info("Redirecting to %s", authorization_url)
             response = RedirectResponse(url=authorization_url)
 
-
             logger.info("Response location: %s", response.headers["location"])
             logger.info("Status Code: %s", response.status_code)
             logger.info("Headers: %s", response.headers)
@@ -157,7 +149,6 @@ def login(
             logger.info("creds not valid. refreshing...")
             creds.refresh(Request())
             return RedirectResponse("/login", status_code=303)
-
 
         user = AuthenticatedUser(creds)
         # Create a session for the user

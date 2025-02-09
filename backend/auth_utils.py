@@ -23,7 +23,6 @@ class AuthenticatedUser:
     successfully authenticated with Google.
     """
 
-
     def __init__(self, creds: Credentials):
         self.creds = creds
         self.user_id = self.get_user_id()

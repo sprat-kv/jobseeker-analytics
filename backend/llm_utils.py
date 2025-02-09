@@ -1,13 +1,9 @@
 import google.generativeai as genai
 import time
 import json
-import os
 from google.ai.generativelanguage_v1beta2 import GenerateTextResponse
-from dotenv import load_dotenv
 import logging
 
-
-load_dotenv()
 from config_utils import get_settings
 
 settings = get_settings()
@@ -38,7 +34,6 @@ def process_email(email_text):
         If the email is obviously not related to a job application, return an empty pair of curly braces like this {{}}
         Email: {email_text}
     """
-
 
     retries = 3  # Max retries
     delay = 60  # Initial delay
@@ -81,4 +76,3 @@ def process_email(email_text):
                 return None
     logger.error(f"Failed to process email after {retries} attempts.")
     return None
-

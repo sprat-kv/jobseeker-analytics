@@ -2,8 +2,6 @@
 This file contains the main constants used in the application.
 """
 
-import os
-import json
 
 from datetime import datetime, timedelta
 
