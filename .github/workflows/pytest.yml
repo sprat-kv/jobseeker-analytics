@@ -1,4 +1,4 @@
-name: Run Pytest on PR
+name: Run python unit tests
 
 on:
   pull_request:
@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Adjust if needed
+          pip install -r backend/requirements.txt  # Adjust if needed
 
       - name: Run Pytest
         run: pytest --maxfail=5 --disable-warnings  # Modify flags as needed
