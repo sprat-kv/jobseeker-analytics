@@ -113,7 +113,9 @@ def test_get_company_name_returns_last_capital_word_in_subject_line():
     """Default behavior for company name is to return the
     highest frequency word that appears in the email body."""
     with (
-        mock.patch("utils.email_utils.get_top_word_in_email_body", return_value="interview"),
+        mock.patch(
+            "utils.email_utils.get_top_word_in_email_body", return_value="interview"
+        ),
         mock.patch(
             "utils.email_utils.get_email_from_address",
             return_value="no-reply@us.greenhouse-mail.io",
