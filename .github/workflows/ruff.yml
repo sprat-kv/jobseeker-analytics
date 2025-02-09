@@ -1,4 +1,4 @@
-name: Ruff
+name: Run python linting checks
 on: [ push, pull_request ]
 jobs:
   ruff:
