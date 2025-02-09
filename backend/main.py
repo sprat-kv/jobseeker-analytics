@@ -1,18 +1,13 @@
 import datetime
-import json
 import logging
 import os
-import requests
 
-from urllib.parse import urlencode
-
-from fastapi import FastAPI, Request, Query, BackgroundTasks, Depends
+from fastapi import FastAPI, Request, BackgroundTasks, Depends
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import Flow
 
 from constants import QUERY_APPLIED_EMAIL_FILTER
@@ -21,11 +16,6 @@ from db_utils import export_to_csv
 from email_utils import (
     get_email_ids,
     get_email,
-    get_company_name,
-    get_received_at_timestamp,
-    get_email_subject_line,
-    get_email_domain_from_address,
-    get_email_from_address,
 )
 from file_utils import get_user_filepath
 from llm_utils import process_email
@@ -47,6 +37,7 @@ templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
+logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
 
@@ -54,6 +45,7 @@ api_call_finished = False
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
+
 
 
 @app.get("/processing", response_class=HTMLResponse)
@@ -85,6 +77,7 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
     return HTMLResponse(content="File not found :( ", status_code=404)
 
 
+
 @app.get("/logout")
 async def logout(request: Request, response: RedirectResponse):
     logger.info("Logging out")
@@ -98,10 +91,10 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
     messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
+    messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
 
-    emails_data = []
     for message in messages:
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
@@ -109,11 +102,12 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
             result = process_email(msg["text_content"])
+            result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
                 logger.info("user_id:%s  successfully extracted email", user.user_id)
             else:
                 result = {}
-                logger.info(f"user_id:%s failed to extract email", user.user_id)
+                logger.info("user_id:%s failed to extract email", user.user_id)
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
             message_data["received_at"] = [msg.get("date", "")]
@@ -124,8 +118,12 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     api_call_finished = True
 
 
+
 # Define the route for OAuth2 flow
 @app.get("/login")
+def login(
+    request: Request, background_tasks: BackgroundTasks, response: RedirectResponse
+):
 def login(
     request: Request, background_tasks: BackgroundTasks, response: RedirectResponse
 ):
@@ -144,6 +142,7 @@ def login(
             logger.info("Redirecting to %s", authorization_url)
             response = RedirectResponse(url=authorization_url)
 
+
             logger.info("Response location: %s", response.headers["location"])
             logger.info("Status Code: %s", response.status_code)
             logger.info("Headers: %s", response.headers)
@@ -159,10 +158,14 @@ def login(
             creds.refresh(Request())
             return RedirectResponse("/login", status_code=303)
 
+
         user = AuthenticatedUser(creds)
         # Create a session for the user
         session_id = request.session["session_id"] = create_random_session_string()
         logger.info("creds.expiry: %s", creds.expiry)
+        token_expiry = (
+            datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        ).isoformat()
         token_expiry = (
             datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         ).isoformat()
@@ -176,6 +179,9 @@ def login(
 
         response = RedirectResponse(url="/processing", status_code=303)
         logger.info("user_id:%s set_cookie", user.user_id)
+        response.set_cookie(
+            key="Authorization", value=session_id, secure=True, httponly=True
+        )
         response.set_cookie(
             key="Authorization", value=session_id, secure=True, httponly=True
         )
@@ -193,6 +199,9 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
     today = str(datetime.date.today())
+    return templates.TemplateResponse(
+        "success.html", {"request": request, "today": today}
+    )
     return templates.TemplateResponse(
         "success.html", {"request": request, "today": today}
     )

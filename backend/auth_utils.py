@@ -1,11 +1,9 @@
 import logging
-import os
 import uuid
 
 from file_utils import get_user_filepath
 
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 
@@ -19,10 +17,12 @@ settings = get_settings()
 class AuthenticatedUser:
     """
     The AuthenticatedUser class is used to
+    The AuthenticatedUser class is used to
     store information about the user. This
     class is instantiated after the user has
     successfully authenticated with Google.
     """
+
 
     def __init__(self, creds: Credentials):
         self.creds = creds
@@ -54,10 +54,19 @@ class AuthenticatedUser:
                 )
                 return proxy_user_id  # Generate a random ID
             if not hasattr(self, "_retry"):
+                logger.error(
+                    "Could not retrieve user ID. Using proxy ID: %s", proxy_user_id
+                )
+                return proxy_user_id  # Generate a random ID
+            if not hasattr(self, "_retry"):
                 self._retry = True
                 return self.get_user_id()
             else:
                 proxy_user_id = str(uuid.uuid4())
+                logger.error(
+                    "Could not retrieve user ID after retry. Using proxy ID: %s",
+                    proxy_user_id,
+                )
                 logger.error(
                     "Could not retrieve user ID after retry. Using proxy ID: %s",
                     proxy_user_id,
@@ -67,4 +76,5 @@ class AuthenticatedUser:
             logger.error("Error verifying ID token: %s", e)
             proxy_user_id = str(uuid.uuid4())
             logger.error("Could not verify ID token. Using proxy ID: %s", proxy_user_id)
+            return proxy_user_id  # Generate a random ID
             return proxy_user_id  # Generate a random ID

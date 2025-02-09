@@ -6,6 +6,7 @@ from google.ai.generativelanguage_v1beta2 import GenerateTextResponse
 from dotenv import load_dotenv
 import logging
 
+
 load_dotenv()
 from config_utils import get_settings
 
@@ -15,6 +16,10 @@ settings = get_settings()
 genai.configure(api_key=settings.GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash-8b")
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -34,6 +39,7 @@ def process_email(email_text):
         Email: {email_text}
     """
 
+
     retries = 3  # Max retries
     delay = 60  # Initial delay
     for attempt in range(retries):
@@ -50,6 +56,12 @@ def process_email(email_text):
                     .replace("'", '"')
                     .strip()
                 )
+                cleaned_response_json = (
+                    response_json.replace("json", "")
+                    .replace("`", "")
+                    .replace("'", '"')
+                    .strip()
+                )
                 logger.info("Cleaned response: %s", cleaned_response_json)
                 return json.loads(cleaned_response_json)
             else:
@@ -60,9 +72,13 @@ def process_email(email_text):
                 logger.warning(
                     f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
                 )
+                logger.warning(
+                    f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
+                )
                 time.sleep(delay)
             else:
                 logger.error(f"Error processing email: {e}")
                 return None
     logger.error(f"Failed to process email after {retries} attempts.")
     return None
+
