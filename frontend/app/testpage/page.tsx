@@ -12,8 +12,8 @@ export default function TestPage() {
 				credentials: "include" // Include credentials if needed
 			});
 			const result = await res.json();
-			
-            setData(result);
+
+			setData(result);
 		} catch (error) {
 			setData({ message: "Error fetching data: " + error });
 		}
