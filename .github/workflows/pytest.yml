@@ -6,7 +6,9 @@ on:
       - '**.py'
     branches:
       - main  # Change this to match your default branch
-
+  push:
+     paths:
+      - '**.py'
 jobs:
   test:
     runs-on: ubuntu-latest
