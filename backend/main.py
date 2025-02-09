@@ -3,12 +3,10 @@ import logging
 import os
 
 from fastapi import FastAPI, Request, BackgroundTasks, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import Flow
