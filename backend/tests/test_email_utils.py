@@ -1,7 +1,7 @@
 from unittest import mock
 
 from test_constants import SAMPLE_MESSAGE, SUBJECT_LINE
-import email_utils
+import utils.email_utils as email_utils
 
 
 def test_get_top_consecutive_capitalized_words():

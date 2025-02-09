@@ -11,19 +11,19 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import Flow
 
 from constants import QUERY_APPLIED_EMAIL_FILTER
-from auth_utils import AuthenticatedUser
-from db_utils import export_to_csv
-from email_utils import (
+from utils.auth_utils import AuthenticatedUser
+from utils.db_utils import export_to_csv
+from utils.email_utils import (
     get_email_ids,
     get_email,
 )
-from file_utils import get_user_filepath
-from llm_utils import process_email
+from utils.file_utils import get_user_filepath
+from utils.llm_utils import process_email
 from session.session_layer import (
     create_random_session_string,
     validate_session,
 )
-from config_utils import get_settings
+from utils.config_utils import get_settings
 
 
 app = FastAPI()
