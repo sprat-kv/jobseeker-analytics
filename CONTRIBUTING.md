@@ -161,11 +161,21 @@ You can view logs from the app by finding your container in Docker Desktop/Docke
    git add .
    git commit -m "Add submission guidelines and env setup"
    ```
-5. **Push to your fork**:  
+5. **Format your changes** and commit them:
+
+- If you're using Python, run:
+   ```sh
+   ruff format path/to/your/code
+   git add .
+   git commit -m "format with ruff"
+   ```
+(Please ensure your code passes all linting checks before submitting a pull request.)
+
+6. **Push to your fork**:  
    ```sh
    git push origin docs/65-add-contribution-guidelines
    ```
-6. **Open a Pull Request** on GitHub.  
+7. **Open a Pull Request** on GitHub.  
 
 Please ensure your changes align with the project's goals and do your best to follow the below coding style guides.
 - Python: https://google.github.io/styleguide/pyguide.html
