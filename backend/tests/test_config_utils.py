@@ -4,13 +4,13 @@ from utils.config_utils import get_settings
 
 @patch("utils.config_utils.config.Settings")
 def test_import_settings(mock_settings_call):
-    import backend.utils.llm_utils  # ruff: noqa: F401
+    import backend.utils.llm_utils  # noqa: F401
 
     assert mock_settings_call.called
-    import backend.utils.auth_utils  # ruff: noqa: F401
+    import backend.utils.auth_utils  # noqa: F401
 
     assert mock_settings_call.called
-    import main  # ruff: noqa: F401
+    import main  # noqa: F401
 
     assert mock_settings_call.called
 
