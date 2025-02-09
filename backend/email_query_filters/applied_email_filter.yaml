@@ -5,32 +5,32 @@
   field_list:
     - field: subject
       include_terms:
-        - application was sent
+        - application has been submitted
         - application received
-        - your application to
-        - applied to
-        - your application was sent to
-        - thank you for your application
-        - thank you for your submission
-        - thanks for applying to
-        - thank you for applying
-        - confirmation of your application
-        - your recent job application
-        - successfully submitted
         - application received 
         - application submitted
-        - we received your application
-        - thank you for your interest
-        - thanks for your interest
-        - thank you from
-        - application has been submitted
-        - thanks for your application
-        - job application confirmation
-        - ve been referred
-        - your application for
         - application to * successfully submitted
+        - application was sent
+        - applied to
+        - confirmation of your application
+        - job application confirmation
+        - successfully submitted
+        - thank you for applying
+        - thank you for your application
+        - thank you for your interest
+        - thank you for your submission
+        - thank you from
+        - thanks for applying to
+        - thanks for your application
+        - thanks for your interest
+        - ve been referred
         - we received your * application
+        - we received your application
+        - your application for
+        - your application to
         - your application to * has been received
+        - your application was sent to
+        - your recent job application
       exclude_terms:
         - Do you want to finish your application
         - watering
@@ -62,7 +62,7 @@
       exclude_terms: ~
     - field: from
       include_terms:
-        - no-reply@ashbyhq.com
         - careers@
+        - no-reply@ashbyhq.com
         - no-reply@greenhouse.io
       exclude_terms: ~
