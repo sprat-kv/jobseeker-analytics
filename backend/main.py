@@ -10,13 +10,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import Flow
 
-from constants import (
-    QUERY_APPLIED_EMAIL_FILTER,
-    SCOPES,
-    CLIENT_SECRETS_FILE,
-    REDIRECT_URI,
-    COOKIE_SECRET,
-)
+from constants import QUERY_APPLIED_EMAIL_FILTER
 from auth_utils import AuthenticatedUser
 from db_utils import export_to_csv
 from email_utils import (
@@ -29,14 +23,19 @@ from session.session_layer import (
     create_random_session_string,
     validate_session,
 )
+from config_utils import get_settings
+
 
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key=COOKIE_SECRET)
+settings = get_settings()
+app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
+
 
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
@@ -89,6 +88,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
     messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
+    messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
 
@@ -98,6 +98,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         msg_id = message["id"]
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
+            result = process_email(msg["text_content"])
             result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
                 logger.info("user_id:%s  successfully extracted email", user.user_id)
@@ -122,7 +123,9 @@ def login(
     """Handles the redirect from Google after the user grants consent."""
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
-        CLIENT_SECRETS_FILE, SCOPES, redirect_uri=REDIRECT_URI
+        settings.CLIENT_SECRETS_FILE,
+        settings.GOOGLE_SCOPES,
+        redirect_uri=settings.REDIRECT_URI,
     )
     try:
         if not code:
@@ -154,6 +157,9 @@ def login(
         token_expiry = (
             datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         ).isoformat()
+        token_expiry = (
+            datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        ).isoformat()
         # Default expiry time 1 hour from now in case creds.expiry is not available
         try:
             token_expiry = creds.expiry.isoformat()
@@ -164,6 +170,9 @@ def login(
 
         response = RedirectResponse(url="/processing", status_code=303)
         logger.info("user_id:%s set_cookie", user.user_id)
+        response.set_cookie(
+            key="Authorization", value=session_id, secure=True, httponly=True
+        )
         response.set_cookie(
             key="Authorization", value=session_id, secure=True, httponly=True
         )
@@ -181,6 +190,9 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
     today = str(datetime.date.today())
+    return templates.TemplateResponse(
+        "success.html", {"request": request, "today": today}
+    )
     return templates.TemplateResponse(
         "success.html", {"request": request, "today": today}
     )

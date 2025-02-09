@@ -1,17 +1,21 @@
 import google.generativeai as genai
 import time
 import json
-import os
 from google.ai.generativelanguage_v1beta2 import GenerateTextResponse
-from dotenv import load_dotenv
 import logging
 
-load_dotenv()
+from config_utils import get_settings
+
+settings = get_settings()
 
 # Configure Google Gemini API
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+genai.configure(api_key=settings.GOOGLE_API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash-8b")
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -47,6 +51,12 @@ def process_email(email_text):
                     .replace("'", '"')
                     .strip()
                 )
+                cleaned_response_json = (
+                    response_json.replace("json", "")
+                    .replace("`", "")
+                    .replace("'", '"')
+                    .strip()
+                )
                 logger.info("Cleaned response: %s", cleaned_response_json)
                 return json.loads(cleaned_response_json)
             else:
@@ -54,6 +64,9 @@ def process_email(email_text):
                 return None
         except Exception as e:
             if "429" in str(e):
+                logger.warning(
+                    f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
+                )
                 logger.warning(
                     f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
                 )

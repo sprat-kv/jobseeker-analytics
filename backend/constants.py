@@ -2,17 +2,9 @@
 This file contains the main constants used in the application.
 """
 
-import os
-import json
 
 from datetime import datetime, timedelta
 
-SCOPES = json.loads(os.getenv("GOOGLE_SCOPES").strip("'\""))
-CLIENT_SECRETS_FILE = "credentials.json"
-REDIRECT_URI = os.getenv("REDIRECT_URI")
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-COOKIE_SECRET = os.getenv("COOKIE_SECRET")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 GENERIC_ATS_DOMAINS = [
     "us.greenhouse-mail.io",
