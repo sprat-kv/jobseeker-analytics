@@ -1,0 +1,73 @@
+# supports * as a wildcard
+# supports NOT() to negate a filter
+
+## include or exclude any of the following subjects ##
+- logic: any
+  field1: subject
+  filters1:
+    - application was sent
+    - application received
+    - your application to
+    - applied to
+    - your application was sent to
+    - thank you for your application
+    - thank you for your submission
+    - thanks for applying to
+    - thank you for applying
+    - confirmation of your application
+    - your recent job application
+    - successfully submitted
+    - application received 
+    - application submitted
+    - we received your application
+    - thank you for your interest
+    - thanks for your interest
+    - thank you from
+    - application has been submitted
+    - thanks for your application
+    - job application confirmation
+    - ve been referred
+    - application to * successfully submitted
+    - your application to * has been received
+    - we received your * application
+    - your application for * NOT(update)
+    - NOT(Do you want to finish your application)
+    - NOT(watering)
+    
+## include or exclude any of the following from addresses
+- logic: any
+  field1: from
+  filters1:
+    - notification@smartrecruiters.com
+    - NOT(IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca)
+    - NOT(no-reply@comet.zillow.com)
+
+## specific combinations of subject + from to include or exclude ##
+- logic: all
+  field1: subject
+  filters1:
+    - application was sent
+  field2: from
+  filters2:
+    - jobs-noreply@linkedin.com
+- logic: all
+  field1: subject
+  filters1:
+    - thank
+  field2: from
+  filters2:
+    - no-reply@ashbyhq.com
+- logic: all
+  field1: subject
+  filters1:
+    - thank
+  field2: from
+  filters2:
+    - careers@
+- logic: all
+  field1: subject
+  filters1:
+    - thank
+  field2: from
+  filters2:
+    - no-reply@greenhouse.io
