@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
       - name: Create .env file
         uses: SpicyPizza/create-envfile@v2.0.3
         with:
@@ -30,9 +31,6 @@ jobs:
           envkey_DB_PASSWORD: your-db-password-here
           envkey_CLIENT_SECRETS_FILE: "credentials.json"
           directory: backend
-      
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
