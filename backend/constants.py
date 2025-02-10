@@ -33,10 +33,10 @@ APPLIED_FILTER_PATH = Path(__file__).parent / "email_query_filters" / "applied_e
 APPLIED_FILTER_OVERRIDES_PATH = Path(__file__).parent / "email_query_filters" / "applied_email_filter_overrides.yaml"
 QUERY_APPLIED_EMAIL_FILTER = (
     f"after:{formatted_date} AND "
-    f"({parse_base_filter_config(APPLIED_FILTER_PATH)} OR \n"
-    f"{parse_override_filter_config(APPLIED_FILTER_OVERRIDES_PATH)})"
-    )
-# label:jobs -label:query4
+    f"({parse_base_filter_config(APPLIED_FILTER_PATH)})") 
 
-if __name__ == "__main__":
-    print(QUERY_APPLIED_EMAIL_FILTER)
+    # ------ implement override filter later!! #
+    # OR \n"
+    #f"{parse_override_filter_config(APPLIED_FILTER_OVERRIDES_PATH)})"
+    # )
+# label:jobs -label:query4

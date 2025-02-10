@@ -33,25 +33,25 @@
     - your application to * has been received
     - application was sent
     - your recent job application
-
-## include all of the following subjects
-- logic: all
-  field: subject
-  how: exclude
-  terms:
-    - Do you want to finish your application
-    - watering
     
 ## include any of the following from addresses
 - logic: any
   field: from
   how: include
   terms:
-    - notification@smartrecruiters.com
-    - jobs-noreply@linkedin.com
     - careers@
+    - jobs-noreply@linkedin.com
     - no-reply@ashbyhq.com
     - no-reply@greenhouse.io
+    - notification@smartrecruiters.com
+
+## exclude all of the following subjects
+- logic: all
+  field: subject
+  how: exclude
+  terms:
+    - Do you want to finish your application
+    - watering
 
 ## exclude all of the following from addresses
 - logic: all

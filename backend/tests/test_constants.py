@@ -188,3 +188,22 @@ SAMPLE_MESSAGE = {
     "historyId": "22222222",
     "internalDate": "1111111111000",
 }
+
+DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS = (
+    ("Thank you for your Application!", "do-not-reply@jobs.microsoft.com"),
+    ("Jobba, your application was sent to The Huts", "jobs-noreply@linkedin.com")
+)
+
+DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS = (
+    ("watering applied to plants", "do-not-reply@wateringapp.net"), #made up, would be better to capture the real example
+    ("your application for rental property was viewed", "no-reply@comet.zillow.com"),
+    ("PR Portal (PR application) - Your immigration status update application has been successfully submitted",
+        "IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca")
+)
+
+SAMPLE_FILTER_PATH = "sample_base_filter.yaml"
+EXPECTED_SAMPLE_QUERY_STRING = '''(subject: "application has been submitted" 
+    OR (subject: "application to" AND subject: "successfully submitted") 
+    OR from: "do-not-reply@jobs.microsoft.com" 
+    AND -from: "no-reply@comet.zillow.com" 
+    AND -subject: "watering")'''
