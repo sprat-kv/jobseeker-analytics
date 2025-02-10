@@ -75,7 +75,7 @@ def parse_base_filter_config(filter_path: str) -> str:
         simple_filters = []
         wildcard_any_filters = []
         if block["how"] == "include":
-            simple_filters += [parse_simple(x, block["field"], exclude=False) for x in block["terms"] if not "*" in x]
+            simple_filters += [parse_simple(x, block["field"], exclude=False) for x in block["terms"] if "*" not in x]
             wildcard_any_filters += [parse_wildcard(x, block["field"], exclude=False) for x in block["terms"] if "*" in x]
         if block["how"] == "exclude":
             simple_filters +=  [parse_simple(x, block["field"], exclude=True) for x in block["terms"]]
@@ -107,9 +107,9 @@ def parse_override_filter_config(filter_path: str):
 
             # parse each item based on schema logic    
             if include_terms is not None:
-                simple_filters += [parse_simple(x, sub_block["field"], exclude=False) for x in sub_block["include_terms"] if not "*" in x]
+                simple_filters += [parse_simple(x, sub_block["field"], exclude=False) for x in sub_block["include_terms"]]
             if exclude_terms is not None:
-                simple_filters +=  [parse_simple(x, sub_block["field"], exclude=True) for x in sub_block["exclude_terms"] if not "*" in x]
+                simple_filters +=  [parse_simple(x, sub_block["field"], exclude=True) for x in sub_block["exclude_terms"]]
 
         # join with an AND operator
         if simple_filters:
