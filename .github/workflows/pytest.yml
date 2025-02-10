@@ -43,4 +43,9 @@ jobs:
           pip install -r backend/requirements.txt  # Adjust if needed
 
       - name: Run Pytest
-        run: pytest --maxfail=5 --disable-warnings  # Modify flags as needed
+        run: | 
+          # Load environment variables from .env file
+          set -o allexport
+          source backend/.env
+          set +o allexport
+          pytest --maxfail=5 --disable-warnings  # Modify flags as needed
