@@ -1,6 +1,5 @@
 from unittest.mock import patch
 from utils.config_utils import get_settings
-import functools
 
 
 @patch("utils.config_utils.config.Settings")
