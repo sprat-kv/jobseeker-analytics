@@ -31,10 +31,9 @@ app = FastAPI()
 settings = get_settings()
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 
-# Allow requests from Next.js
 origins = [
-    "http://localhost:3000",  # Next.js Dev Server
-    "https://your-next-app.com"  # Deployed app URL
+    "http://localhost:3000",  # Local Next.js Dev Server
+    "https://www.jobba.help/"  # Deployed app URL
 ]
 
 app.add_middleware(
@@ -59,9 +58,11 @@ async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
 
 # TEST API ROUTE
-@app.get("/test")
-async def test_api():
-    return {"message": "Hello from FastAPI /test route!"}
+ENV = os.getenv("ENV", "prod")  # Default to "prod" if ENV is not set
+if ENV == "dev":
+    @app.get("/test")
+    async def test_api():
+        return {"message": "Hello from FastAPI /test route!"}
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
