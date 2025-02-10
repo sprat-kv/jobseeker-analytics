@@ -1,68 +1,62 @@
-# supports * as a wildcard for any number of characters
-
-## include or any of the following subjects
+# supports * as a wildcard for any number of characters in "include_terms" only.
+# Don't use wildcards in "exclude_terms", as it would imply you want to exclude all characters.
+# Don't use "any" logic with exlusion terms as this will result in all emails matching the filter.
+# -------------------------------------- #
+## include any of the following subjects
 - logic: any
-  field_list:
-    - field: subject
-      include_terms:
-        - application has been submitted
-        - application received
-        - application received 
-        - application submitted
-        - application to * successfully submitted
-        - application was sent
-        - applied to
-        - confirmation of your application
-        - job application confirmation
-        - successfully submitted
-        - thank you for applying
-        - thank you for your application
-        - thank you for your interest
-        - thank you for your submission
-        - thank you from
-        - thanks for applying to
-        - thanks for your application
-        - thanks for your interest
-        - ve been referred
-        - we received your * application
-        - we received your application
-        - your application for
-        - your application to
-        - your application to * has been received
-        - your application was sent to
-        - your recent job application
-      exclude_terms:
-        - Do you want to finish your application
-        - watering
-    
-## include or exclude any of the following from addresses
-    - field: from
-      include_terms:
-        - notification@smartrecruiters.com
-      exclude_terms:
-        - IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca
-        - no-reply@comet.zillow.com
+  field: subject
+  how: include
+  terms:
+    - application has been submitted
+    - application received
+    - application received 
+    - application submitted
+    - application to * successfully submitted
+    - application was sent
+    - applied to
+    - confirmation of your application
+    - job application confirmation
+    - successfully submitted
+    - thank you for applying
+    - thank you for your application
+    - thank you for your interest
+    - thank you for your submission
+    - thank you from
+    - thanks for applying to
+    - thanks for your application
+    - thanks for your interest
+    - ve been referred
+    - we received your * application
+    - we received your application
+    - your application for
+    - your application to
+    - your application to * has been received
+    - application was sent
+    - your recent job application
 
-## specific AND-logic combinations of subject + from to include or exclude ##
+## include all of the following subjects
 - logic: all
-  field_list:
-    - field: subject
-      include_terms:
-        - application was sent
-      exclude_terms: ~
-    - field: from
-      include_terms:
-        - jobs-noreply@linkedin.com
-      exclude_terms: ~
+  field: subject
+  how: exclude
+  terms:
+    - Do you want to finish your application
+    - watering
+    
+## include any of the following from addresses
+- logic: any
+  field: from
+  how: include
+  terms:
+    - notification@smartrecruiters.com
+    - jobs-noreply@linkedin.com
+    - careers@
+    - no-reply@ashbyhq.com
+    - no-reply@greenhouse.io
+
+## exclude all of the following from addresses
 - logic: all
-  field_list:
-    - field: subject
-      include_terms:
-        - thank
-      exclude_terms: ~
-    - field: from
-      include_terms:
-        - careers@
-        - no-reply@ashbyhq.com
-        - no-reply@greenhouse.io
-      exclude_terms: ~
+  field: from
+  how: exclude
+  terms:
+    - IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca
+    - no-reply@comet.zillow.com

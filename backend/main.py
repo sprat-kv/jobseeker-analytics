@@ -36,7 +36,6 @@ templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
-logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
 
@@ -88,9 +87,11 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
     messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
-    messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
+    
+    if len(messages) > 1000:
+        logger.warning(f"**************detected {len(messages)} that passed the filter!")
 
     for message in messages:
         message_data = {}
