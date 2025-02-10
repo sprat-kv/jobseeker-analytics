@@ -2,7 +2,6 @@
 This file contains the main constants used in the application.
 """
 
-
 from datetime import datetime, timedelta
 from pathlib import Path
 from utils.filter_utils import parse_base_filter_config, parse_override_filter_config
