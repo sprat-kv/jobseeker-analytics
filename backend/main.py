@@ -58,7 +58,7 @@ async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
 
 # TEST API ROUTE
-ENV = os.getenv("ENV", "prod")  # Default to "prod" if ENV is not set
+ENV = os.getenv("ENV", "dev")  # Default to "dev" if ENV is not set
 if ENV == "dev":
     @app.get("/test")
     async def test_api():
