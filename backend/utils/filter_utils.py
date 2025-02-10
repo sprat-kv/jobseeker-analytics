@@ -78,8 +78,7 @@ def parse_base_filter_config(filter_path: str) -> str:
             simple_filters += [parse_simple(x, block["field"], exclude=False) for x in block["terms"] if not "*" in x]
             wildcard_any_filters += [parse_wildcard(x, block["field"], exclude=False) for x in block["terms"] if "*" in x]
         if block["how"] == "exclude":
-            simple_filters +=  [parse_simple(x, block["field"], exclude=True) for x in block["terms"] if not "*" in x]
-            wildcard_any_filters += [parse_wildcard(x, block["field"], exclude=True) for x in block["terms"] if "*" in x]
+            simple_filters +=  [parse_simple(x, block["field"], exclude=True) for x in block["terms"]]
         
         # join with appropriate operator
         if simple_filters + wildcard_any_filters:                
