@@ -1,13 +1,13 @@
 import logging
 import uuid
 
-from file_utils import get_user_filepath
+from utils.file_utils import get_user_filepath
 
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 
-from config_utils import get_settings
+from utils.config_utils import get_settings
 
 logger = logging.getLogger(__name__)
 

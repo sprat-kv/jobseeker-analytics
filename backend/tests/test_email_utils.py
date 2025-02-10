@@ -1,7 +1,7 @@
 from unittest import mock
 
 from test_constants import SAMPLE_MESSAGE, SUBJECT_LINE
-import email_utils
+import utils.email_utils as email_utils
 
 
 def test_get_top_consecutive_capitalized_words():
@@ -101,7 +101,7 @@ def test_get_company_name_returns_top_word():
     """Default behavior for company name is to return the
     highest frequency word that appears in the email body."""
     with mock.patch(
-        "email_utils.get_top_word_in_email_body", return_value="FakeCompany"
+        "utils.email_utils.get_top_word_in_email_body", return_value="FakeCompany"
     ):
         company_name = email_utils.get_company_name(
             id="abc123", msg=SAMPLE_MESSAGE, subject_line=SUBJECT_LINE
@@ -113,9 +113,11 @@ def test_get_company_name_returns_last_capital_word_in_subject_line():
     """Default behavior for company name is to return the
     highest frequency word that appears in the email body."""
     with (
-        mock.patch("email_utils.get_top_word_in_email_body", return_value="interview"),
         mock.patch(
-            "email_utils.get_email_from_address",
+            "utils.email_utils.get_top_word_in_email_body", return_value="interview"
+        ),
+        mock.patch(
+            "utils.email_utils.get_email_from_address",
             return_value="no-reply@us.greenhouse-mail.io",
         ),
     ):

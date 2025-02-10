@@ -2,7 +2,6 @@
 This file contains the main constants used in the application.
 """
 
-
 from datetime import datetime, timedelta
 
 
