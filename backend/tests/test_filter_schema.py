@@ -13,7 +13,7 @@ from typing import List, Dict, Union
 import re
 import sys
 sys.path.insert(1, str(Path(__file__).parent.parent))
-from constants import APPLIED_FILTER_PATH, APPLIED_FILTER_OVERRIDES_PATH
+from constants import APPLIED_FILTER_PATH #, APPLIED_FILTER_OVERRIDES_PATH
 from test_constants import DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, \
     DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS
 
@@ -54,7 +54,7 @@ def test_base_filter_yaml_schema(filter_config):
     exclude_terms =  sum([block["terms"] for block in filter_config if block["how"] == "exclude"], [])
 
     assert all( [(x == "any" and y=="include") or (x == "all" and y == "exclude") for x, y in zip(logic_list, how_list)]), \
-      f"logic=any is not allowed for how=exclude"
+      "logic=any is not allowed for how=exclude"
     assert all (["*" not in x for x in exclude_terms]), "wildcard is not allowed in exclude blocks"
     assert validate_schema_block_order(filter_config), "Exclude block found before an include block"
 
