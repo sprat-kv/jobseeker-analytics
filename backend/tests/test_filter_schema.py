@@ -11,8 +11,6 @@ from pathlib import Path
 import yaml
 from typing import List, Dict, Union
 import re
-import sys
-sys.path.insert(1, str(Path(__file__).parent.parent))
 from constants import APPLIED_FILTER_PATH #, APPLIED_FILTER_OVERRIDES_PATH
 from test_constants import DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, \
     DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS

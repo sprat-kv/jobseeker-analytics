@@ -4,9 +4,6 @@ test that the strings produced by filter utils match expectations
 tests for override filters have not yet been implemented. 
 """
 from typing import List, Dict, Union
-from pathlib import Path
-import sys
-sys.path.insert(1, str(Path(__file__).parent.parent))
 
 from utils.filter_utils import parse_base_filter_config #, parse_override_filter_config
 from test_constants import SAMPLE_FILTER_PATH, EXPECTED_SAMPLE_QUERY_STRING

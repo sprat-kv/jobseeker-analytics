@@ -1,3 +1,4 @@
+from pathlib import Path
 SUBJECT_LINE = "Invitation from an unknown sender: Interview with TestCompanyName @ Thu May 2, 2024 11:00am - 12pm (PDT) (appuser@gmail.com)"
 SAMPLE_MESSAGE = {
     "id": "abc123",
@@ -201,7 +202,7 @@ DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS = (
         "IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca")
 )
 
-SAMPLE_FILTER_PATH = "sample_base_filter.yaml"
+SAMPLE_FILTER_PATH = Path(__file__).parent / "sample_base_filter.yaml"
 EXPECTED_SAMPLE_QUERY_STRING = '''(subject: "application has been submitted" 
     OR (subject: "application to" AND subject: "successfully submitted") 
     OR from: "do-not-reply@jobs.microsoft.com" 
