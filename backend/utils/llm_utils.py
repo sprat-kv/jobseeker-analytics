@@ -4,7 +4,7 @@ import json
 from google.ai.generativelanguage_v1beta2 import GenerateTextResponse
 import logging
 
-from config_utils import get_settings
+from utils.config_utils import get_settings
 
 settings = get_settings()
 
