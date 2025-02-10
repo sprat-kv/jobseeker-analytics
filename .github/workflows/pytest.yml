@@ -18,7 +18,7 @@ jobs:
       - name: Create .env file
         uses: SpicyPizza/create-envfile@v2.0.3
         with:
-          envkey_GOOGLE_SCOPES: "[\"scopes\", \"here\"]"
+          envkey_GOOGLE_SCOPES: '["https://www.googleapis.com/auth/gmail.readonly", "openid"]'
           envkey_GOOGLE_CLIENT_ID: your-client-id-here
           envkey_COOKIE_SECRET: your-random-secret-here
           envkey_GOOGLE_API_KEY: your-api-key-here
