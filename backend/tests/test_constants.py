@@ -203,8 +203,8 @@ DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS = (
 )
 
 SAMPLE_FILTER_PATH = Path(__file__).parent / "sample_base_filter.yaml"
-EXPECTED_SAMPLE_QUERY_STRING = '''(subject: "application has been submitted" 
-    OR (subject: "application to" AND subject: "successfully submitted") 
-    OR from: "do-not-reply@jobs.microsoft.com" 
-    AND -from: "no-reply@comet.zillow.com" 
-    AND -subject: "watering")'''
+EXPECTED_SAMPLE_QUERY_STRING = '''(subject:"application has been submitted" 
+    OR (subject:"application to" AND subject:"successfully submitted") 
+    OR from:"do-not-reply@jobs.microsoft.com" 
+    AND -from:"no-reply@comet.zillow.com" 
+    AND -subject:"watering")'''

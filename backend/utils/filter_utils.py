@@ -21,9 +21,9 @@ def parse_simple(
         field_str = f"{field}:"
 
     if exclude:
-        out_str = f"-{field_str} \"{term}\""
+        out_str = f"-{field_str}\"{term}\""
     else:
-        out_str = f"{field_str} \"{term}\""
+        out_str = f"{field_str}\"{term}\""
 
     return out_str
 
@@ -51,11 +51,11 @@ def parse_wildcard(
 
     if exclude:
         sub_terms = term.split(" * ")
-        out_str =  "(" + " AND ".join([f"-{field_str} \"{x}\"" for x in sub_terms]) + ")"
+        out_str =  "(" + " AND ".join([f"-{field_str}\"{x}\"" for x in sub_terms]) + ")"
 
     else:
         sub_terms = term.split(" * ")
-        out_str = "(" + " AND ".join([f"{field_str} \"{x}\"" for x in sub_terms]) + ")"
+        out_str = "(" + " AND ".join([f"{field_str}\"{x}\"" for x in sub_terms]) + ")"
 
     return out_str
 
