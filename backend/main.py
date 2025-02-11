@@ -23,6 +23,16 @@ app = FastAPI()
 settings = get_settings()
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allow Next.js frontend
+    allow_credentials=True,  # Allow cookies (important for authentication)
+    allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
+app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
+
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 

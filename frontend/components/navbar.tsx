@@ -1,3 +1,5 @@
+"use client"
+
 import { Navbar as HeroUINavbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarItem } from "@heroui/react";
 import { Button, Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
