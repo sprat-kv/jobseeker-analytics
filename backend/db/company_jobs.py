@@ -12,7 +12,7 @@ class CompanyJobs(SQLModel, table=True):
 
     __table_args__ = (
         # Ensure that company_name and company_email_domain together are unique
-        UniqueConstraint('company_id', 'job_title_id', 'job_location', name='non_unique_job_title_and_location'),
+        UniqueConstraint('company_id', 'job_title_id', 'job_location', name='unique_job_title_and_location'),
     )
 
 
