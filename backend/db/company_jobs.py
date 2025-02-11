@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, Field, UniqueConstraint
 from datetime import datetime
 
-class Company_jobs(SQLModel, table=True):
+class CompanyJobs(SQLModel, table=True):
     __tablename__ = 'company_jobs'
     job_id: int = Field(default=None, primary_key=True)
     company_id: int = Field(foreign_key="companies.company_id", nullable=False)
