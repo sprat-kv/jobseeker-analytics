@@ -1,5 +1,6 @@
 import { Navbar as HeroUINavbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarItem } from "@heroui/react";
 import { Button, Link } from "@heroui/react";
+import { useRouter } from "next/navigation";
 import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
@@ -7,6 +8,12 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, GoogleIcon } from "@/components/icons";
 
 export const Navbar = () => {
+	const router = useRouter();
+
+	const handleGoogleLogin = () => {
+		router.push("http://localhost:8000/login"); // Update with your FastAPI server URL
+	};
+
 	return (
 		<HeroUINavbar maxWidth="xl" position="sticky">
 			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
@@ -51,17 +58,18 @@ export const Navbar = () => {
 				<ThemeSwitch />
 				<NavbarMenuToggle />
 			</NavbarContent>
-
+			
 			<NavbarItem className="hidden md:flex">
 				<Button
 					className="text-sm font-normal text-default-600 bg-default-100"
 					startContent={<GoogleIcon className="text-danger" />}
 					variant="flat"
-					// onClick={handleGoogleLogin}
+					onClick={handleGoogleLogin}
 				>
 					Login with Google
 				</Button>
 			</NavbarItem>
+
 		</HeroUINavbar>
 	);
 };
