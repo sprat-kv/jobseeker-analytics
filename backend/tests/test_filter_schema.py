@@ -13,14 +13,14 @@ from typing import List, Dict, Union
 import re
 from constants import APPLIED_FILTER_PATH #, APPLIED_FILTER_OVERRIDES_PATH
 from test_constants import DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, \
-    DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS
+    DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, SAMPLE_FILTER_PATH
 
 FilterConfigType = List[Dict[str, Union[str, int, bool, list, dict]]]
 
 FITLER_CONFIG_DIR = Path(__file__).parent.parent / "email_query_filters"
 
 def get_base_filter_config_paths() -> List[Path]:
-    return [x for x in FITLER_CONFIG_DIR.iterdir() if "override" not in str(x)]
+    return [SAMPLE_FILTER_PATH] + [x for x in FITLER_CONFIG_DIR.iterdir() if "override" not in str(x)]
 
 def get_override_filter_config_paths() -> List[Path]:
     return [x for x in FITLER_CONFIG_DIR.iterdir() if "override" in str(x)]
