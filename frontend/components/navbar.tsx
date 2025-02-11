@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Navbar as HeroUINavbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarItem } from "@heroui/react";
 import { Button, Link } from "@heroui/react";
@@ -60,7 +60,7 @@ export const Navbar = () => {
 				<ThemeSwitch />
 				<NavbarMenuToggle />
 			</NavbarContent>
-			
+
 			<NavbarItem className="hidden md:flex">
 				<Button
 					className="text-sm font-normal text-default-600 bg-default-100"
@@ -71,7 +71,6 @@ export const Navbar = () => {
 					Login with Google
 				</Button>
 			</NavbarItem>
-
 		</HeroUINavbar>
 	);
 };
