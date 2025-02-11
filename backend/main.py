@@ -26,6 +26,7 @@ from session.session_layer import (
 from utils.config_utils import get_settings
 
 
+
 app = FastAPI()
 settings = get_settings()
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
@@ -93,13 +94,15 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     if len(messages) > 1000:
         logger.warning(f"**************detected {len(messages)} that passed the filter!")
 
+    if settings.ENV == "dev":
+        logger.info(f"**************We are operating on the dev environment")
+
     for idx, message in enumerate(messages):
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
         msg_id = message["id"]
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
-            result = process_email(msg["text_content"])
             result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
                 logger.info(f"user_id: {user.user_id} successfully extracted email {idx} of {len(messages)} with id {msg_id}")
@@ -111,6 +114,10 @@ def fetch_emails(user: AuthenticatedUser) -> None:
             message_data["received_at"] = [msg.get("date", "")]
             message_data["subject"] = [msg.get("subject", "")]
             message_data["from"] = [msg.get("from", "")]
+
+            #expose the message id on the dev environment
+            if settings.ENV == "dev":
+                message_data["id"] = [msg_id]
             # Exporting the email data to a CSV file
             export_to_csv(user.filepath, user.user_id, message_data)
     api_call_finished = True
@@ -158,9 +165,6 @@ def login(
         token_expiry = (
             datetime.datetime.utcnow() + datetime.timedelta(hours=1)
         ).isoformat()
-        token_expiry = (
-            datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        ).isoformat()
         # Default expiry time 1 hour from now in case creds.expiry is not available
         try:
             token_expiry = creds.expiry.isoformat()
@@ -171,9 +175,6 @@ def login(
 
         response = RedirectResponse(url="/processing", status_code=303)
         logger.info("user_id:%s set_cookie", user.user_id)
-        response.set_cookie(
-            key="Authorization", value=session_id, secure=True, httponly=True
-        )
         response.set_cookie(
             key="Authorization", value=session_id, secure=True, httponly=True
         )
@@ -194,10 +195,6 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     return templates.TemplateResponse(
         "success.html", {"request": request, "today": today}
     )
-    return templates.TemplateResponse(
-        "success.html", {"request": request, "today": today}
-    )
-
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
