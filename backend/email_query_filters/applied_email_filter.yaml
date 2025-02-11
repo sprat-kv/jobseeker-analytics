@@ -51,7 +51,11 @@
   how: exclude
   terms:
     - Do you want to finish your application
-    - watering
+    - watering    
+    - you have new application updates this week
+    - farewell
+    - Verify your candidate account
+
 
 ## exclude all of the following from addresses
 - logic: all
@@ -60,3 +64,4 @@
   terms:
     - IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca
     - no-reply@comet.zillow.com
+    - insights@careerseeker.accenture.com

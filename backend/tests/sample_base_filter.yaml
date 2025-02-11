@@ -24,7 +24,7 @@
   terms:
     - no-reply@comet.zillow.com
 
-## include all of the following subjects
+## exclude all of the following subjects
 - logic: all
   field: subject
   how: exclude
