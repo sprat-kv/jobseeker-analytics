@@ -33,7 +33,8 @@ app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 
 origins = [
     "http://localhost:3000",  # Local Next.js Dev Server
-    "https://www.jobba.help/"  # Deployed app URL
+    "https://www.jobba.help/",
+    "https://jobseeker-analytics.onrender.com/"
 ]
 
 app.add_middleware(
