@@ -3,6 +3,15 @@ from utils.config_utils import get_settings
 from config import Settings
 import pytest
 import json
+import os
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_static_directory():
+    static_dir = os.path.join(os.path.dirname(__file__), "../static")
+    if not os.path.exists(static_dir):
+        os.makedirs(static_dir)
+
 
 @patch("utils.config_utils.config.Settings")
 def test_get_settings_only_called_once_with_lru(mock_settings_call):
@@ -39,6 +48,6 @@ def test_decode_scopes_invalid_json():
 
 
 def test_decode_scopes_empty_string():
-    input_str = ''
+    input_str = ""
     with pytest.raises(json.JSONDecodeError):
         Settings.decode_scopes(input_str)
