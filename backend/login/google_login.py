@@ -17,14 +17,6 @@ settings = get_settings()
 # FastAPI router for Google login
 router = APIRouter()
 
-def fetch_emails(user: AuthenticatedUser) -> None:
-    """Dummy function to simulate email fetching (Replace with real logic)."""
-    logger.info("Fetching emails for user_id: %s", user.user_id)
-    # Simulate some work
-    import time
-    time.sleep(2)
-    logger.info("Finished fetching emails for user_id: %s", user.user_id)
-
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
     """Handles Google OAuth2 login and authorization code exchange."""
