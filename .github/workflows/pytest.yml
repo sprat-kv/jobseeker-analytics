@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - '**.py'
+      - '**.yml'
     branches:
       - main  # Change this to match your default branch
   push:
      paths:
       - '**.py'
+      - '**.yml'
 jobs:
   test:
     runs-on: ubuntu-latest
