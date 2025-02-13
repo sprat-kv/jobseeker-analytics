@@ -60,6 +60,13 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :(", status_code=404)
 
+@app.get("/logout")
+async def logout(request: Request, response: RedirectResponse):
+    logger.info("Logging out")
+    request.session.clear()
+    response.delete_cookie(key="Authorization")
+    return RedirectResponse("/", status_code=303)
+
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
     logger.info("user_id:%s fetch_emails", user.user_id)

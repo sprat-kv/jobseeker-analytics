@@ -66,12 +66,3 @@ async def login(request: Request, background_tasks: BackgroundTasks):
     except Exception as e:
         logger.error("Login error: %s", e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
-
-@router.get("/logout")
-async def logout(request: Request):
-    """Clears user session and logs out."""
-    logger.info("User logging out")
-    request.session.clear()
-    response = RedirectResponse("/", status_code=303)
-    response.delete_cookie(key="Authorization")
-    return response
