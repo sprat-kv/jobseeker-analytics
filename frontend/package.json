@@ -11,9 +11,6 @@
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json",
 		"check": "prettier --check . && eslint . --ext .ts,.tsx -c .eslintrc.json"
 	},
-	"tailwindcss": {
-		"config": "./tailwind.config.cjs"
-	},
 	"dependencies": {
 		"@heroui/react": "^2.6.14",
 		"@heroui/system": "2.4.6",
