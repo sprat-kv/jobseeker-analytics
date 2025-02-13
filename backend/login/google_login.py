@@ -7,6 +7,7 @@ from google_auth_oauthlib.flow import Flow
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
+from main import fetch_emails
 
 # Logger setup
 logger = logging.getLogger(__name__)
