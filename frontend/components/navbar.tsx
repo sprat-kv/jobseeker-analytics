@@ -21,15 +21,9 @@ export const Navbar = () => {
 			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
-						<p className="text-xl font-bold text-inherit">JOBBA</p>
+						<img src="favicon.svg" alt="Jobba Logo" className="h-20 w-20 mt-8" />
 					</NextLink>
 				</NavbarBrand>
-				<NextLink className="flex justify-start items-center gap-1" href="/dashboard">
-					<p className="text-l font-bold text-inherit">Dashboard</p>
-				</NextLink>
-				<NextLink className="flex justify-start items-center gap-1" href="/testpage">
-					<p className="text-l font-bold text-inherit">Test Page</p>
-				</NextLink>
 			</NavbarContent>
 
 			<NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
