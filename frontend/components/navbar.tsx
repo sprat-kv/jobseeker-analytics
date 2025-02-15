@@ -8,13 +8,19 @@ import NextLink from "next/link";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, GoogleIcon } from "@/components/icons";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
+	const pathname = usePathname();
 	const router = useRouter();
 
 	const handleGoogleLogin = () => {
 		router.push("http://localhost:8000/login"); // Update with your FastAPI server URL
 	};
+
+	const handleGoogleLogout = async () => {
+		router.push("http://localhost:8000/logout");
+	  };
 
 	return (
 		<HeroUINavbar maxWidth="xl" position="sticky">
@@ -54,17 +60,33 @@ export const Navbar = () => {
 				<ThemeSwitch />
 				<NavbarMenuToggle />
 			</NavbarContent>
-
+			
+			{pathname === "/" && (
+				<NavbarItem className="hidden md:flex">
+					<Button
+						className="text-sm font-normal text-default-600 bg-default-100"
+						startContent={<GoogleIcon className="text-danger" />}
+						variant="flat"
+						onClick={handleGoogleLogin}
+					>
+						Login with Google
+					</Button>
+				</NavbarItem>
+			)}
+			
+			{/* Add for processing page too */}
+			{pathname === "/success" && (
 			<NavbarItem className="hidden md:flex">
-				<Button
-					className="text-sm font-normal text-default-600 bg-default-100"
-					startContent={<GoogleIcon className="text-danger" />}
-					variant="flat"
-					onClick={handleGoogleLogin}
-				>
-					Login with Google
-				</Button>
-			</NavbarItem>
+					<Button
+						className="text-sm font-normal text-default-600 bg-default-100"
+						startContent={<GoogleIcon className="text-danger" />}
+						variant="flat"
+						onClick={handleGoogleLogout}
+					>
+						Logout
+					</Button>
+				</NavbarItem>
+			)}
 		</HeroUINavbar>
 	);
 };
