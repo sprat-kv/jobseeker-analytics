@@ -3,6 +3,7 @@ import logging
 import os
 
 from fastapi import FastAPI, Request, BackgroundTasks, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -32,6 +33,20 @@ settings = get_settings()
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+origins = [
+    "http://localhost:3000",  # Local Next.js Dev Server
+    "http://127.0.0.1:3000",
+    "https://www.jobba.help/",
+    "https://jobseeker-analytics.onrender.com/"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow frontend origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="templates")
@@ -42,11 +57,16 @@ logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
 
-
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
 
+# TEST API ROUTE
+ENV = settings.ENV
+if ENV == "dev":
+    @app.get("/test")
+    async def test_api():
+        return {"message": "Hello from FastAPI /test route!"}
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
