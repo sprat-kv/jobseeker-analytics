@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 	},
 	description: siteConfig.description,
 	icons: {
-		icon: "/favicon.svg"
+		icon: "/favicon.ico"
 	}
 };
 
@@ -36,17 +36,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<div className="relative flex flex-col h-screen">
 						<Navbar />
 						<main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">{children}</main>
-						<footer className="w-full flex items-center justify-center py-3">
-							<Link
-								isExternal
-								className="flex items-center gap-1 text-current"
-								href="https://heroui.com?utm_source=next-app-template"
-								title="heroui.com homepage"
-							>
-								<span className="text-default-600">Powered by</span>
-								<p className="text-primary">HeroUI</p>
-							</Link>
-						</footer>
+						<footer className="w-full flex flex-col items-center py-3">
+  <div className="w-[10rem] h-[5rem] overflow-hidden flex items-center justify-center rounded-lg">
+    <img src="/logo.png" className="w-full h-full object-cover" alt="jobba.help logo" />
+  </div>
+  
+  <p className="mt-2 text-center">&copy; 2025 Lianna Novitz</p>
+</footer>
+
 					</div>
 				</Providers>
 			</body>
