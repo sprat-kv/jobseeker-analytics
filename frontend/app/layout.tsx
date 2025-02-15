@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@heroui/react";
+import Image from "next/image";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
@@ -33,17 +33,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<head />
 			<body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
 				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-					<div className="relative flex flex-col h-screen">
+					<div className="relative flex h-screen flex-col">
 						<Navbar />
-						<main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">{children}</main>
-						<footer className="w-full flex flex-col items-center py-3">
-  <div className="w-[10rem] h-[5rem] overflow-hidden flex items-center justify-center rounded-lg">
-    <img src="/logo.png" className="w-full h-full object-cover" alt="jobba.help logo" />
-  </div>
-  
-  <p className="mt-2 text-center">&copy; 2025 Lianna Novitz</p>
-</footer>
-
+						<main className="container mx-auto flex-grow max-w-7xl px-6 pt-16">{children}</main>
+						<footer className="flex w-full flex-col items-center py-3">
+							<div className="flex h-[5rem] w-[10rem] items-center justify-center overflow-hidden rounded-lg">
+								<Image
+									alt="jobba.help logo"
+									className="h-full w-full object-cover"
+									height={80}
+									src="/logo.png"
+									width={160}
+								/>
+							</div>
+							<p className="mt-2 text-center">&copy; 2025 Lianna Novitz</p>
+						</footer>
 					</div>
 				</Providers>
 			</body>
