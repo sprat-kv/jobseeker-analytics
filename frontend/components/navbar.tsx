@@ -23,20 +23,10 @@ export const Navbar = () => {
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
 						<div>
-							<p className="text-xl font-bold text-inherit">JOBBA</p>
+							<p className="text-md font-bold text-inherit">jobba.help</p>
 						</div>
 					</NextLink>
 				</NavbarBrand>
-				<NextLink className="flex justify-start items-center gap-1" href="/dashboard">
-					<div>
-						<p className="text-l font-bold text-inherit">Dashboard</p>
-					</div>
-				</NextLink>
-				<NextLink className="flex justify-start items-center gap-1" href="/testpage">
-					<div>
-						<p className="text-l font-bold text-inherit">Test Page</p>
-					</div>
-				</NextLink>
 			</NavbarContent>
 
 			<NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
