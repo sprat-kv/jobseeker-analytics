@@ -5,7 +5,6 @@ import { Button, Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import NextLink from "next/link";
 
-import { envConfig } from '../envConfig';
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -15,10 +14,9 @@ import RedirectUrl from "@/utils/navbar-utils";
 
 export const Navbar = () => {
 	const router = useRouter();
-	const env_type = envConfig.NEXT_PUBLIC_ENV_TYPE;
 
 	const handleGoogleLogin = () => {
-		router.push(`${RedirectUrl(env_type)}/login`);
+		router.push(`${RedirectUrl("PROD")}/login`);
 	};
 
 	return (
