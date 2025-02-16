@@ -2,15 +2,14 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, Request, BackgroundTasks, Depends
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import Flow
 
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
@@ -21,12 +20,11 @@ from utils.email_utils import (
 )
 from utils.file_utils import get_user_filepath
 from utils.llm_utils import process_email
-from session.session_layer import (
-    create_random_session_string,
-    validate_session,
-)
 from utils.config_utils import get_settings
+from session.session_layer import validate_session
 
+# Import Google login routes
+from login.google_login import router as google_login_router
 
 app = FastAPI()
 settings = get_settings()
@@ -37,7 +35,7 @@ origins = [
     "http://localhost:3000",  # Local Next.js Dev Server
     "http://127.0.0.1:3000",
     "https://www.jobba.help/",
-    "https://jobseeker-analytics.onrender.com/"
+    "https://jobseeker-analytics.onrender.com/",
 ]
 
 app.add_middleware(
@@ -53,20 +51,14 @@ templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
-logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
+
 
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
 
-# TEST API ROUTE
-ENV = settings.ENV
-if ENV == "dev":
-    @app.get("/test")
-    async def test_api():
-        return {"message": "Hello from FastAPI /test route!"}
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
@@ -137,76 +129,6 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     api_call_finished = True
 
 
-# Define the route for OAuth2 flow
-@app.get("/login")
-def login(
-    request: Request, background_tasks: BackgroundTasks, response: RedirectResponse
-):
-    """Handles the redirect from Google after the user grants consent."""
-    code = request.query_params.get("code")
-    flow = Flow.from_client_secrets_file(
-        settings.CLIENT_SECRETS_FILE,
-        settings.GOOGLE_SCOPES,
-        redirect_uri=settings.REDIRECT_URI,
-    )
-    try:
-        if not code:
-            logger.info("No code in request, redirecting to authorization URL")
-            # If no code, redirect the user to the authorization URL
-            authorization_url, state = flow.authorization_url(prompt="consent")
-            logger.info("Redirecting to %s", authorization_url)
-            response = RedirectResponse(url=authorization_url)
-
-            logger.info("Response location: %s", response.headers["location"])
-            logger.info("Status Code: %s", response.status_code)
-            logger.info("Headers: %s", response.headers)
-            return response
-
-        # Exchange the authorization code for credentials
-        logger.info("code found, starting fetch_token...")
-        flow.fetch_token(code=code)
-        creds = flow.credentials
-
-        if not creds.valid:
-            logger.info("creds not valid. refreshing...")
-            creds.refresh(Request())
-            return RedirectResponse("/login", status_code=303)
-
-        user = AuthenticatedUser(creds)
-        # Create a session for the user
-        session_id = request.session["session_id"] = create_random_session_string()
-        logger.info("creds.expiry: %s", creds.expiry)
-        token_expiry = (
-            datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        ).isoformat()
-        token_expiry = (
-            datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-        ).isoformat()
-        # Default expiry time 1 hour from now in case creds.expiry is not available
-        try:
-            token_expiry = creds.expiry.isoformat()
-        except Exception as e:
-            logger.error("datetime.striptime.isoformat() failed: %s", e)
-        request.session["token_expiry"] = token_expiry
-        request.session["user_id"] = user.user_id
-
-        response = RedirectResponse(url="/processing", status_code=303)
-        logger.info("user_id:%s set_cookie", user.user_id)
-        response.set_cookie(
-            key="Authorization", value=session_id, secure=True, httponly=True
-        )
-        response.set_cookie(
-            key="Authorization", value=session_id, secure=True, httponly=True
-        )
-
-        background_tasks.add_task(fetch_emails, user)
-        logger.info("user_id:%s background_tasks.add_task fetch_emails", user.user_id)
-        return response
-    except Exception as e:
-        logger.error("login: an error occurred: %s", e)
-        return HTMLResponse(content="An error occurred, sorry!", status_code=500)
-
-
 @app.get("/success", response_class=HTMLResponse)
 def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
@@ -215,10 +137,10 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     return templates.TemplateResponse(
         "success.html", {"request": request, "today": today}
     )
-    return templates.TemplateResponse(
-        "success.html", {"request": request, "today": today}
-    )
 
+
+# Register Google login routes
+app.include_router(google_login_router)
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
