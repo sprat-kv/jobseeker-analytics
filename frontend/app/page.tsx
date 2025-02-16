@@ -123,10 +123,15 @@ export default function Home() {
 				</p>
 				<h2 className="text-2xl font-bold mt-6">Resources</h2>
 				<ul>
-					<li><a href="https://discord.gg/5tTT6WVQyw">jobba.help Community on Discord</a></li>
-					<li><a href="https://www.phyl.org/">Never Search Alone - phyl.org - Free Support Group for Job Seekers</a></li>
+					<li>
+						<a href="https://discord.gg/5tTT6WVQyw">jobba.help Community on Discord</a>
+					</li>
+					<li>
+						<a href="https://www.phyl.org/">
+							Never Search Alone - phyl.org - Free Support Group for Job Seekers
+						</a>
+					</li>
 				</ul>
-
 			</main>
 		</>
 	);
