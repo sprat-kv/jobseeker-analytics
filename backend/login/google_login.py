@@ -7,6 +7,7 @@ from google_auth_oauthlib.flow import Flow
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
+# from main import fetch_emails
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -17,17 +18,12 @@ settings = get_settings()
 # FastAPI router for Google login
 router = APIRouter()
 
-def fetch_emails(user: AuthenticatedUser) -> None:
-    """Dummy function to simulate email fetching (Replace with real logic)."""
-    logger.info("Fetching emails for user_id: %s", user.user_id)
-    # Simulate some work
-    import time
-    time.sleep(2)
-    logger.info("Finished fetching emails for user_id: %s", user.user_id)
 
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
     """Handles Google OAuth2 login and authorization code exchange."""
+    from main import fetch_emails  # Move the import here to avoid circular import
+    
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
         settings.CLIENT_SECRETS_FILE,
@@ -58,13 +54,17 @@ async def login(request: Request, background_tasks: BackgroundTasks):
             token_expiry = creds.expiry.isoformat()
         except Exception as e:
             logger.error("Failed to parse token expiry: %s", e)
-            token_expiry = (datetime.datetime.utcnow() + datetime.timedelta(hours=1)).isoformat()
+            token_expiry = (
+                datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+            ).isoformat()
 
         request.session["token_expiry"] = token_expiry
         request.session["user_id"] = user.user_id
 
         response = RedirectResponse(url="/processing", status_code=303)
-        response.set_cookie(key="Authorization", value=session_id, secure=True, httponly=True)
+        response.set_cookie(
+            key="Authorization", value=session_id, secure=True, httponly=True
+        )
 
         # Start email fetching in the background
         background_tasks.add_task(fetch_emails, user)
@@ -74,12 +74,3 @@ async def login(request: Request, background_tasks: BackgroundTasks):
     except Exception as e:
         logger.error("Login error: %s", e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
-
-@router.get("/logout")
-async def logout(request: Request):
-    """Clears user session and logs out."""
-    logger.info("User logging out")
-    request.session.clear()
-    response = RedirectResponse("/", status_code=303)
-    response.delete_cookie(key="Authorization")
-    return response

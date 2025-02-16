@@ -8,12 +8,13 @@ import NextLink from "next/link";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, GoogleIcon } from "@/components/icons";
+import RedirectUrl from "@/utils/navbar-utils";
 
 export const Navbar = () => {
 	const router = useRouter();
 
 	const handleGoogleLogin = () => {
-		router.push("http://localhost:8000/login"); // Update with your FastAPI server URL
+		router.push(`${RedirectUrl("PROD")}/login`);
 	};
 
 	return (
@@ -21,14 +22,20 @@ export const Navbar = () => {
 			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
-						<p className="text-xl font-bold text-inherit">JOBBA</p>
+						<div>
+							<p className="text-xl font-bold text-inherit">JOBBA</p>
+						</div>
 					</NextLink>
 				</NavbarBrand>
 				<NextLink className="flex justify-start items-center gap-1" href="/dashboard">
-					<p className="text-l font-bold text-inherit">Dashboard</p>
+					<div>
+						<p className="text-l font-bold text-inherit">Dashboard</p>
+					</div>
 				</NextLink>
 				<NextLink className="flex justify-start items-center gap-1" href="/testpage">
-					<p className="text-l font-bold text-inherit">Test Page</p>
+					<div>
+						<p className="text-l font-bold text-inherit">Test Page</p>
+					</div>
 				</NextLink>
 			</NavbarContent>
 
