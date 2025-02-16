@@ -1,4 +1,5 @@
 import { loadEnvConfig } from '@next/env'
  
 const projectDir = process.cwd()
-loadEnvConfig(projectDir)
+const { combinedEnv } = loadEnvConfig(projectDir);
+export const envConfig = combinedEnv;
