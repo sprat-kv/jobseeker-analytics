@@ -9,6 +9,8 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, GoogleIcon } from "@/components/icons";
 import RedirectUrl from "@/utils/navbar-utils";
+import './envConfig.ts'
+
 
 export const Navbar = () => {
 	const router = useRouter();
