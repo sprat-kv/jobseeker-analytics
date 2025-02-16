@@ -12,7 +12,7 @@ const ProcessingPage = () => {
         async function fetchProcessingData() {
             try {
                 console.log("Starting to fetch processing data...");
-                const res = await fetch("http://127.0.0.1:8000/processing", {
+                const res = await fetch("http://localhost:8000/processing", {
                     method: "GET",
                     credentials: "include", // Include credentials if needed
                 });
