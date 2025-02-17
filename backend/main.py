@@ -94,9 +94,6 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     if len(messages) > 1000:
         logger.warning(f"**************detected {len(messages)} that passed the filter!")
 
-    if settings.ENV == "dev":
-        logger.info(f"**************We are operating on the dev environment")
-
     for idx, message in enumerate(messages):
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
