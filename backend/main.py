@@ -63,16 +63,16 @@ async def root(request: Request, response_class=HTMLResponse):
 
 @app.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
-    logging.info("user_id: %s processing", user_id)
+    logging.info("user_id:%s processing", user_id)
     global api_call_finished
     if not user_id:
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
     if api_call_finished:
-        logger.info("user_id: %s processing complete", user_id)
+        logger.info("user_id:%s processing complete", user_id)
         return RedirectResponse("/success", status_code=303)
     else:
-        logger.info("user_id: %s processing not complete for file", user_id)
+        logger.info("user_id:%s processing not complete for file", user_id)
         # Show a message that the job is still processing
         return templates.TemplateResponse("processing.html", {"request": request})
 
@@ -117,10 +117,10 @@ def fetch_emails(user: AuthenticatedUser) -> None:
         if msg:
             result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
-                logger.info(f"user_id: {user.user_id} successfully extracted email {idx} of {len(messages)} with id {msg_id}")
+                logger.info(f"user_id:{user.user_id} successfully extracted email {idx} of {len(messages)} with id {msg_id}")
             else:
                 result = {}
-                logger.warning(f"user_id: {user.user_id} failed to extract email {idx} of {len(messages)} with id {msg_id}")
+                logger.warning(f"user_id:{user.user_id} failed to extract email {idx} of {len(messages)} with id {msg_id}")
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
             message_data["received_at"] = [msg.get("date", "")]
