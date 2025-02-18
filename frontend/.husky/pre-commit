@@ -1,18 +1,13 @@
-
-
 echo "Running frontend pre-commit hook"
 
-# Check if node_modules exists
-if [ -d "frontend/node_modules" ]; then
+# Get list of staged files
+STAGED_FILES=$(git diff --cached --name-only)
 
-    # Run prettier.sh
-    echo "\n----- Running prettier check -----"
-    ./scripts/prettier.sh
-
-    # Run lint.sh
-    echo "\n----- Running lint check -----"
-    ./scripts/lint.sh
+# Check if any staged files are in the frontend directory
+if echo "$STAGED_FILES" | grep -q "^frontend/"; then
+    echo "Changes detected in frontend files. Running checks..."
+    cd frontend
+    npm run format
 else
-    # Skip frontend checks if node_modules folder not found
-    echo "Skipping frontend checks: node_modules folder not found. Cd into frontend and run 'npm install' first."
+    echo "No changes in frontend files. Skipping checks."
 fi
