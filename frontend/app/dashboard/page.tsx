@@ -5,5 +5,6 @@ export default function Dashboard() {
 				
 			</h1>
 		</div>
+		
 	);
 }
