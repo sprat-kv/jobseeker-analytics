@@ -117,7 +117,7 @@ def get_email(message_id: str, gmail_instance=None):
 
             return email_data
         except Exception as e:
-            print(f"Error retrieving email: {e}")
+            logger.exception(f"Error retrieving email with id {message_id}: {e}")
             return {}
     return {}
 
