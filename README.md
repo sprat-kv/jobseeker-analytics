@@ -66,7 +66,7 @@ View contributing guidelines [here.](https://github.com/lnovitz/jobseeker-analyt
 
 We take data privacy seriously. jobba.help is currently in beta (100 user testing limit), and we have a code scanning tool in place to actively address security issues. Since jobba.help integrates with Gmail, the application will undergo a strict verification process before it is published to the public. 
 
-## 📢 **Join the Movement**
+## 📢 **A note from the maintainer**
 
 Help us build the first open-source job search platform. Join our Discord at [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw)
 
@@ -78,7 +78,11 @@ My goal is different.
 
 I envision a community-driven tool, built by the people, for the people, ensuring it remains accessible and beneficial to all jobseekers.
 
-Because it's open-source, future developers can always fork this project and continue the work. This is especially important if I, the maintainer, ever win the lottery, retire my computer, and open a cat café. 👀 
+Because it's open-source, future developers can always fork this project and continue the work. 
+
+This is especially important if I, the maintainer, ever win the lottery, retire my computer, and open a cat café. 👀 
+
+-Lianna
 
 ## **Support & Feedback**
 
