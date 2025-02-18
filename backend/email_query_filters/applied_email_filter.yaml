@@ -9,9 +9,9 @@
   terms:
     - application has been submitted
     - application received
-    - application received 
     - application submitted
     - application to * successfully submitted
+    - application was sent
     - application was sent
     - applied to
     - confirmation of your application
@@ -27,11 +27,10 @@
     - thanks for your interest
     - ve been referred
     - we received your * application
-    - we received your application
     - your application for
     - your application to
     - your application to * has been received
-    - application was sent
+    - your job application has been received
     - your recent job application
     
 ## include any of the following from addresses
@@ -50,12 +49,13 @@
   field: subject
   how: exclude
   terms:
-    - Do you want to finish your application
+    - do you want to finish your application
     - watering    
     - you have new application updates this week
     - farewell
     - Verify your candidate account
-
+    - account created
+    - welcome to the
 
 ## exclude all of the following from addresses
 - logic: all
