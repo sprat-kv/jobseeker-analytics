@@ -9,7 +9,6 @@ import NextLink from "next/link";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, GoogleIcon } from "@/components/icons";
-import RedirectUrl from "@/utils/navbar-utils";
 
 export const Navbar = () => {
 	const pathname = usePathname();
