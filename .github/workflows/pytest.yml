@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - '**.py'
+      - '**.yml'
     branches:
       - main  # Change this to match your default branch
   push:
      paths:
       - '**.py'
+      - '**.yml'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -30,12 +32,16 @@ jobs:
           envkey_DB_USER: your-db-user-here
           envkey_DB_PASSWORD: your-db-password-here
           envkey_CLIENT_SECRETS_FILE: "credentials.json"
+          envkey_APP_URL: http://localhost:3000
           directory: backend
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'  # Set your Python version
+
+      - name: Create static directory
+        run: mkdir -p backend/static
 
       - name: Install dependencies
         run: |

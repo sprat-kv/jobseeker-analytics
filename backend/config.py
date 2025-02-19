@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class Settings(BaseSettings):
     GOOGLE_SCOPES: Annotated[List[str], NoDecode]
     REDIRECT_URI: str
@@ -21,6 +22,7 @@ class Settings(BaseSettings):
     DB_PORT: int
     CLIENT_SECRETS_FILE: str = "credentials.json"
     ENV: str = "dev"
+    APP_URL: str
 
     @field_validator("GOOGLE_SCOPES", mode="before")
     @classmethod
