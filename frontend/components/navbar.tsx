@@ -22,7 +22,6 @@ export const Navbar = () => {
 
 	const handleGoogleLogout = async () => {
 		router.push(`${apiUrl}/logout`);
-
 	};
 
 	return (
