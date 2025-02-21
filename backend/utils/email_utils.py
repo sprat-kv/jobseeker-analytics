@@ -56,19 +56,25 @@ def is_valid_email(email: str) -> bool:
 
 def get_email_content(email_data: EmailData) -> str:
     """
-    parses html content of email data and appends it to text content
-    linkedIn easy apply messages have *different* html and text_content, so we need to keep both
+    parses html content of email data and appends it to text content and subject conent
+
+    Note 1: linkedIn easy apply messages have *different* html and text_content, so we need to keep both
+    Note 2: some automated emails only contain the information about hte company in the subject and
+        not the email body, so we need to append this to make sure the email processor gets to see it. 
     
     """
+    text_content = email_data["subject"]
+
     if email_data["text_content"]:
-        text_content = email_data["text_content"]
-    else:
-        text_content = ""
+        text_content += "\n" 
+        text_content += email_data["text_content"]
+        
     if email_data["html_content"]:
         soup = BeautifulSoup(email_data["html_content"], "html.parser")
         html_content = soup.get_text(separator=" ", strip=True)
 
-        text_content = text_content + "\n" + html_content
+        text_content += "\n" 
+        text_content += html_content
 
     return text_content
 
