@@ -67,7 +67,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ### Set Up Environment Variables
 1. Copy `backend\.env.example` to `backend\.env`:
    ```sh
-   cp .env.example .env
+   cp backend/.env.example backend/.env
    ```
 2. Edit the `.env` file with your credentials:  
    ```ini
@@ -78,7 +78,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    DB_NAME=your-db-name-here
    DB_USER=your-db-user-here
    DB_PASSWORD=your-db-password-here
-   APP_URL=url-here
+   APP_URL=http://localhost:3000
    ```
    **🔒 Never share your `.env` file or commit it to Git!**  
 
