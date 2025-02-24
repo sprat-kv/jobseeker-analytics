@@ -54,7 +54,7 @@ def is_valid_email(email: str) -> bool:
         print(str(e))
         return False
 
-def get_email_content(email_data: EmailData) -> str:
+def get_email_content(email_data: Dict[str, Any]) -> str:
     """
     parses html content of email data and appends it to text content and subject conent
 
