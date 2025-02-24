@@ -9,7 +9,6 @@ from email_validator import validate_email, EmailNotValidError
 
 from constants import GENERIC_ATS_DOMAINS
 
-EmailData = Dict[str, Any]
 logger = logging.getLogger(__name__)
 
 def clean_whitespace(text: str) -> str:
