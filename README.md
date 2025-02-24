@@ -2,9 +2,7 @@
 
 ## **Overview**
 
-jobba.help is an open-source job search tracker designed to empower jobseekers. 
-
-By integrating with the Gmail API, jobba.help automates tracking and generates insights to improve transparency in hiring.
+jobba.help is an open-source job tracker that reliably logs every application by integrating with your inbox—no manual entry, just automated and accurate tracking.
 
 ## **The Vision**
 
