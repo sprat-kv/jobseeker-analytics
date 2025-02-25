@@ -75,7 +75,7 @@ export const Navbar = () => {
 						data-testid="GoogleLogin"
 						startContent={<GoogleIcon className="text-danger" />}
 						variant="flat"
-						onClick={handleGoogleLogin}
+						onPress={handleGoogleLogin}
 					>
 						Login with Google
 					</Button>
