@@ -15,7 +15,7 @@ body:
     id: acceptance-criteria
     attributes:
       label: Acceptance Criteria
-      description: The subtask is considered complete when all the following criteria are met:
+      description: The subtask is considered complete when all the following criteria are met
       value: |
         - [ ] Add a button
         - [ ] Ensure UI updates smoothly without full refresh
