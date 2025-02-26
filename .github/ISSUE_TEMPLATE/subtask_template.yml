@@ -15,12 +15,11 @@ body:
     id: acceptance-criteria
     attributes:
       label: Acceptance Criteria
-      description: |
-        List the acceptance criteria for this subtask. Use `- [ ]` to create checkboxes.
-      placeholder: |
-        - [ ] Implement feature according to specifications.
-        - [ ] Ensure code follows project guidelines.
-        - [ ] Write unit/integration tests.
-        - [ ] Verify no breaking changes are introduced.
+      description: The subtask is considered complete when all the following criteria are met:
+      value: |
+        - [ ] Add a button
+        - [ ] Ensure UI updates smoothly without full refresh
+        - [ ] Display a timestamp showing when data was last updated
+        - [ ] etc.
     validations:
       required: true
