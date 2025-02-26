@@ -1,5 +1,4 @@
 # Product Spec: Application Response Rates
-### Template Credit to Alex Chiou, Taro Co-Founder
 - Authors: [@AxisShine](https://www.github.com/AxisShine) 
 - Spec Template Author: [Alex Chiou](https://www.linkedin.com/in/alexander-chiou/), Co-Founder @ Taro, Ex-Robinhood, Ex-Meta Tech Lead
 
