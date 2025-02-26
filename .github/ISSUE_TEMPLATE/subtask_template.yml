@@ -1,4 +1,4 @@
-name: Subtask Issue
+name: 👶 Subtask Issue
 description: Create a structured subtask issue with clear description and acceptance criteria.
 title: "[Subtask] <Brief Description>"
 labels: ["enhancement", "subtask"]
