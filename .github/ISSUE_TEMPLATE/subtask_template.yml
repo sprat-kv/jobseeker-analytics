@@ -1,0 +1,23 @@
+name: Subtask Issue
+description: Create a structured subtask issue with clear description and acceptance criteria.
+title: "[Subtask] <Brief Description>"
+labels: ["enhancement", "subtask"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Provide a brief overview of what this subtask involves.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Define what needs to be completed for this subtask to be considered done.
+      options:
+        - label: Feature implementation meets functional requirements.
+        - label: Code follows project guidelines and best practices.
+        - label: Unit/integration tests are included and pass.
+        - label: No breaking changes introduced.
