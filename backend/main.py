@@ -3,7 +3,7 @@ import logging
 import os
 
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -28,19 +28,13 @@ from login.google_login import router as google_login_router
 
 app = FastAPI()
 settings = get_settings()
+APP_URL = settings.APP_URL
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-origins = [
-    "http://localhost:3000",  # Local Next.js Dev Server
-    "http://127.0.0.1:3000",
-    "https://www.jobba.help/",
-    "https://jobseeker-analytics.onrender.com/",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allow frontend origins
+    allow_origins=APP_URL,  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -68,12 +62,13 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
     if api_call_finished:
-        logger.info("user_id:%s processing complete", user_id)
-        return RedirectResponse("/success", status_code=303)
+        logger.info("user_id: %s processing complete", user_id)
+        return JSONResponse(
+            content={"message": "Processing complete", "redirect_url": f"{APP_URL}/success"}
+        )
     else:
-        logger.info("user_id:%s processing not complete for file", user_id)
-        # Show a message that the job is still processing
-        return templates.TemplateResponse("processing.html", {"request": request})
+        logger.info("user_id: %s processing not complete for file", user_id)
+        return JSONResponse(content={"message": "Processing in progress"})
 
 
 @app.get("/download-file")
