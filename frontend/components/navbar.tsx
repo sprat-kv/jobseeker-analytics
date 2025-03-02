@@ -69,7 +69,7 @@ export const Navbar = () => {
 				<NavbarItem>
 					{pathname === "/" ? (
 						<Button
-							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
+							className="w-full text-sm font-normal text-default-600 bg-default-100"
 							data-testid="GoogleLogin"
 							startContent={<GoogleIcon className="text-danger" />}
 							variant="flat"
@@ -79,7 +79,7 @@ export const Navbar = () => {
 						</Button>
 					) : (
 						<Button
-							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
+							className="w-full text-sm font-normal text-default-600 bg-default-100"
 							data-testid="GoogleLogout"
 							startContent={<LogOutIcon />}
 							variant="flat"
@@ -93,48 +93,60 @@ export const Navbar = () => {
 
 			{/* Smaller screens */}
 			<NavbarContent className="md:hidden" justify="end">
-				<Link isExternal aria-label="Github" href={siteConfig.links.github}>
-					<GithubIcon className="text-default-500" />
-				</Link>
-				<ThemeSwitch />
+				{pathname === "/" ? (
+					<Button
+						className="w-auto text-sm font-normal text-default-600 bg-default-100"
+						data-testid="GoogleLogin"
+						startContent={<GoogleIcon className="text-danger" />}
+						variant="flat"
+						onPress={handleGoogleLogin}
+					>
+						Login with Google
+					</Button>
+				) : (
+					<Button
+						className="w-auto text-sm font-normal text-default-600 bg-default-100 px-7"
+						data-testid="GoogleLogout"
+						startContent={<LogOutIcon />}
+						variant="flat"
+						onPress={handleGoogleLogout}
+					>
+						Logout
+					</Button>
+				)}
 				<NavbarMenuToggle />
 			</NavbarContent>
 
-			<NavbarMenu>
+			<NavbarMenu className="flex flex-col items-center gap-3">
+				<NavbarMenuItem>
+					<Link
+						isExternal
+						aria-label="Github"
+						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
+						href={siteConfig.links.github}
+					>
+						<GithubIcon className="w-5 h-5 text-default-500" />
+						<span>View code</span>
+					</Link>
+				</NavbarMenuItem>
+
+				<NavbarMenuItem>
+					<ThemeSwitch className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition">
+						<span>Change theme</span>
+					</ThemeSwitch>
+				</NavbarMenuItem>
+
 				<NavbarMenuItem>
 					<Button
 						isExternal
 						as={Link}
-						className="w-full text-sm font-normal text-default-600 bg-default-100"
+						className="w-auto text-sm font-medium text-default-600 bg-default-100 px-4 py-2 rounded-md transition"
 						href={siteConfig.links.sponsor}
 						startContent={<HeartFilledIcon className="text-danger" />}
 						variant="flat"
 					>
 						Sponsor
 					</Button>
-				</NavbarMenuItem>
-				<NavbarMenuItem>
-					{pathname === "/" ? (
-						<Button
-							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
-							data-testid="GoogleLogin"
-							startContent={<GoogleIcon className="text-danger" />}
-							variant="flat"
-							onPress={handleGoogleLogin}
-						>
-							Login with Google
-						</Button>
-					) : (
-						<Button
-							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
-							data-testid="GoogleLogout"
-							startContent={<LogOutIcon />}
-							variant="flat"
-							onPress={handleGoogleLogout}
-						>
-							Logout
-						</Button>
-					)}
 				</NavbarMenuItem>
 			</NavbarMenu>
 		</HeroUINavbar>
