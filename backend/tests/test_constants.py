@@ -213,7 +213,7 @@ DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT = [
 ]
 
 DESIRED_PASS_APPLIED_EMAIL_FILTER_FROM = [
-    "linkedin.com",
+    "hit-reply@linkedin.com",
     "myworkday.com"
 ]
 
