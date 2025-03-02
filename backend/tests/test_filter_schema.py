@@ -13,8 +13,8 @@ from typing import List, Dict, Union
 import re
 from constants import APPLIED_FILTER_PATH  # , APPLIED_FILTER_OVERRIDES_PATH
 from test_constants import (
-    DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS,
-    DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS,
+    DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT,
+    DESIRED_PASS_APPLIED_EMAIL_FILTER_FROM,
     SAMPLE_FILTER_PATH,
 )
 
@@ -111,26 +111,7 @@ def apply_base_filter(field_text, field_name, filter_config) -> bool:
 
 @pytest.mark.parametrize(
     "test_constant,filter_config",
-    [(DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, APPLIED_FILTER_PATH)],
-)
-def test_apply_email_filter_subject_pass(test_constant, filter_config):
-    """
-    Tests if the desired subject pairs in test_constants will pass the filter
-    """
-    filter_config = load_filter_config(APPLIED_FILTER_PATH)
-
-    result_list = []
-    for subject_text, _ in test_constant:
-        result = apply_base_filter(subject_text, "subject", filter_config)
-        result_list.append(result)
-
-    assert all(result_list), \
-        f"These subject pairs failed to pass: {[x for x, y in list(zip(test_constant, result_list)) if not y]}"
-
-
-@pytest.mark.parametrize(
-    "test_constant,filter_config",
-    [(DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, APPLIED_FILTER_PATH)],
+    [(DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT, APPLIED_FILTER_PATH)],
 )
 def test_apply_email_filter_subject_fail(test_constant, filter_config):
     """
@@ -139,7 +120,7 @@ def test_apply_email_filter_subject_fail(test_constant, filter_config):
     filter_config = load_filter_config(APPLIED_FILTER_PATH)
 
     result_list = []
-    for subject_text, _ in test_constant:
+    for subject_text in test_constant:
         result = apply_base_filter(subject_text, "subject", filter_config)
         result_list.append(result)
 
@@ -149,7 +130,7 @@ def test_apply_email_filter_subject_fail(test_constant, filter_config):
 
 @pytest.mark.parametrize(
     "test_constant,filter_config",
-    [(DESIRED_PASS_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, APPLIED_FILTER_PATH)],
+    [(DESIRED_PASS_APPLIED_EMAIL_FILTER_FROM, APPLIED_FILTER_PATH)],
 )
 def test_apply_email_filter_from_pass(test_constant, filter_config):
     """
@@ -158,7 +139,7 @@ def test_apply_email_filter_from_pass(test_constant, filter_config):
     filter_config = load_filter_config(APPLIED_FILTER_PATH)
 
     result_list = []
-    for _, from_text in test_constant:
+    for from_text in test_constant:
         result = apply_base_filter(from_text, "from", filter_config)
         result_list.append(result)
 
@@ -168,7 +149,7 @@ def test_apply_email_filter_from_pass(test_constant, filter_config):
 
 @pytest.mark.parametrize(
     "test_constant,filter_config",
-    [(DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT_FROM_PAIRS, APPLIED_FILTER_PATH)],
+    [(DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT, APPLIED_FILTER_PATH)],
 )
 def test_apply_email_filter_from_fail(test_constant, filter_config):
     """
@@ -177,7 +158,7 @@ def test_apply_email_filter_from_fail(test_constant, filter_config):
     filter_config = load_filter_config(APPLIED_FILTER_PATH)
 
     result_list = []
-    for _, from_text in test_constant:
+    for from_text in test_constant:
         result = apply_base_filter(from_text, "from", filter_config)
         result_list.append(result)
 

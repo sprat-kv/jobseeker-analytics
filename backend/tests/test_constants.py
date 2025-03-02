@@ -212,9 +212,9 @@ DESIRED_FAIL_APPLIED_EMAIL_FILTER_SUBJECT = [
     "New job",
 ]
 
-DESIRED_FAIL_APPLIED_EMAIL_FILTER_FROM_SUBJECT_PAIRS = [
-    ("unsubscribe", "linkedin.com"),
-    ("unsubscribe", "myworkday.com")
+DESIRED_PASS_APPLIED_EMAIL_FILTER_FROM = [
+    "linkedin.com",
+    "myworkday.com"
 ]
 
 SAMPLE_FILTER_PATH = Path(__file__).parent / "sample_base_filter.yaml"
