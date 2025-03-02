@@ -7,7 +7,7 @@ class CompanyJobs(SQLModel, table=True):
     company_id: int = Field(foreign_key="companies.company_id", nullable=False)
     job_title_id: int = Field(foreign_key="job_titles.job_title_id", nullable=False)
     job_description: str 
-    job_posted_at: datetime 
+    job_posted_at: datetime = Field(default_factory=datetime.utcnow, nullable=False) 
     job_location: str
 
     __table_args__ = (
