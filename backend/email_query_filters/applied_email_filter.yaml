@@ -43,8 +43,8 @@
     - no-reply@ashbyhq.com
     - no-reply@greenhouse.io
     - notification@smartrecruiters.com
-    - linkedin.com
     - myworkday.com
+    - hit-reply@linkedin.com
 
 ## exclude all of the following subjects
 - logic: all
@@ -58,6 +58,7 @@
     - Verify your candidate account
     - account created
     - welcome to the
+    - '% off'
 
 ## exclude all of the following from addresses
 - logic: all
@@ -68,3 +69,9 @@
     - no-reply@comet.zillow.com
     - insights@careerseeker.accenture.com
     - notifications@github.com
+    - messaging-digest-noreply@linkedin.com
+    - newsletter@
+    - '@interviewing.io'
+    - mail.jointaro.com
+    - calendar.luma-mail.com
+    - huntr.co
