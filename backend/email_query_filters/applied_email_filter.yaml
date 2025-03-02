@@ -25,12 +25,14 @@
     - thanks for applying to
     - thanks for your application
     - thanks for your interest
-    - ve been referred
+    - been referred
     - your application for
     - your application to
     - your application to * has been received
     - your job application has been received
     - your recent job application
+    - next step
+    - interview
     
 ## include any of the following from addresses
 - logic: any
@@ -41,6 +43,8 @@
     - no-reply@ashbyhq.com
     - no-reply@greenhouse.io
     - notification@smartrecruiters.com
+    - myworkday.com
+    - hit-reply@linkedin.com
 
 ## exclude all of the following subjects
 - logic: all
@@ -54,6 +58,7 @@
     - Verify your candidate account
     - account created
     - welcome to the
+    - '% off'
 
 ## exclude all of the following from addresses
 - logic: all
@@ -63,3 +68,10 @@
     - IRCC.DoNotReply-NePasRepondre.IRCC@prson-srpel.apps.cic.gc.ca
     - no-reply@comet.zillow.com
     - insights@careerseeker.accenture.com
+    - notifications@github.com
+    - messaging-digest-noreply@linkedin.com
+    - newsletter@
+    - '@interviewing.io'
+    - mail.jointaro.com
+    - calendar.luma-mail.com
+    - huntr.co
