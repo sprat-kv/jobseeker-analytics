@@ -1,6 +1,14 @@
 "use client";
 
-import { Navbar as HeroUINavbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarItem } from "@heroui/react";
+import {
+	Navbar as HeroUINavbar,
+	NavbarContent,
+	NavbarMenuToggle,
+	NavbarBrand,
+	NavbarItem,
+	NavbarMenu,
+	NavbarMenuItem
+} from "@heroui/react";
 import { Button, Link } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -8,7 +16,7 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, HeartFilledIcon, GoogleIcon } from "@/components/icons";
+import { GithubIcon, HeartFilledIcon, GoogleIcon, LogOutIcon } from "@/components/icons";
 
 export const Navbar = () => {
 	const pathname = usePathname();
@@ -38,14 +46,14 @@ export const Navbar = () => {
 				</NavbarBrand>
 			</NavbarContent>
 
-			<NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full" justify="end">
-				<NavbarItem className="hidden sm:flex gap-2">
+			<NavbarContent className="hidden md:flex basis-1/5 sm:basis-full" justify="end">
+				<NavbarItem className="flex gap-2">
 					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
 						<GithubIcon className="text-default-500" />
 					</Link>
 					<ThemeSwitch />
 				</NavbarItem>
-				<NavbarItem className="hidden md:flex">
+				<NavbarItem>
 					<Button
 						isExternal
 						as={Link}
@@ -58,9 +66,35 @@ export const Navbar = () => {
 						Sponsor
 					</Button>
 				</NavbarItem>
+				<NavbarItem>
+					{pathname === "/" && (
+						<Button
+							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
+							data-testid="GoogleLogin"
+							startContent={<GoogleIcon className="text-danger" />}
+							variant="flat"
+							onPress={handleGoogleLogin}
+						>
+							Login with Google
+						</Button>
+					)}
+
+					{pathname === "/success" && (
+						<Button
+							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
+							data-testid="GoogleLogout"
+							startContent={<LogOutIcon />}
+							variant="flat"
+							onPress={handleGoogleLogout}
+						>
+							Logout
+						</Button>
+					)}
+				</NavbarItem>
 			</NavbarContent>
 
-			<NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+			{/* Smaller screens */}
+			<NavbarContent className="md:hidden" justify="end">
 				<Link isExternal aria-label="Github" href={siteConfig.links.github}>
 					<GithubIcon className="text-default-500" />
 				</Link>
@@ -68,33 +102,43 @@ export const Navbar = () => {
 				<NavbarMenuToggle />
 			</NavbarContent>
 
-			{pathname === "/" && (
-				<NavbarItem className="hidden md:flex" data-testid="GoogleLogin">
+			<NavbarMenu>
+				<NavbarMenuItem>
 					<Button
-						className="text-sm font-normal text-default-600 bg-default-100"
-						data-testid="GoogleLogin"
-						startContent={<GoogleIcon className="text-danger" />}
+						isExternal
+						as={Link}
+						className="w-full text-sm font-normal text-default-600 bg-default-100"
+						href={siteConfig.links.sponsor}
+						startContent={<HeartFilledIcon className="text-danger" />}
 						variant="flat"
-						onPress={handleGoogleLogin}
 					>
-						Login with Google
+						Sponsor
 					</Button>
-				</NavbarItem>
-			)}
-
-			{/* Add for processing page too */}
-			{pathname === "/success" && (
-				<NavbarItem className="hidden md:flex">
-					<Button
-						className="text-sm font-normal text-default-600 bg-default-100"
-						startContent={<GoogleIcon className="text-danger" />}
-						variant="flat"
-						onClick={handleGoogleLogout}
-					>
-						Logout
-					</Button>
-				</NavbarItem>
-			)}
+				</NavbarMenuItem>
+				<NavbarMenuItem>
+					{pathname === "/" ? (
+						<Button
+							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
+							data-testid="GoogleLogin"
+							startContent={<GoogleIcon className="text-danger" />}
+							variant="flat"
+							onPress={handleGoogleLogin}
+						>
+							Login with Google
+						</Button>
+					) : (
+						<Button
+							className="w-full text-sm font-normal text-default-600 bg-default-100 hover:bg-gray-300"
+							data-testid="GoogleLogout"
+							startContent={<LogOutIcon />}
+							variant="flat"
+							onPress={handleGoogleLogout}
+						>
+							Logout
+						</Button>
+					)}
+				</NavbarMenuItem>
+			</NavbarMenu>
 		</HeroUINavbar>
 	);
 };
