@@ -10,9 +10,18 @@ export default function Dashboard() {
   const [startDate, setStartDate] = useState<CalendarDate | null>(null);
   const router = useRouter();
 
-  const handleConfirm = () => {
+  const fetchEmails = async () => {
+    try {
+      await fetch("/api/fetch-emails", { method: "POST" });
+    } catch (error) {
+      console.error("Error fetching emails:", error);
+    }
+  };
+
+  const handleConfirm = async () => {
     setShowModal(false);
-    router.push("/processing");
+    await fetchEmails();
+    router.replace("/processing");
   };
 
   return (
