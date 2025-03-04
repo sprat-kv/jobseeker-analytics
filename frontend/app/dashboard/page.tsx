@@ -1,5 +1,6 @@
 "use client";
 import { useState, Fragment } from "react";
+import { useRouter } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date";
@@ -7,6 +8,12 @@ import { CalendarDate } from "@internationalized/date";
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(true);
   const [startDate, setStartDate] = useState<CalendarDate | null>(null);
+  const router = useRouter();
+
+  const handleConfirm = () => {
+    setShowModal(false);
+    router.push("/processing");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center text-center pt-64">
@@ -26,7 +33,7 @@ export default function Dashboard() {
               />
               <button
                 className="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                onClick={() => setShowModal(false)}
+                onClick={handleConfirm}
               >
                 Confirm
               </button>
@@ -37,12 +44,10 @@ export default function Dashboard() {
 
       {/* Dashboard */}
       {!showModal && (
-        <div className="text-center">
+        <>
           <h1 className="text-3xl font-bold text-blue-500">Dashboard</h1>
-          <p className="pt-8 text-lg font-medium text-gray-700">
-            Your job search start date: {startDate ? startDate.toString() : "Not set"}
-          </p>
-        </div>
+          <p className="pt-8">Your job search start date: {startDate ? startDate.toString() : "Not set"}</p>
+        </>
       )}
     </div>
   );
