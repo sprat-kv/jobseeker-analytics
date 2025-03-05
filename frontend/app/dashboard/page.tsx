@@ -3,6 +3,7 @@
 import React from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
 import { Select, SelectItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 
 export const dates = [
 	{ key: "30-days", label: "30 days" },
@@ -61,35 +62,43 @@ export default function Dashboard() {
 					</h2>
 				</div>
 
-				<div className="flex flex-col md:flex-row justify-end items-stretch md:items-center gap-4 w-full md:w-auto flex-1">
+				<div className="flex flex-col md:flex-row justify-end items-stretch md:items-center gap-4 w-full md:w-auto">
 					<Select
-						className="w-full md:max-w-xs"
+						className="min-w-[200px] flex-1 h-12"
+						classNames={{
+							trigger: "h-full text-sm px-4",
+							label: "text-xs",
+							value: "text-sm"
+						}}
 						defaultSelectedKeys={["90-days"]}
 						label="Start Date"
 						labelPlacement="inside"
 					>
 						{dates.map((date) => (
-							<SelectItem key={date.key}>{date.label}</SelectItem>
+							<SelectItem key={date.key} className="text-sm">
+								{date.label}
+							</SelectItem>
 						))}
 					</Select>
 
-					<button
-						className="w-full md:w-auto bg-blue-600 text-white rounded-lg shadow 
-							text-sm sm:text-base px-4 py-2 truncate hover:bg-blue-700
-							transition-colors duration-200 flex items-center justify-center"
+					<Button
+						className="min-w-[200px] flex-1 h-12 truncate text-white text-sm"
+						color="primary"
+						radius="lg"
 					>
 						Sync New Data
-					</button>
+					</Button>
 
-					<a
+					<Button
 						download
-						className="w-full md:w-auto bg-green-600 text-white rounded-lg shadow
-							text-sm sm:text-base px-4 py-2 truncate hover:bg-green-700
-							transition-colors duration-200 flex items-center justify-center"
+						as="a"
+						className="min-w-[200px] flex-1 h-12 truncate text-white text-sm"
+						color="success"
 						href={`${apiUrl}/download-file`}
+						radius="lg"
 					>
 						Download CSV
-					</a>
+					</Button>
 				</div>
 			</div>
 
