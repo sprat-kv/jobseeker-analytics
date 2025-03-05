@@ -59,6 +59,7 @@ engine = create_engine(DATABASE_URL)
 class TestTable(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     name: str
+    __tablename__ = "test_table"
 
 SQLModel.metadata.create_all(engine)
 

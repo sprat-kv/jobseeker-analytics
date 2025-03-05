@@ -174,7 +174,18 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    - In the `Database Navigator` pane on the left side of DBeaver, expand the `PostgreSQL` node.
    - Expand the `jobseeker_analytics` node to see the available schemas and tables.
    - Right-click on a table (e.g., `test_table`) and select `View Data` to see the data in the table.
-   - You can also run SQL queries by clicking on the `SQL Editor` button and writing your queries.
+
+7. **Open the Playground Page**:
+   - Open your browser and navigate to `http://localhost:3000/playground`.
+
+8. **Insert a Record**:
+   - Use the form on the playground page to insert a new record by entering a name and clicking "Insert Data".
+   - Observe the changes in DBeaver. You should see the new record appear in the `test_table`.
+
+9. **Delete All Records**:
+   - Click the "Delete All Data" button on the playground page to delete all records.
+   - Observe the changes in DBeaver. You should see the records being removed from the `test_table`.
+
 
 
 ### Troubleshooting Tips
