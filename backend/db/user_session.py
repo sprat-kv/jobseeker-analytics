@@ -10,4 +10,3 @@ class UserSession(SQLModel, table=True):
     session_start: datetime = Field(default_factory=datetime.now(timezone.utc))
     session_end: Optional[datetime] = None
     user_agent: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
