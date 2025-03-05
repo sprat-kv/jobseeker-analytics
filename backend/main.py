@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -28,7 +28,6 @@ from login.google_login import router as google_login_router
 
 from pydantic import BaseModel
 from sqlmodel import SQLModel, create_engine, Session, Field, select
-from config import settings
 
 app = FastAPI()
 settings = get_settings()
