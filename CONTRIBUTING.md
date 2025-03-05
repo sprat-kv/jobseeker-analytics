@@ -161,6 +161,7 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
 
 3. **Create a New Database Connection in DBeaver (if this is your first time opening DBeaver for this project)**:
    - Open DBeaver.
+   - - Note: you may need to Download SQLLite driver files - Driver settings window will prompt you.
    - Click on the `Database` menu and select `New Database Connection`.
    - Select `PostgreSQL` and click `Next`.
 
@@ -171,6 +172,7 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    - **Username**: `postgres`
    - **Password**: `postgres`
    - Click on the `Test Connection` button to ensure the connection is successful.
+   - Note: you may need to Download PostgreSQL driver files - Driver settings window will prompt you.
 
 5. **Save the Connection**:
    - If the connection test is successful, click `Finish` to save the connection.
