@@ -82,8 +82,9 @@ export default function Dashboard() {
 					</Select>
 
 					<Button
-						className="min-w-[200px] flex-1 h-12 truncate text-white text-sm"
+						className="min-w-[200px] flex-1 h-14 truncate text-white text-base"
 						color="primary"
+						data-testid="sync-new-data"
 						radius="lg"
 					>
 						Sync New Data
@@ -92,8 +93,9 @@ export default function Dashboard() {
 					<Button
 						download
 						as="a"
-						className="min-w-[200px] flex-1 h-12 truncate text-white text-sm"
+						className="min-w-[200px] flex-1 h-14 truncate text-white text-base"
 						color="success"
+						data-testid="download-csv"
 						href={`${apiUrl}/download-file`}
 						radius="lg"
 					>
@@ -102,8 +104,8 @@ export default function Dashboard() {
 				</div>
 			</div>
 
-			<div className="overflow-x-auto bg-white shadow-md rounded-lg">
-				<Table aria-label="Example table with mock data">
+			<div className="overflow-x-auto bg-white shadow-md rounded-lg mt-6">
+				<Table aria-label="Example table with mock data" data-testid="jobs-table">
 					<TableHeader>
 						{/* Render table columns */}
 						{columns.map((column) => (
