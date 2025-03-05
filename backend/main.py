@@ -56,17 +56,22 @@ api_call_finished = False
 DATABASE_URL = settings.DATABASE_URL
 engine = create_engine(DATABASE_URL)
 
+
 class TestTable(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     name: str
     __tablename__ = "test_table"
 
+
 SQLModel.metadata.create_all(engine)
+
 
 class TestData(BaseModel):
     name: str
 
+
 if settings.ENV == "dev":
+
     @app.post("/insert")
     def insert_data(data: TestData):
         with Session(engine) as session:
@@ -85,6 +90,7 @@ if settings.ENV == "dev":
                 session.delete(test_entry)
             session.commit()
             return {"message": "All data deleted successfully"}
+
 
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
