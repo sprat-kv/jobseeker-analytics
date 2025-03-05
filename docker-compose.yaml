@@ -17,6 +17,7 @@ services:
     volumes:
       - ./frontend:/app # Mount frontend directory for live code updates
       - /app/node_modules
+      - /app/.next # Mount .next directory for build artifacts
     env_file: "./frontend/.env"
     restart: always  # Restart container if it crashes
 
