@@ -122,6 +122,12 @@ Once your `.env` file is set up, start the app by following the instructions bel
    pip install -r backend/requirements.txt
    cd frontend && npm install
    ```
+3. Start the PostgreSQL database:
+   - Ensure Docker is installed and running.
+   - Use Docker to start the PostgreSQL database:
+     ```bash
+     docker run --name jobseeker-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=jobseeker_analytics -p 5433:5432 -d postgres:13
+     ```
 4. Run backend and frontend apps:
    In one terminal window, run:
    ```bash
@@ -131,7 +137,7 @@ Once your `.env` file is set up, start the app by following the instructions bel
    ```bash
    cd frontend && npm run dev
    ```
-6. Check it out @:
+5. Check it out @:
    http://127.0.0.1:8000
    
 Then, visit `http://localhost:8000/login` to test the authentication flow.  
