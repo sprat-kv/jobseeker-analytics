@@ -13,7 +13,6 @@ def setup_static_directory():
         os.makedirs(static_dir)
 
 
-
 @patch("utils.config_utils.config.Settings")
 def test_get_settings_only_called_once_with_lru(mock_settings_call):
     get_settings.cache_clear()
