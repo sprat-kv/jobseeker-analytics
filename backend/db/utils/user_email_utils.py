@@ -1,5 +1,5 @@
 from sqlmodel import Session
-from db.user_email import UserEmail
+from user_email import UserEmail
 from datetime import datetime
 import logging
 
