@@ -70,6 +70,7 @@ export default function Dashboard() {
 							label: "text-xs",
 							value: "text-sm"
 						}}
+						data-testid="start-date"
 						defaultSelectedKeys={["90-days"]}
 						label="Start Date"
 						labelPlacement="inside"
@@ -81,14 +82,14 @@ export default function Dashboard() {
 						))}
 					</Select>
 
-					<Button
+					{/* <Button
 						className="min-w-[200px] flex-1 h-14 truncate text-white text-base"
 						color="primary"
 						data-testid="sync-new-data"
 						radius="lg"
 					>
 						Sync New Data
-					</Button>
+					</Button> */}
 
 					<Button
 						download

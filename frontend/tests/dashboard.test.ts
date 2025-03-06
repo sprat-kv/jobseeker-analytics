@@ -8,10 +8,19 @@ test.describe("Dashboard", () => {
 		await page.goto(DASHBOARD_URL);
 	});
 
-	test("should display Sync New Data button", async ({ page }) => {
-		const syncButton = await page.locator('[data-testid="sync-new-data"]');
-		await expect(syncButton).toBeVisible();
+	test("should display title Your Job Application Data", async ({ page }) => {
+		await expect(page.getByRole("heading", { name: /Your Job Application Data/i })).toBeVisible();
 	});
+
+	test("should display Start Date dropdown", async ({ page }) => {
+		const startDateDropdown = await page.locator('[data-testid="start-date"]');
+		await expect(startDateDropdown).toBeVisible();
+	});
+
+	// test("should display Sync New Data button", async ({ page }) => {
+	// 	const syncButton = await page.locator('[data-testid="sync-new-data"]');
+	// 	await expect(syncButton).toBeVisible();
+	// });
 
 	test("should display Download CSV button", async ({ page }) => {
 		const downloadButton = await page.locator('[data-testid="download-csv"]');
