@@ -2,7 +2,6 @@ from sqlmodel import Session
 from db.user_email import UserEmail
 from datetime import datetime
 import email.utils
-import re
 import logging
 
 logger = logging.getLogger(__name__)
