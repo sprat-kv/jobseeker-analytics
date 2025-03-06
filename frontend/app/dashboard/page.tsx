@@ -1,14 +1,32 @@
 "use client";
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { DatePicker } from "@heroui/react";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, parseDate } from "@internationalized/date";
 
 export default function Dashboard() {
   const [showModal, setShowModal] = useState(true);
   const [startDate, setStartDate] = useState<CalendarDate | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchStartDate = async () => {
+      try {
+        const response = await fetch("/api/get-start-date");
+        const data = await response.json();
+        if (data.start_date) {
+          const parsedDate = parseDate(data.start_date);
+          setStartDate(parsedDate);
+          setShowModal(false);
+        }
+      } catch (error) {
+        console.error("Error fetching start date:", error);
+      }
+    };
+
+    fetchStartDate();
+  }, []);
 
   const fetchEmails = async () => {
     try {
@@ -21,6 +39,13 @@ export default function Dashboard() {
   const handleConfirm = async () => {
     setShowModal(false);
     await fetchEmails();
+    await fetch("/api/save-start-date", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ start_date: startDate?.toString() }),
+    });
     router.replace("/processing");
   };
 

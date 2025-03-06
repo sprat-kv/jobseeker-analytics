@@ -145,6 +145,19 @@ def success(request: Request, user_id: str = Depends(validate_session)):
         "success.html", {"request": request, "today": today}
     )
 
+# replace with database once it's ready
+start_date_storage = {"start_date": None}
+
+@app.post("/api/save-start-date")
+async def save_start_date(request: Request):
+    data = await request.json()
+    start_date_storage["start_date"] = data.get("start_date")
+    return JSONResponse(content={"message": "Start date saved successfully"})
+
+@app.get("/api/get-start-date")
+async def get_start_date():
+    return JSONResponse(content={"start_date": start_date_storage["start_date"]})
+
 # Register Google login routes
 app.include_router(google_login_router)
 
