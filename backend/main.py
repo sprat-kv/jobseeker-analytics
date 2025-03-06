@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, BackgroundTasks
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -147,7 +147,6 @@ def success(request: Request, user_id: str = Depends(validate_session)):
         "success.html", {"request": request, "today": today}
     )
 
-# replace with database call once it's ready
 @app.post("/api/save-start-date")
 async def save_start_date(request: Request):
     data = await request.json()
@@ -156,7 +155,14 @@ async def save_start_date(request: Request):
 
 @app.get("/api/get-start-date")
 async def get_start_date():
-    return JSONResponse(content={"start_date": start_date_storage["start_date"]})
+    start_date = start_date_storage.get("start_date")
+    return JSONResponse(content={"start_date": start_date if start_date else ""})
+
+@app.post("/api/fetch-emails")
+async def fetch_emails_endpoint(user_id: str, background_tasks: BackgroundTasks):
+    user = AuthenticatedUser(user_id=user_id)  # Assuming you have a way to create an AuthenticatedUser from user_id
+    background_tasks.add_task(fetch_emails, user)
+    return JSONResponse(content={"message": "Email fetching started"})
 
 # Register Google login routes
 app.include_router(google_login_router)
