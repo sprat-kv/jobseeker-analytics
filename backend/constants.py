@@ -1,7 +1,7 @@
 """
 This file contains the main constants used in the application.
 """
-from main import start_date_storage
+from start_date.storage import start_date_storage
 
 GENERIC_ATS_DOMAINS = [
     "us.greenhouse-mail.io",

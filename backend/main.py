@@ -22,6 +22,8 @@ from utils.file_utils import get_user_filepath
 from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
+#replace with db once it's ready
+from start_date.storage import start_date_storage
 
 # Import Google login routes
 from login.google_login import router as google_login_router
@@ -145,9 +147,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
         "success.html", {"request": request, "today": today}
     )
 
-# replace with database once it's ready
-start_date_storage = {"start_date": None}
-
+# replace with database call once it's ready
 @app.post("/api/save-start-date")
 async def save_start_date(request: Request):
     data = await request.json()
