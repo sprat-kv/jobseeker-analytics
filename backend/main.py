@@ -14,7 +14,7 @@ from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
-# from db.utils.user_email_utils import add_user_email (need to import this later)
+from db.utils.user_email_utils import create_user_email
 from utils.email_utils import (
     get_email_ids,
     get_email,
@@ -109,6 +109,8 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
 
     logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
     
+    email_records = []  # list to collect email records
+
     for idx, message in enumerate(messages):
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
@@ -124,18 +126,27 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
             else:
                 result = {}
                 logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
-                
-            message_data["company_name"] = [result.get("company_name", "")]
-            message_data["application_status"] = [result.get("application_status", "")]
-            message_data["received_at"] = [msg.get("date", "")]
-            message_data["subject"] = [msg.get("subject", "")]
-            message_data["from"] = [msg.get("from", "")]
 
-            #expose the message id on the dev environment
-            if settings.ENV == "dev":
-                message_data["id"] = [msg_id]
-            # write all the user application data into the user_email model
-            # add_user_email(user, message_data, session) session isn't defined just yet
+        message_data = {  
+            "company_name": [result.get("company_name", "")],
+            "application_status": [result.get("application_status", "")],
+            "received_at": [msg.get("date", "")],
+            "subject": [msg.get("subject", "")],
+            "from": [msg.get("from", "")]
+        }
+
+        #expose the message id on the dev environment
+        if settings.ENV == "dev":
+            message_data["id"] = [msg_id]
+        # write all the user application data into the user_email model
+        email_record = create_user_email(user, message_data)
+        email_records.append(email_record)
+    
+    # batch insert all records at once
+    if email_records:
+        # session.add_all(email_records) when our session is defined in main
+        # session.commit()
+        logger.info(f"Added {len(email_records)} email records for user {user.user_id}")
 
     api_call_finished = True
     logger.info(f"user_id:{user.user_id} Email fetching complete.")
