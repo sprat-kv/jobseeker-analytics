@@ -138,50 +138,52 @@ async def logout(request: Request, response: RedirectResponse):
     response.delete_cookie(key="Authorization")
     return RedirectResponse("/", status_code=303)
 
-def fetch_emails_to_db(user: AuthenticatedUser, session: Session) -> None: 
+def fetch_emails_to_db(user: AuthenticatedUser) -> None: 
     global api_call_finished
     
     api_call_finished = False # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails", user.user_id)
-    service = build("gmail", "v1", credentials=user.creds)
-    messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
-    
-    if not messages:
-        logger.info(f"user_id:{user.user_id} No job application emails found.")
-        return
 
-    logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
-    
-    for idx, message in enumerate(messages):
-        message_data = {}
-        # (email_subject, email_from, email_domain, company_name, email_dt)
-        msg_id = message["id"]
-        logger.info(f"user_id:{user.user_id} begin processing for email {idx+1} of {len(messages)} with id {msg_id}")
+    with Session(engine) as session:
+        service = build("gmail", "v1", credentials=user.creds)
+        messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
+        
+        if not messages:
+            logger.info(f"user_id:{user.user_id} No job application emails found.")
+            return
 
-        msg = get_email(message_id=msg_id, gmail_instance=service)
+        logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
+        
+        for idx, message in enumerate(messages):
+            message_data = {}
+            # (email_subject, email_from, email_domain, company_name, email_dt)
+            msg_id = message["id"]
+            logger.info(f"user_id:{user.user_id} begin processing for email {idx+1} of {len(messages)} with id {msg_id}")
 
-        if msg:
-            result = process_email(msg["text_content"])
-            if not isinstance(result, str) and result:
-                logger.info(f"user_id:{user.user_id} successfully extracted email {idx+1} of {len(messages)} with id {msg_id}")
-            else:
-                result = {}
-                logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
-                
-            message_data["company_name"] = [result.get("company_name", "")]
-            message_data["application_status"] = [result.get("application_status", "")]
-            message_data["received_at"] = [msg.get("date", "")]
-            message_data["subject"] = [msg.get("subject", "")]
-            message_data["from"] = [msg.get("from", "")]
+            msg = get_email(message_id=msg_id, gmail_instance=service)
 
-            #expose the message id on the dev environment
-            if settings.ENV == "dev":
-                message_data["id"] = [msg_id]
-            # write all the user application data into the user_email model
-            add_user_email(user, message_data, session)
+            if msg:
+                result = process_email(msg["text_content"])
+                if not isinstance(result, str) and result:
+                    logger.info(f"user_id:{user.user_id} successfully extracted email {idx+1} of {len(messages)} with id {msg_id}")
+                else:
+                    result = {}
+                    logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
+                    
+                message_data["company_name"] = [result.get("company_name", "")]
+                message_data["application_status"] = [result.get("application_status", "")]
+                message_data["received_at"] = [msg.get("date", "")]
+                message_data["subject"] = [msg.get("subject", "")]
+                message_data["from"] = [msg.get("from", "")]
 
-    api_call_finished = True
-    logger.info(f"user_id:{user.user_id} Email fetching complete.")
+                #expose the message id on the dev environment
+                if settings.ENV == "dev":
+                    message_data["id"] = [msg_id]
+                # write all the user application data into the user_email model
+                add_user_email(user, message_data, session)
+
+        api_call_finished = True
+        logger.info(f"user_id:{user.user_id} Email fetching complete.")
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished

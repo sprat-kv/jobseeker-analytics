@@ -5,7 +5,7 @@ from datetime import datetime
 class UserEmail(SQLModel, table=True):
     __tablename__ = "user_email"  
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int
+    user_id: str 
     company_name: str
     application_status: str
     received_at: datetime
