@@ -1,6 +1,6 @@
 from sqlmodel import Session
 from db.user_email import UserEmail
-from datetime import datetime
+from datetime import datetime, timezone
 import email.utils
 import logging
 
@@ -12,7 +12,8 @@ def parse_email_date(date_str: str) -> datetime:
     """
     dt = email.utils.parsedate_to_datetime(date_str)
     if dt is None:
-        raise ValueError(f"Unrecognized date format: {date_str}")
+        # default to current UTC datetime
+        dt = datetime.now(timezone.utc)
     return dt
 
 
