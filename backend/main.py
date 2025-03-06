@@ -93,11 +93,13 @@ async def logout(request: Request, response: RedirectResponse):
     response.delete_cookie(key="Authorization")
     return RedirectResponse("/", status_code=303)
 
-def fetch_emails_to_db(user: AuthenticatedUser, session: Session) -> None: 
+def fetch_emails_to_db(user: AuthenticatedUser) -> None: 
     global api_call_finished
     
     api_call_finished = False # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails", user.user_id)
+
+    # with Session(engine) as session: This should be added when we merge the database set up into main
     service = build("gmail", "v1", credentials=user.creds)
     messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
     
@@ -133,10 +135,11 @@ def fetch_emails_to_db(user: AuthenticatedUser, session: Session) -> None:
             if settings.ENV == "dev":
                 message_data["id"] = [msg_id]
             # write all the user application data into the user_email model
-            add_user_email(user, message_data, session)
+            # add_user_email(user, message_data, session) session isn't defined just yet
 
     api_call_finished = True
     logger.info(f"user_id:{user.user_id} Email fetching complete.")
+
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
