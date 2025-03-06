@@ -14,7 +14,6 @@ from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
-from db.user_email import UserEmail
 from db.utils.user_email_utils import add_user_email
 from utils.email_utils import (
     get_email_ids,
