@@ -159,8 +159,18 @@ async def get_start_date():
     return JSONResponse(content={"start_date": start_date if start_date else ""})
 
 @app.post("/api/fetch-emails")
-async def fetch_emails_endpoint(user_id: str, background_tasks: BackgroundTasks):
-    user = AuthenticatedUser(user_id=user_id) 
+async def fetch_emails_endpoint(request: Request, background_tasks: BackgroundTasks):
+    logger.info(f"Session data at fetch-emails: {request.session}") 
+    data = await request.json()
+    user_id = data.get("user_id")
+    if not user_id:
+        return JSONResponse(content={"error": "Missing user_id"}, status_code=400)
+    # Retrieve credentials from session
+    creds_json = request.session.get("creds")
+    if not creds_json:
+        return JSONResponse(content={"error": "Missing credentials"}, status_code=400)
+    creds = Credentials.from_authorized_user_info(json.loads(creds_json))
+    user = AuthenticatedUser(creds)
     background_tasks.add_task(fetch_emails, user)
     return JSONResponse(content={"message": "Email fetching started"})
 
