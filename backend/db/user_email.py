@@ -3,6 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 class UserEmail(SQLModel, table=True):
+    __tablename__ = "user_email"  
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int
     company_name: str
