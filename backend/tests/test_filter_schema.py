@@ -71,12 +71,12 @@ def test_base_filter_yaml_schema(filter_config):
             for x, y in zip(logic_list, how_list)
         ]
     ), "logic=any is not allowed for how=exclude"
-    assert all(
-        ["*" not in x for x in exclude_terms]
-    ), "wildcard is not allowed in exclude blocks"
-    assert validate_schema_block_order(
-        filter_config
-    ), "Exclude block found before an include block"
+    assert all(["*" not in x for x in exclude_terms]), (
+        "wildcard is not allowed in exclude blocks"
+    )
+    assert validate_schema_block_order(filter_config), (
+        "Exclude block found before an include block"
+    )
 
 
 def apply_base_filter(field_text, field_name, filter_config) -> bool:
@@ -91,20 +91,32 @@ def apply_base_filter(field_text, field_name, filter_config) -> bool:
                 # simple compare
                 if not ret_val:
                     ret_val = any(
-                        [x.lower() in field_text.lower() for x in block["terms"] if "*" not in x]
+                        [
+                            x.lower() in field_text.lower()
+                            for x in block["terms"]
+                            if "*" not in x
+                        ]
                     )
 
                 # use regex for wildcard compare
                 if not ret_val:
                     ret_val = any(
-                        [re.findall(x.replace(" * ", ".*").lower(), field_text.lower()) for x in block["terms"] if "*" in x]
+                        [
+                            re.findall(
+                                x.replace(" * ", ".*").lower(), field_text.lower()
+                            )
+                            for x in block["terms"]
+                            if "*" in x
+                        ]
                     )
 
             # check if the text is in the all, exclude block for that field.
             # all, exclude logic will override any matching includes
             if ret_val:
                 if block["logic"] == "all" and block["how"] == "exclude":
-                    ret_val = all([x.lower() not in field_text.lower() for x in block["terms"]])
+                    ret_val = all(
+                        [x.lower() not in field_text.lower() for x in block["terms"]]
+                    )
 
     return ret_val
 
@@ -124,8 +136,9 @@ def test_apply_email_filter_subject_fail(test_constant, filter_config):
         result = apply_base_filter(subject_text, "subject", filter_config)
         result_list.append(result)
 
-    assert not any(result_list), \
+    assert not any(result_list), (
         f"These subject pairs failed to fail: {[x for x, y in list(zip(test_constant, result_list)) if y]}"
+    )
 
 
 @pytest.mark.parametrize(
@@ -143,8 +156,9 @@ def test_apply_email_filter_from_pass(test_constant, filter_config):
         result = apply_base_filter(from_text, "from", filter_config)
         result_list.append(result)
 
-    assert all(result_list), \
+    assert all(result_list), (
         f"These from pairs failed to pass: {[x for x, y in list(zip(test_constant, result_list)) if not y]}"
+    )
 
 
 @pytest.mark.parametrize(
@@ -162,5 +176,6 @@ def test_apply_email_filter_from_fail(test_constant, filter_config):
         result = apply_base_filter(from_text, "from", filter_config)
         result_list.append(result)
 
-    assert not any(result_list), \
+    assert not any(result_list), (
         f"These from pairs failed to fail: {[x for x, y in list(zip(test_constant, result_list)) if y]}"
+    )
