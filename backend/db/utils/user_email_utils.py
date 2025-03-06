@@ -1,5 +1,4 @@
 from sqlmodel import Session
-from email.utils import parsedate_to_datetime
 from db.user_email import UserEmail
 from datetime import datetime
 import re
