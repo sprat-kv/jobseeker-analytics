@@ -14,7 +14,7 @@ from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
-from db.utils.user_email_utils import add_user_email
+# from db.utils.user_email_utils import add_user_email (need to import this later)
 from utils.email_utils import (
     get_email_ids,
     get_email,
@@ -23,7 +23,7 @@ from utils.file_utils import get_user_filepath
 from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
-from sqlmodel import Session
+# from sqlmodel import Session (need to import this later)
 
 # Import Google login routes
 from login.google_login import router as google_login_router
