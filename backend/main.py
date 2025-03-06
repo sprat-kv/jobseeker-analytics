@@ -160,7 +160,7 @@ async def get_start_date():
 
 @app.post("/api/fetch-emails")
 async def fetch_emails_endpoint(user_id: str, background_tasks: BackgroundTasks):
-    user = AuthenticatedUser(user_id=user_id)  # Assuming you have a way to create an AuthenticatedUser from user_id
+    user = AuthenticatedUser(user_id=user_id) 
     background_tasks.add_task(fetch_emails, user)
     return JSONResponse(content={"message": "Email fetching started"})
 
