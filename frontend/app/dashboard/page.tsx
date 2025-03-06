@@ -53,21 +53,21 @@ export default function Dashboard() {
 	};
 
 	const pollProcessingStatus = async () => {
-    const interval = setInterval(async () => {
-        try {
-            const response = await fetch(`http://localhost:8000/processing?user_id=${userId}`);
-            const text = await response.text();
-            console.log("API Response:", text);
-            const data = JSON.parse(text);
-            if (data.message === "Processing complete") {
-                clearInterval(interval);
-                router.replace(data.redirect_url);
-            }
-        } catch (error) {
-            console.error("Error parsing JSON:", error);
-        }
-    }, 5000); // Poll every 5 seconds
-};
+		const interval = setInterval(async () => {
+			try {
+				const response = await fetch(`http://localhost:8000/processing?user_id=${userId}`);
+				const text = await response.text();
+				console.log("API Response:", text);
+				const data = JSON.parse(text);
+				if (data.message === "Processing complete") {
+					clearInterval(interval);
+					router.replace(data.redirect_url);
+				}
+			} catch (error) {
+				console.error("Error parsing JSON:", error);
+			}
+		}, 5000); // Poll every 5 seconds
+	};
 
 	return (
 		<div className="flex flex-col items-center justify-center text-center pt-64">
