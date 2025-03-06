@@ -18,7 +18,8 @@ class Settings(BaseSettings):
     CLIENT_SECRETS_FILE: str = "credentials.json"
     ENV: str = "dev"
     APP_URL: str
-    DATABASE_URL: str
+    DATABASE_URL_LOCAL: str
+    DATABASE_URL_DOCKER: str
 
     @field_validator("GOOGLE_SCOPES", mode="before")
     @classmethod
