@@ -1,7 +1,7 @@
 """
 This file contains the main constants used in the application.
 """
-from frontend.app.dashboard import start_date
+from main import start_date_storage
 
 GENERIC_ATS_DOMAINS = [
     "us.greenhouse-mail.io",
@@ -50,5 +50,5 @@ QUERY_APPLIED_EMAIL_FILTER = (
     'subject:"ve been referred" OR '
     '(subject:"we received your" AND subject:"application") '
     '-subject:"watering"'
-    f"after:{start_date}"
+    f"after:{start_date_storage['start_date']}"
 )  # label:jobs -label:query4
