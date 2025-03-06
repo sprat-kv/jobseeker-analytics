@@ -73,7 +73,7 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    **🔒 Never share your `.env` file or commit it to Git!**  
 3. Copy `frontend\.env.sample` to `frontend\.env`:
    ```sh
-   cp frontend/.env.sample front/.env
+   cp frontend/.env.sample frontend/.env
    ```
 ---
 
