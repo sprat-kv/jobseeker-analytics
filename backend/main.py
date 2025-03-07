@@ -103,7 +103,7 @@ async def add_user_endpoint(user_data: UserData):
     This endpoint adds a user to the database
     """
     try:
-        add_user(user_data, user_data.start_date)
+        add_user(user_data)
         return {"message": "User added successfully"}
     except Exception as e:
         # Log the error for debugging purposes
