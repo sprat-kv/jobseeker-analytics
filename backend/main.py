@@ -155,34 +155,32 @@ def fetch_emails(user: AuthenticatedUser) -> None:
 
 
 @app.get("/user-emails/{user_id}", response_model=List[UserEmail])
-def query_emails(user_id: int, session: Session) -> None: 
-    try:
-        logger.info(f"Fetching emails for user_id: {user_id}")
-
-        # Calculate the date 90 days ago from today
-        ninety_days_ago = datetime.utcnow() - timedelta(days=90)
-
-        # Query the UserEmail table for records matching the user_id and received within the last 90 days
-        statement = (
-            select(UserEmail)
-            .where(UserEmail.user_id == user_id)
-            .where(UserEmail.received_at >= ninety_days_ago)
-        )
-        user_emails = session.exec(statement).all()
-
-        # If no records are found, return a 404 error
-        if not user_emails:
-            logger.warning(f"No emails found for user_id: {user_id} within the last 90 days")
-            raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id} within the last 90 days")
-
-        # Return the query results as a JSON blob
-        logger.info(f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}")
-        return user_emails
+def query_emails(user_id: int) -> None: 
+    with Session(engine) as session:
+        try:
+            logger.info(f"Fetching emails for user_id: {user_id}")
     
-    except Exception as e:
-        # Handle any unexpected errors
-        logger.error(f"Error fetching emails for user_id {user_id}: {e}")
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+                
+            # Query the UserEmail table for records matching the user_id and received within the last 90 days
+            statement = (
+                select(UserEmail)
+                .where(UserEmail.user_id == user_id)
+            )
+            user_emails = session.exec(statement).all()
+    
+            # If no records are found, return a 404 error
+            if not user_emails:
+                logger.warning(f"No emails found for user_id: {user_id} within the last 90 days")
+                raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id} within the last 90 days")
+    
+            # Return the query results as a JSON blob
+            logger.info(f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}")
+            return user_emails
+        
+        except Exception as e:
+            # Handle any unexpected errors
+            logger.error(f"Error fetching emails for user_id {user_id}: {e}")
+            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
         
     
 @app.get("/success", response_class=HTMLResponse)
