@@ -8,7 +8,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic.types import datetime
 
 from googleapiclient.discovery import build
 
@@ -105,9 +104,11 @@ async def add_user_endpoint(user_data: UserData):
     """
     try:
         add_user(user_data, user_data.start_date)
-        return {"User added successfully"}
+        return {"message": "User added successfully"}
     except Exception as e:
-        logger.info("Failed to add user to database")
+        # Log the error for debugging purposes
+        logger.error(f"An error occurred while adding user: {e}")
+        return {"error": "An error occurred while adding the user."}
     
 
 @app.get("/")
