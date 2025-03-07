@@ -1,78 +1,77 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from '@heroui/table';
 
+interface Application {
+  id?: string;
+  company_name: string;
+  application_status: string;
+  received_at: string;
+  subject: string;
+  from: string;
+}
+
 export default function Dashboard() {
-  // Mock data for the table
-  const data = [
-    {
-      company_name: 'Company A',
-      application_status: 'Pending',
-      received_at: '2025-03-01',
-      subject: 'Software Engineer',
-    },
-    {
-      company_name: 'Company B',
-      application_status: 'Accepted',
-      received_at: '2025-03-02',
-      subject: 'Product Manager',
-    },
-    {
-      company_name: 'Company C',
-      application_status: 'Rejected',
-      received_at: '2025-03-03',
-      subject: 'Data Analyst',
-    },
-  ];
+  const [data, setData] = useState<Application[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false); // Track if the response is empty
 
-  // Columns for the table
-  const columns = [
-    { key: 'company_name', label: 'Company Name' },
-    { key: 'application_status', label: 'Application Status' },
-    { key: 'received_at', label: 'Received At' },
-    { key: 'subject', label: 'Subject' },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8000/query-emails');
+        const result = await response.json();
+        if (!result.emails || result.emails.length === 0) {
+          setIsEmpty(true);
+        } else {
+          setData(result.emails);
+          setIsEmpty(false);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setIsEmpty(true); // Assume empty in case of an error
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Function to get data for each cell
-  const getKeyValue = (item: any, columnKey: string) => {
-    return item[columnKey] || '--'; // Safely handle missing data
-  };
+    fetchData();
+  }, []);
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <Table aria-label="Example table with mock data">
-          <TableHeader>
-            {/* Render table columns */}
-            {columns.map((column) => (
-              <TableColumn key={column.key}>{column.label}</TableColumn>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {data.length > 0 ? (
-              data.map((item, index) => (
-                <TableRow key={index}>
-                  {/* Render a TableCell for each column */}
-                  {columns.map((column) => (
-                    <TableCell key={column.key}>
-                      {getKeyValue(item, column.key)}
-                    </TableCell>
-                  ))}
+
+      {loading ? (
+        <p>Loading applications...</p>
+      ) : isEmpty ? (
+        <p className="text-gray-500 text-lg">No data available</p>
+      ) : (
+        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+          <Table aria-label="Applications Table">
+            <TableHeader>
+              <TableColumn>Company Name</TableColumn>
+              <TableColumn>Application Status</TableColumn>
+              <TableColumn>Received At</TableColumn>
+              <TableColumn>Subject</TableColumn>
+              <TableColumn>From</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {data.map((item) => (
+                <TableRow key={item.id || item.received_at}>
+                  <TableCell>{item.company_name || '--'}</TableCell>
+                  <TableCell>{item.application_status || '--'}</TableCell>
+                  <TableCell>{item.received_at || '--'}</TableCell>
+                  <TableCell>{item.subject || '--'}</TableCell>
+                  <TableCell>{item.from || '--'}</TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                {/* Empty row that spans all 4 columns */}
-                <TableCell colSpan={4} className="p-4 text-center">
-                  No data available
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 }
