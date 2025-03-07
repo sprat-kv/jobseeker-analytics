@@ -51,7 +51,7 @@ export const Navbar = () => {
 					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
 						<GithubIcon className="text-default-500" />
 					</Link>
-					<ThemeSwitch />
+					<ThemeSwitch data-testid="theme-switch-button" />
 				</NavbarItem>
 				<NavbarItem>
 					<Button
