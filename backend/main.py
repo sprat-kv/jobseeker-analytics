@@ -23,6 +23,10 @@ from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 
+from sqlmodel import select
+from fastapi import Depends, HTTPException
+from user_email import UserEmail
+
 # Import Google login routes
 from login.google_login import router as google_login_router
 
@@ -148,7 +152,25 @@ def fetch_emails(user: AuthenticatedUser) -> None:
             export_to_csv(user.filepath, user.user_id, message_data)
     api_call_finished = True
 
+@app.get("/fetch-emails", response_class=JSONResponse)
+async def get_user_emails(user_id: int = Depends(validate_session), db: Session = Depends(get_db)):
+    """
+    Fetches all email records for a given user_id from the database.
+    Returns a JSON response with the emails.
+    """
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
+    # Query database for all emails belonging to the user
+    emails = db.exec(select(UserEmail).where(UserEmail.user_id == user_id)).all()
+
+    if not emails:
+        return JSONResponse(content={"message": "No emails found"}, status_code=404)
+
+    # Convert the SQLModel objects to dictionaries
+    email_list = [email.dict() for email in emails]
+    return JSONResponse(content=email_list)
+    
 @app.get("/success", response_class=HTMLResponse)
 def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
