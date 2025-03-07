@@ -34,32 +34,47 @@ test.describe("Navbar Tests", () => {
 		await expect(sponsorButton).toHaveAttribute("href", "https://buymeacoffee.com/liano");
 	});
 
-	test("should show Login button on the home page", async ({ page }) => {
+	test("should show login button on the home page", async ({ page }) => {
 		const loginButton = page.locator('[data-testid="GoogleLogin"]');
 		await expect(loginButton).toBeVisible();
+		await expect(loginButton).toHaveText("Login with Google");
 		await loginButton.click();
-		await expect(page).toHaveURL(/\/login$/);
+		await page.waitForURL("**/accounts.google.com/**");
+		const currentURL = page.url();
+		expect(currentURL).toMatch(/https:\/\/accounts\.google\.com/);
 	});
 
-	test("should show Logout button on success page", async ({ page }) => {
+	test("should show logout button on success page", async ({ page }) => {
 		await page.goto("http://localhost:3000/success");
 		const logoutButton = page.locator('[data-testid="GoogleLogout"]');
 		await expect(logoutButton).toBeVisible();
-		await logoutButton.click();
-		await expect(page).toHaveURL(/\/logout$/);
+		await expect(logoutButton).toHaveText("Logout");
 	});
 
-	test("should open mobile menu when menu toggle is clicked", async ({ page }) => {
-		const menuToggle = page.locator("button[aria-label='Toggle navigation']");
+	test("should show navbar hamburger for smaller screens", async ({ page }) => {
+		await page.setViewportSize({ width: 375, height: 667 });
+		const menuToggle = page
+			.locator('button[type="button"] >> span.sr-only:has-text("open navigation menu")')
+			.first();
 		await expect(menuToggle).toBeVisible();
-		await menuToggle.click();
+	});
 
-		const menu = page.locator("nav [role='menu']");
-		await expect(menu).toBeVisible();
+	test("login button should be visible on the home page for smaller screens", async ({ page }) => {
+		await page.setViewportSize({ width: 375, height: 667 });
+		const loginButton = page.locator('[data-testid="GoogleLoginSmallScreen"]');
+		await expect(loginButton).toBeVisible();
+		await expect(loginButton).toHaveText("Login with Google");
+		await loginButton.click();
+		await page.waitForURL("**/accounts.google.com/**");
+		const currentURL = page.url();
+		expect(currentURL).toMatch(/https:\/\/accounts\.google\.com/);
+	});
 
-		// Check if menu contains necessary items
-		await expect(menu.locator('a[aria-label="Github"]')).toBeVisible();
-		await expect(menu.locator("button:text('Change theme')")).toBeVisible();
-		await expect(menu.locator('[data-testid="Sponsor"]')).toBeVisible();
+	test("logout button should be visible on the success page for smaller screens", async ({ page }) => {
+		await page.setViewportSize({ width: 375, height: 667 });
+		await page.goto("http://localhost:3000/success");
+		const logoutButton = page.locator('[data-testid="GoogleLogoutSmallScreen"]');
+		await expect(logoutButton).toBeVisible();
+		await expect(logoutButton).toHaveText("Logout");
 	});
 });

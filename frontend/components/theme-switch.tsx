@@ -57,8 +57,10 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className, classNames, child
 					)
 				})}
 			>
-				{!isSelected || isSSR ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
-				{children && <span className="text-default-600">{children}</span>}
+				<div data-testid="theme-switch-button">
+					{!isSelected || isSSR ? <SunFilledIcon size={22} /> : <MoonFilledIcon size={22} />}
+					{children && <span className="text-default-600">{children}</span>}
+				</div>
 			</div>
 		</Component>
 	);

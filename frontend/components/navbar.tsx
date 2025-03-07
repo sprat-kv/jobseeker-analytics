@@ -51,7 +51,7 @@ export const Navbar = () => {
 					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
 						<GithubIcon className="text-default-500" />
 					</Link>
-					<ThemeSwitch data-testid="theme-switch-button" />
+					<ThemeSwitch />
 				</NavbarItem>
 				<NavbarItem>
 					<Button
@@ -96,7 +96,7 @@ export const Navbar = () => {
 				{pathname === "/" ? (
 					<Button
 						className="w-auto text-sm font-normal text-default-600 bg-default-100"
-						data-testid="GoogleLogin"
+						data-testid="GoogleLoginSmallScreen"
 						startContent={<GoogleIcon className="text-danger" />}
 						variant="flat"
 						onPress={handleGoogleLogin}
@@ -106,7 +106,7 @@ export const Navbar = () => {
 				) : (
 					<Button
 						className="w-auto text-sm font-normal text-default-600 bg-default-100 px-7"
-						data-testid="GoogleLogout"
+						data-testid="GoogleLogoutSmallScreen"
 						startContent={<LogOutIcon />}
 						variant="flat"
 						onPress={handleGoogleLogout}
