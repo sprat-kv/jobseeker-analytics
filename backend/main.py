@@ -26,6 +26,7 @@ from session.session_layer import validate_session
 from sqlmodel import select
 from fastapi import Depends, HTTPException
 from user_email import UserEmail
+from datetime import timedelta
 
 # Import Google login routes
 from login.google_login import router as google_login_router
@@ -152,24 +153,37 @@ def fetch_emails(user: AuthenticatedUser) -> None:
             export_to_csv(user.filepath, user.user_id, message_data)
     api_call_finished = True
 
-@app.get("/fetch-emails", response_class=JSONResponse)
-async def get_user_emails(user_id: int = Depends(validate_session), db: Session = Depends(get_db)):
-    """
-    Fetches all email records for a given user_id from the database.
-    Returns a JSON response with the emails.
-    """
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Unauthorized")
 
-    # Query database for all emails belonging to the user
-    emails = db.exec(select(UserEmail).where(UserEmail.user_id == user_id)).all()
+@app.get("/user-emails/{user_id}", response_model=List[UserEmail])
+def query_emails(user_id: int, session: Session) -> None: 
+    try:
+        logger.info(f"Fetching emails for user_id: {user_id}")
 
-    if not emails:
-        return JSONResponse(content={"message": "No emails found"}, status_code=404)
+        # Calculate the date 90 days ago from today
+        ninety_days_ago = datetime.utcnow() - timedelta(days=90)
 
-    # Convert the SQLModel objects to dictionaries
-    email_list = [email.dict() for email in emails]
-    return JSONResponse(content=email_list)
+        # Query the UserEmail table for records matching the user_id and received within the last 90 days
+        statement = (
+            select(UserEmail)
+            .where(UserEmail.user_id == user_id)
+            .where(UserEmail.received_at >= ninety_days_ago)
+        )
+        user_emails = session.exec(statement).all()
+
+        # If no records are found, return a 404 error
+        if not user_emails:
+            logger.warning(f"No emails found for user_id: {user_id} within the last 90 days")
+            raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id} within the last 90 days")
+
+        # Return the query results as a JSON blob
+        logger.info(f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}")
+        return user_emails
+    
+    except Exception as e:
+        # Handle any unexpected errors
+        logger.error(f"Error fetching emails for user_id {user_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        
     
 @app.get("/success", response_class=HTMLResponse)
 def success(request: Request, user_id: str = Depends(validate_session)):
