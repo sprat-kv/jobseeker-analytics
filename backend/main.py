@@ -8,12 +8,15 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic.types import datetime
 
 from googleapiclient.discovery import build
 
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
+from db.users import UserData
+from db.utils.user_utils import add_user
 from db.utils.user_email_utils import create_user_email
 from utils.email_utils import (
     get_email_ids,
@@ -62,7 +65,6 @@ else:
     DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
 engine = create_engine(DATABASE_URL)
 
-
 class TestTable(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     name: str
@@ -74,7 +76,6 @@ SQLModel.metadata.create_all(engine)
 
 class TestData(BaseModel):
     name: str
-
 
 if settings.ENV == "dev":
 
@@ -97,6 +98,17 @@ if settings.ENV == "dev":
             session.commit()
             return {"message": "All data deleted successfully"}
 
+@app.post("/api/add-user")
+async def add_user_endpoint(user_data: UserData):
+    """
+    This endpoint adds a user to the database
+    """
+    try:
+        add_user(user_data, user_data.start_date)
+        return {"User added successfully"}
+    except Exception as e:
+        logger.info("Failed to add user to database")
+    
 
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
