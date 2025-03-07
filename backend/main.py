@@ -41,9 +41,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 if settings.is_publicly_deployed:
     # Production CORS settings
     origins = [
-        "https://jobba.help",
         "https://www.jobba.help",
-        "https://staging.jobba.help",
         "https://www.staging.jobba.help"
     ]
 else:
@@ -124,29 +122,25 @@ if settings.ENV == "dev":
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
 
-@app.get("/processing")
-def processing():
-    # Your processing logic here
-    return {"message": "Processing complete"}
 
-# @app.get("/processing", response_class=HTMLResponse)
-# async def processing(request: Request, user_id: str = Depends(validate_session)):
-#     logging.info("user_id:%s processing", user_id)
-#     global api_call_finished
-#     if not user_id:
-#         logger.info("user_id: not found, redirecting to login")
-#         return RedirectResponse("/logout", status_code=303)
-#     if api_call_finished:
-#         logger.info("user_id: %s processing complete", user_id)
-#         return JSONResponse(
-#             content={
-#                 "message": "Processing complete",
-#                 "redirect_url": f"{APP_URL}/success",
-#             }
-#         )
-#     else:
-#         logger.info("user_id: %s processing not complete for file", user_id)
-#         return JSONResponse(content={"message": "Processing in progress"})
+@app.get("/processing", response_class=HTMLResponse)
+async def processing(request: Request, user_id: str = Depends(validate_session)):
+    logging.info("user_id:%s processing", user_id)
+    global api_call_finished
+    if not user_id:
+        logger.info("user_id: not found, redirecting to login")
+        return RedirectResponse("/logout", status_code=303)
+    if api_call_finished:
+        logger.info("user_id: %s processing complete", user_id)
+        return JSONResponse(
+            content={
+                "message": "Processing complete",
+                "redirect_url": f"{APP_URL}/success",
+            }
+        )
+    else:
+        logger.info("user_id: %s processing not complete for file", user_id)
+        return JSONResponse(content={"message": "Processing in progress"})
 
 
 @app.get("/download-file")
