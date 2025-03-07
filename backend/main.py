@@ -159,9 +159,7 @@ def query_emails(user_id: int) -> None:
     with Session(engine) as session:
         try:
             logger.info(f"Fetching emails for user_id: {user_id}")
-    
-                
-            # Query the UserEmail table for records matching the user_id and received within the last 90 days
+
             statement = (
                 select(UserEmail)
                 .where(UserEmail.user_id == user_id)
@@ -170,15 +168,13 @@ def query_emails(user_id: int) -> None:
     
             # If no records are found, return a 404 error
             if not user_emails:
-                logger.warning(f"No emails found for user_id: {user_id} within the last 90 days")
-                raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id} within the last 90 days")
+                logger.warning(f"No emails found for user_id: {user_id}")
+                raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id}")
     
-            # Return the query results as a JSON blob
             logger.info(f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}")
             return user_emails
         
         except Exception as e:
-            # Handle any unexpected errors
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
         
