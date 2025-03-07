@@ -19,14 +19,22 @@ class Settings(BaseSettings):
     ENV: str = "dev"
     APP_URL: str
     DATABASE_URL: str
-    DATABASE_URL_LOCAL_VIRTUAL_ENV: str="postgresql://postgres:postgres@localhost:5433/jobseeker_analytics"
-    DATABASE_URL_DOCKER: str="postgresql://postgres:postgres@db:5432/jobseeker_analytics"
+    DATABASE_URL_LOCAL_VIRTUAL_ENV: str = (
+        "postgresql://postgres:postgres@localhost:5433/jobseeker_analytics"
+    )
+    DATABASE_URL_DOCKER: str = (
+        "postgresql://postgres:postgres@db:5432/jobseeker_analytics"
+    )
 
     @field_validator("GOOGLE_SCOPES", mode="before")
     @classmethod
     def decode_scopes(cls, v: str) -> List[str]:
         logger.info("Decoding scopes from string: %s", v)
         return json.loads(v.strip("'\""))
+
+    @property
+    def is_publicly_deployed(self) -> bool:
+        return self.ENV in ["prod", "staging"]
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

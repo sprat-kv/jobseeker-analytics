@@ -7,6 +7,8 @@ from google_auth_oauthlib.flow import Flow
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
+from utils.cookie_utils import set_conditional_cookie
+
 # from main import fetch_emails
 
 # Logger setup
@@ -64,8 +66,8 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         response = RedirectResponse(
             url=f"{settings.APP_URL}/processing", status_code=303
         )
-        response.set_cookie(
-            key="Authorization", value=session_id, secure=True, httponly=True
+        response = set_conditional_cookie(
+            key="Authorization", value=session_id, response=response
         )
 
         # Start email fetching in the background

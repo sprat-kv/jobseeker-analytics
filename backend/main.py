@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, Response
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -15,6 +15,7 @@ from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
 from db.utils.user_email_utils import create_user_email
+from utils.cookie_utils import set_conditional_cookie
 from utils.email_utils import (
     get_email_ids,
     get_email,
@@ -56,7 +57,7 @@ api_call_finished = False
 IS_DOCKER_CONTAINER = os.environ.get("IS_DOCKER_CONTAINER", 0)
 if IS_DOCKER_CONTAINER:
     DATABASE_URL = settings.DATABASE_URL_DOCKER
-elif settings.ENV in ["prod", "staging"]:
+elif settings.is_publicly_deployed:
     DATABASE_URL = settings.DATABASE_URL
 else:
     DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
@@ -77,6 +78,11 @@ class TestData(BaseModel):
 
 
 if settings.ENV == "dev":
+
+    @app.get("/set-cookie")
+    def set_cookie(response: Response):
+        set_conditional_cookie(response=response, key="test_cookie", value="test_value")
+        return {"message": "Cookie set"}
 
     @app.post("/insert")
     def insert_data(data: TestData):
@@ -143,60 +149,71 @@ async def logout(request: Request, response: RedirectResponse):
     response.delete_cookie(key="Authorization")
     return RedirectResponse("/", status_code=303)
 
-def fetch_emails_to_db(user: AuthenticatedUser) -> None: 
+
+def fetch_emails_to_db(user: AuthenticatedUser) -> None:
     global api_call_finished
-    
-    api_call_finished = False # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
+
+    api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails", user.user_id)
 
     with Session(engine) as session:
         service = build("gmail", "v1", credentials=user.creds)
-        messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
-        
+        messages = get_email_ids(
+            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
+        )
+
         if not messages:
             logger.info(f"user_id:{user.user_id} No job application emails found.")
             return
 
         logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
-        
+
         email_records = []  # list to collect email records
 
         for idx, message in enumerate(messages):
             message_data = {}
             # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
-            logger.info(f"user_id:{user.user_id} begin processing for email {idx+1} of {len(messages)} with id {msg_id}")
+            logger.info(
+                f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
+            )
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
 
             if msg:
                 result = process_email(msg["text_content"])
                 if not isinstance(result, str) and result:
-                    logger.info(f"user_id:{user.user_id} successfully extracted email {idx+1} of {len(messages)} with id {msg_id}")
+                    logger.info(
+                        f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
+                    )
                 else:
                     result = {}
-                    logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
+                    logger.warning(
+                        f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
+                    )
 
-            message_data = {  
+            message_data = {
                 "company_name": [result.get("company_name", "")],
                 "application_status": [result.get("application_status", "")],
                 "received_at": [msg.get("date", "")],
                 "subject": [msg.get("subject", "")],
-                "from": [msg.get("from", "")]
+                "from": [msg.get("from", "")],
             }
 
-            #expose the message id on the dev environment
+            # expose the message id on the dev environment
             if settings.ENV == "dev":
                 message_data["id"] = [msg_id]
             # write all the user application data into the user_email model
             email_record = create_user_email(user, message_data)
             email_records.append(email_record)
-        
+
         # batch insert all records at once
         if email_records:
-            session.add_all(email_records) 
+            session.add_all(email_records)
             session.commit()
-            logger.info(f"Added {len(email_records)} email records for user {user.user_id}")
+            logger.info(
+                f"Added {len(email_records)} email records for user {user.user_id}"
+            )
 
         api_call_finished = True
         logger.info(f"user_id:{user.user_id} Email fetching complete.")
