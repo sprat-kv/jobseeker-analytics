@@ -37,9 +37,25 @@ APP_URL = settings.APP_URL
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Configure CORS
+if settings.is_publicly_deployed:
+    # Production CORS settings
+    origins = [
+        "https://jobba.help",
+        "https://www.jobba.help",
+        "https://staging.jobba.help",
+        "https://www.staging.jobba.help"
+    ]
+else:
+    # Development CORS settings
+    origins = [
+        "http://localhost:3000",  # Assuming frontend runs on port 3000
+        "http://127.0.0.1:3000"
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[APP_URL],  # Allow frontend origins
+    allow_origins=origins,  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
