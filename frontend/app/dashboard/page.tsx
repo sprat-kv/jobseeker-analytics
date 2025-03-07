@@ -20,54 +20,54 @@ export default function Dashboard() {
 	}, [userId]);
 
 	const handleConfirm = async () => {
-		console.log("Confirm button clicked");
-		if (!selectedDate) {
-			console.error("No start date selected");
-			return;
-		}
-		if (!userId) {
-			console.error("User ID is missing in query parameters");
-			return;
-		}
-		try {
-			setStartDate(selectedDate);
-			setShowModal(false);
-			// Save the start date
-			await fetch("http://localhost:8000/api/save-start-date", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ start_date: selectedDate.toString() })
-			});
-			// Fetch emails
-			const emailResponse = await fetch("http://localhost:8000/api/fetch-emails", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ user_id: userId })
-			});
-			const emailData = await emailResponse.json();
-			console.log("Fetch Emails Response:", emailData);
-			pollProcessingStatus();
-		} catch (error) {
-			console.error("Error in handleConfirm:", error);
-		}
-	};
+    console.log("Confirm button clicked");
+    if (!selectedDate) {
+        console.error("No start date selected");
+        return;
+    }
+    if (!userId) {
+        console.error("User ID is missing in query parameters");
+        return;
+    }
+    try {
+        setStartDate(selectedDate);
+        setShowModal(false);
+        // Save the start date
+        await fetch("http://localhost:8000/api/save-start-date", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ start_date: selectedDate.toString() })
+        });
+        // Fetch emails
+        const emailResponse = await fetch("http://localhost:8000/api/fetch-emails", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId })
+        });
+        const emailData = await emailResponse.json();
+        console.log("Fetch Emails Response:", emailData);
+        pollProcessingStatus();
+    } catch (error) {
+        console.error("Error in handleConfirm:", error);
+    }
+  };
 
-	const pollProcessingStatus = async () => {
-		const interval = setInterval(async () => {
-			try {
-				const response = await fetch(`http://localhost:8000/processing?user_id=${userId}`);
-				const text = await response.text();
-				console.log("API Response:", text);
-				const data = JSON.parse(text);
-				if (data.message === "Processing complete") {
-					clearInterval(interval);
-					router.replace(data.redirect_url);
-				}
-			} catch (error) {
-				console.error("Error parsing JSON:", error);
-			}
-		}, 5000); // Poll every 5 seconds
-	};
+  const pollProcessingStatus = async () => {
+    const interval = setInterval(async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/processing?user_id=${userId}`);
+            const text = await response.text();
+            console.log("API Response:", text);
+            const data = JSON.parse(text);
+            if (data.message === "Processing complete") {
+                clearInterval(interval);
+                router.replace(data.redirect_url);
+            }
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+        }
+    }, 5000); // Poll every 5 seconds
+  };
 
 	return (
 		<div className="flex flex-col items-center justify-center text-center pt-64">

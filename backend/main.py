@@ -162,6 +162,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
 
 @app.post("/api/save-start-date")
 async def save_start_date(request: Request):
+    logger.info(f"Session after save-start-date: {request.session}")  # Debugging
     data = await request.json()
     start_date_storage["start_date"] = data.get("start_date")
     return JSONResponse(content={"message": "Start date saved successfully"})

@@ -62,6 +62,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         )
 
         logger.info("User logged in with user_id: %s", user.user_id)
+        logger.info(f"Session after login: {request.session}")  # Debugging
 
         return response
     except Exception as e:
