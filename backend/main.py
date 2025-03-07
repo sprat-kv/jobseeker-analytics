@@ -36,7 +36,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=APP_URL,  # Allow frontend origins
+    allow_origins=[APP_URL],  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -68,7 +68,7 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
         return JSONResponse(
             content={
                 "message": "Processing complete",
-                "redirect_url": f"{APP_URL}/success",
+                "redirect_url": f"{APP_URL}/dashboard",
             }
         )
     else:
@@ -187,6 +187,16 @@ async def fetch_emails_endpoint(request: Request, background_tasks: BackgroundTa
     user = AuthenticatedUser(creds)
     background_tasks.add_task(fetch_emails, user)
     return JSONResponse(content={"message": "Email fetching started"})
+
+@app.get("/api/session-data")
+async def get_session_data(request: Request):
+    logger.info(f"Session data at dashboard: {request.session}") 
+    session_data = {
+        "user_id": request.session.get("user_id"),
+        "token_expiry": request.session.get("token_expiry"),
+        "session_id": request.session.get("session_id"),
+    }
+    return JSONResponse(content=session_data)
 
 # Register Google login routes
 app.include_router(google_login_router)

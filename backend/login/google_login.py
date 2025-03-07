@@ -55,6 +55,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["token_expiry"] = token_expiry
         request.session["user_id"] = user.user_id
         request.session["creds"] = creds.to_json() 
+        request.session["access_token"] = creds.token
 
         response = RedirectResponse(url=f"{settings.APP_URL}/dashboard?user_id={user.user_id}", status_code=303)
         response.set_cookie(
