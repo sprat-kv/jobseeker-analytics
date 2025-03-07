@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from '@heroui/table';
