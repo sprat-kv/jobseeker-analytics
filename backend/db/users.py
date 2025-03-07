@@ -1,5 +1,4 @@
 from sqlmodel import SQLModel, Field
-from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 
 class UserData(BaseModel):
