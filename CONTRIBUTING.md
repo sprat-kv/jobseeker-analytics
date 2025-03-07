@@ -69,19 +69,12 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
    ```sh
    cp backend/.env.example backend/.env
    ```
-2. Edit the `.env` file with your credentials:  
-   ```ini
-   GOOGLE_CLIENT_ID=your-client-id-here
-   COOKIE_SECRET=your-random-secret-here
-   GOOGLE_API_KEY=your-api-key-here
-   DB_HOST=your-db-host-here
-   DB_NAME=your-db-name-here
-   DB_USER=your-db-user-here
-   DB_PASSWORD=your-db-password-here
-   APP_URL=http://localhost:3000
-   ```
+2. Edit the `.env` file with your own credentials.
    **🔒 Never share your `.env` file or commit it to Git!**  
-
+3. Copy `frontend\.env.sample` to `frontend\.env`:
+   ```sh
+   cp frontend/.env.sample frontend/.env
+   ```
 ---
 
 
