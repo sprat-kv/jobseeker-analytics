@@ -14,6 +14,7 @@ from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
+from db.utils.user_email_utils import create_user_email
 from utils.email_utils import (
     get_email_ids,
     get_email,
@@ -26,6 +27,9 @@ from session.session_layer import validate_session
 # Import Google login routes
 from login.google_login import router as google_login_router
 
+from pydantic import BaseModel
+from sqlmodel import SQLModel, create_engine, Session, Field, select
+
 app = FastAPI()
 settings = get_settings()
 APP_URL = settings.APP_URL
@@ -34,7 +38,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=APP_URL,  # Allow frontend origins
+    allow_origins=[APP_URL],  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -47,6 +51,51 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
+
+# Database setup
+IS_DOCKER_CONTAINER = os.environ.get("IS_DOCKER_CONTAINER", 0)
+if IS_DOCKER_CONTAINER:
+    DATABASE_URL = settings.DATABASE_URL_DOCKER
+elif settings.ENV in ["prod", "staging"]:
+    DATABASE_URL = settings.DATABASE_URL
+else:
+    DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
+engine = create_engine(DATABASE_URL)
+
+
+class TestTable(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    name: str
+    __tablename__ = "test_table"
+
+
+SQLModel.metadata.create_all(engine)
+
+
+class TestData(BaseModel):
+    name: str
+
+
+if settings.ENV == "dev":
+
+    @app.post("/insert")
+    def insert_data(data: TestData):
+        with Session(engine) as session:
+            test_entry = TestTable(name=data.name)
+            session.add(test_entry)
+            session.commit()
+            session.refresh(test_entry)
+            return {"message": "Data inserted successfully", "id": test_entry.id}
+
+    @app.delete("/delete")
+    def delete_data():
+        with Session(engine) as session:
+            statement = select(TestTable)
+            results = session.exec(statement)
+            for test_entry in results:
+                session.delete(test_entry)
+            session.commit()
+            return {"message": "All data deleted successfully"}
 
 
 @app.get("/")
@@ -64,7 +113,10 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
     if api_call_finished:
         logger.info("user_id: %s processing complete", user_id)
         return JSONResponse(
-            content={"message": "Processing complete", "redirect_url": f"{APP_URL}/success"}
+            content={
+                "message": "Processing complete",
+                "redirect_url": f"{APP_URL}/success",
+            }
         )
     else:
         logger.info("user_id: %s processing not complete for file", user_id)
@@ -91,44 +143,112 @@ async def logout(request: Request, response: RedirectResponse):
     response.delete_cookie(key="Authorization")
     return RedirectResponse("/", status_code=303)
 
-
-def fetch_emails(user: AuthenticatedUser) -> None:
+def fetch_emails_to_db(user: AuthenticatedUser) -> None: 
     global api_call_finished
     
     api_call_finished = False # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails", user.user_id)
+
+    with Session(engine) as session:
+        service = build("gmail", "v1", credentials=user.creds)
+        messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
+        
+        if not messages:
+            logger.info(f"user_id:{user.user_id} No job application emails found.")
+            return
+
+        logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
+        
+        email_records = []  # list to collect email records
+
+        for idx, message in enumerate(messages):
+            message_data = {}
+            # (email_subject, email_from, email_domain, company_name, email_dt)
+            msg_id = message["id"]
+            logger.info(f"user_id:{user.user_id} begin processing for email {idx+1} of {len(messages)} with id {msg_id}")
+
+            msg = get_email(message_id=msg_id, gmail_instance=service)
+
+            if msg:
+                result = process_email(msg["text_content"])
+                if not isinstance(result, str) and result:
+                    logger.info(f"user_id:{user.user_id} successfully extracted email {idx+1} of {len(messages)} with id {msg_id}")
+                else:
+                    result = {}
+                    logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
+
+            message_data = {  
+                "company_name": [result.get("company_name", "")],
+                "application_status": [result.get("application_status", "")],
+                "received_at": [msg.get("date", "")],
+                "subject": [msg.get("subject", "")],
+                "from": [msg.get("from", "")]
+            }
+
+            #expose the message id on the dev environment
+            if settings.ENV == "dev":
+                message_data["id"] = [msg_id]
+            # write all the user application data into the user_email model
+            email_record = create_user_email(user, message_data)
+            email_records.append(email_record)
+        
+        # batch insert all records at once
+        if email_records:
+            session.add_all(email_records) 
+            session.commit()
+            logger.info(f"Added {len(email_records)} email records for user {user.user_id}")
+
+        api_call_finished = True
+        logger.info(f"user_id:{user.user_id} Email fetching complete.")
+
+
+def fetch_emails(user: AuthenticatedUser) -> None:
+    global api_call_finished
+
+    api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
+    logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
     messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
-    
+
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
-    # if we're developing, flush the emails output instead of appending to it. 
-    if settings.ENV == "dev" and os.path.isfile(os.path.join(user.filepath, "emails.csv")):
+    # if we're developing, flush the emails output instead of appending to it.
+    if settings.ENV == "dev" and os.path.isfile(
+        os.path.join(user.filepath, "emails.csv")
+    ):
         os.remove(os.path.join(user.filepath, "emails.csv"))
-    
+
     if len(messages) > 1000:
-        logger.warning(f"**************detected {len(messages)} that passed the filter!")
+        logger.warning(
+            f"**************detected {len(messages)} that passed the filter!"
+        )
 
     for idx, message in enumerate(messages):
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
         msg_id = message["id"]
-        logger.info(f"user_id:{user.user_id} begin processing for email {idx+1} of {len(messages)} with id {msg_id}")
+        logger.info(
+            f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
+        )
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
             result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
-                logger.info(f"user_id:{user.user_id} successfully extracted email {idx+1} of {len(messages)} with id {msg_id}")
+                logger.info(
+                    f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
+                )
             else:
                 result = {}
-                logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
+                logger.warning(
+                    f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
+                )
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
             message_data["received_at"] = [msg.get("date", "")]
             message_data["subject"] = [msg.get("subject", "")]
             message_data["from"] = [msg.get("from", "")]
 
-            #expose the message id on the dev environment
+            # expose the message id on the dev environment
             if settings.ENV == "dev":
                 message_data["id"] = [msg_id]
             # Exporting the email data to a CSV file
@@ -144,6 +264,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     return templates.TemplateResponse(
         "success.html", {"request": request, "today": today}
     )
+
 
 # Register Google login routes
 app.include_router(google_login_router)
