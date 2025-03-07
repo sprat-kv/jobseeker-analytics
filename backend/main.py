@@ -54,7 +54,13 @@ logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 api_call_finished = False
 
 # Database setup
-DATABASE_URL = settings.DATABASE_URL
+IS_DOCKER_CONTAINER = os.environ.get("IS_DOCKER_CONTAINER", 0)
+if IS_DOCKER_CONTAINER:
+    DATABASE_URL = settings.DATABASE_URL_DOCKER
+elif settings.ENV in ["prod", "staging"]:
+    DATABASE_URL = settings.DATABASE_URL
+else:
+    DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
 engine = create_engine(DATABASE_URL)
 
 

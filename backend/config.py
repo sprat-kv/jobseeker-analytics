@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     ENV: str = "dev"
     APP_URL: str
     DATABASE_URL: str
+    DATABASE_URL_LOCAL_VIRTUAL_ENV: str="postgresql://postgres:postgres@localhost:5433/jobseeker_analytics"
+    DATABASE_URL_DOCKER: str="postgresql://postgres:postgres@db:5432/jobseeker_analytics"
 
     @field_validator("GOOGLE_SCOPES", mode="before")
     @classmethod
