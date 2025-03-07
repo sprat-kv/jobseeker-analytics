@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field
 from pydantic import BaseModel
+from datetime import datetime
 
 class UserData(BaseModel):
     user_id: str
