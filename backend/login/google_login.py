@@ -77,8 +77,8 @@ async def login(request: Request, background_tasks: BackgroundTasks):
                 url=f"{settings.APP_URL}/processing", status_code=303
             )
 
-        response.set_cookie(
-            key="Authorization", value=session_id, secure=True, httponly=True
+        response = set_conditional_cookie(
+            key="Authorization", value=session_id, response=response
         )
 
         # Start email fetching in the background
