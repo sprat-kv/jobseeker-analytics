@@ -27,7 +27,6 @@ from utils.file_utils import get_user_filepath
 from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
-
 from db.user_email import UserEmail
 
 # Import Google login routes
@@ -45,15 +44,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Configure CORS
 if settings.is_publicly_deployed:
     # Production CORS settings
-    origins = [
-        "https://www.jobba.help",
-        "https://www.staging.jobba.help"
-    ]
+    origins = ["https://www.jobba.help", "https://www.staging.jobba.help"]
 else:
     # Development CORS settings
     origins = [
         "http://localhost:3000",  # Assuming frontend runs on port 3000
-        "http://127.0.0.1:3000"
+        "http://127.0.0.1:3000",
     ]
 
 app.add_middleware(
@@ -82,6 +78,7 @@ else:
     DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
 engine = create_engine(DATABASE_URL)
 
+
 class TestTable(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     name: str
@@ -93,6 +90,7 @@ SQLModel.metadata.create_all(engine)
 
 class TestData(BaseModel):
     name: str
+
 
 if settings.ENV == "dev":
 
@@ -120,6 +118,7 @@ if settings.ENV == "dev":
             session.commit()
             return {"message": "All data deleted successfully"}
 
+
 @app.post("/api/add-user")
 async def add_user_endpoint(user_data: UserData):
     """
@@ -132,7 +131,7 @@ async def add_user_endpoint(user_data: UserData):
         # Log the error for debugging purposes
         logger.error(f"An error occurred while adding user: {e}")
         return {"error": "An error occurred while adding the user."}
-    
+
 
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
