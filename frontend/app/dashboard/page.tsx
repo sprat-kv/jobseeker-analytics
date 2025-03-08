@@ -3,6 +3,7 @@ import { useState, useEffect, Fragment } from "react";
 import { useRouter } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { DatePicker } from "@heroui/react";
+import { useSearchParams } from "next/navigation";
 import { CalendarDate } from "@internationalized/date";
 
 export default function Dashboard() {
@@ -10,6 +11,8 @@ export default function Dashboard() {
 	const [startDate, setStartDate] = useState<CalendarDate | null>(null);
 	const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
 	const [sessionData, setSessionData] = useState(null);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 	const router = useRouter();
 
 	useEffect(() => {
@@ -39,13 +42,16 @@ export default function Dashboard() {
 			await fetch("http://localhost:8000/api/save-start-date", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ start_date: selectedDate.toString() })
+				body: JSON.stringify({ start_date: selectedDate.toString() }),
 			});
-			// Fetch emails
+			//Pass token directly in request (ignoring session storage rn)
 			const emailResponse = await fetch("http://localhost:8000/api/fetch-emails", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({})
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({}),
 			});
 			const emailData = await emailResponse.json();
 			console.log("Fetch Emails Response:", emailData);

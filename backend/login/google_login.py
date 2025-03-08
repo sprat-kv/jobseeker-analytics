@@ -7,7 +7,6 @@ from google_auth_oauthlib.flow import Flow
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
-# from main import fetch_emails
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -17,7 +16,6 @@ settings = get_settings()
 
 # FastAPI router for Google login
 router = APIRouter()
-
 
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
@@ -57,7 +55,10 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["creds"] = creds.to_json() 
         request.session["access_token"] = creds.token
 
-        response = RedirectResponse(url=f"{settings.APP_URL}/dashboard?user_id={user.user_id}", status_code=303)
+        response = RedirectResponse(
+            url=f"{settings.APP_URL}/dashboard",
+            status_code=303
+        )
         response.set_cookie(
             key="Authorization", value=session_id, secure=True, httponly=True
         )
