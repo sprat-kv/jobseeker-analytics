@@ -8,6 +8,8 @@ from db.utils.user_utils import user_exists, add_user
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
+from utils.cookie_utils import set_conditional_cookie
+
 # from main import fetch_emails
 
 # Logger setup
