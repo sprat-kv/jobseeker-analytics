@@ -47,7 +47,7 @@ export default function Dashboard() {
         }
         
       } catch (error) {
-        console.error('Error fetching data:', error);
+        error;
         setError('Failed to load applications');
       } finally {
         setLoading(false);
