@@ -3,7 +3,7 @@ import logging
 import os
 from typing import List
 
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, Response, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -15,6 +15,10 @@ from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from utils.auth_utils import AuthenticatedUser
 from utils.db_utils import export_to_csv
+from db.users import UserData
+from db.utils.user_utils import add_user
+from db.utils.user_email_utils import create_user_email
+from utils.cookie_utils import set_conditional_cookie
 from utils.email_utils import (
     get_email_ids,
     get_email,
@@ -29,15 +33,32 @@ from db.user_email import UserEmail
 # Import Google login routes
 from login.google_login import router as google_login_router
 
+from pydantic import BaseModel
+from sqlmodel import SQLModel, create_engine, Session, Field, select
+
 app = FastAPI()
 settings = get_settings()
 APP_URL = settings.APP_URL
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Configure CORS
+if settings.is_publicly_deployed:
+    # Production CORS settings
+    origins = [
+        "https://www.jobba.help",
+        "https://www.staging.jobba.help"
+    ]
+else:
+    # Development CORS settings
+    origins = [
+        "http://localhost:3000",  # Assuming frontend runs on port 3000
+        "http://127.0.0.1:3000"
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=APP_URL,  # Allow frontend origins
+    allow_origins=origins,  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -51,6 +72,67 @@ logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
 
+# Database setup
+IS_DOCKER_CONTAINER = os.environ.get("IS_DOCKER_CONTAINER", 0)
+if IS_DOCKER_CONTAINER:
+    DATABASE_URL = settings.DATABASE_URL_DOCKER
+elif settings.is_publicly_deployed:
+    DATABASE_URL = settings.DATABASE_URL
+else:
+    DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
+engine = create_engine(DATABASE_URL)
+
+class TestTable(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    name: str
+    __tablename__ = "test_table"
+
+
+SQLModel.metadata.create_all(engine)
+
+
+class TestData(BaseModel):
+    name: str
+
+if settings.ENV == "dev":
+
+    @app.get("/set-cookie")
+    def set_cookie(response: Response):
+        set_conditional_cookie(response=response, key="test_cookie", value="test_value")
+        return {"message": "Cookie set"}
+
+    @app.post("/insert")
+    def insert_data(data: TestData):
+        with Session(engine) as session:
+            test_entry = TestTable(name=data.name)
+            session.add(test_entry)
+            session.commit()
+            session.refresh(test_entry)
+            return {"message": "Data inserted successfully", "id": test_entry.id}
+
+    @app.delete("/delete")
+    def delete_data():
+        with Session(engine) as session:
+            statement = select(TestTable)
+            results = session.exec(statement)
+            for test_entry in results:
+                session.delete(test_entry)
+            session.commit()
+            return {"message": "All data deleted successfully"}
+
+@app.post("/api/add-user")
+async def add_user_endpoint(user_data: UserData):
+    """
+    This endpoint adds a user to the database
+    """
+    try:
+        add_user(user_data)
+        return {"message": "User added successfully"}
+    except Exception as e:
+        # Log the error for debugging purposes
+        logger.error(f"An error occurred while adding user: {e}")
+        return {"error": "An error occurred while adding the user."}
+    
 
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
@@ -94,8 +176,77 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
 async def logout(request: Request, response: RedirectResponse):
     logger.info("Logging out")
     request.session.clear()
-    response.delete_cookie(key="Authorization")
+    response.delete_cookie(key="__Secure-Authorization")
     return RedirectResponse("/", status_code=303)
+
+
+def fetch_emails_to_db(user: AuthenticatedUser) -> None:
+    global api_call_finished
+
+    api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
+    logger.info("user_id:%s fetch_emails", user.user_id)
+
+    with Session(engine) as session:
+        service = build("gmail", "v1", credentials=user.creds)
+        messages = get_email_ids(
+            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
+        )
+
+        if not messages:
+            logger.info(f"user_id:{user.user_id} No job application emails found.")
+            return
+
+        logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
+
+        email_records = []  # list to collect email records
+
+        for idx, message in enumerate(messages):
+            message_data = {}
+            # (email_subject, email_from, email_domain, company_name, email_dt)
+            msg_id = message["id"]
+            logger.info(
+                f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
+            )
+
+            msg = get_email(message_id=msg_id, gmail_instance=service)
+
+            if msg:
+                result = process_email(msg["text_content"])
+                if not isinstance(result, str) and result:
+                    logger.info(
+                        f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
+                    )
+                else:
+                    result = {}
+                    logger.warning(
+                        f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
+                    )
+
+            message_data = {
+                "company_name": [result.get("company_name", "")],
+                "application_status": [result.get("application_status", "")],
+                "received_at": [msg.get("date", "")],
+                "subject": [msg.get("subject", "")],
+                "from": [msg.get("from", "")],
+            }
+
+            # expose the message id on the dev environment
+            if settings.ENV == "dev":
+                message_data["id"] = [msg_id]
+            # write all the user application data into the user_email model
+            email_record = create_user_email(user, message_data)
+            email_records.append(email_record)
+
+        # batch insert all records at once
+        if email_records:
+            session.add_all(email_records)
+            session.commit()
+            logger.info(
+                f"Added {len(email_records)} email records for user {user.user_id}"
+            )
+
+        api_call_finished = True
+        logger.info(f"user_id:{user.user_id} Email fetching complete.")
 
 
 def fetch_emails(user: AuthenticatedUser) -> None:
