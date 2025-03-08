@@ -2,7 +2,9 @@ import datetime
 import logging
 import os
 from typing import List
+from typing import List
 
+from fastapi import FastAPI, Request, Depends, Response, HTTPException
 from fastapi import FastAPI, Request, Depends, Response, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -302,33 +304,34 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     api_call_finished = True
 
 
-@app.get("/user-emails", response_model=List[UserEmail])
-def query_emails(request: Request) -> None: 
+@app.get("/get-emails", response_model=List[UserEmail])
+def query_emails(request: Request) -> None:
     with Session(engine) as session:
         try:
             user_id = request.session.get("user_id")
 
             logger.info(f"Fetching emails for user_id: {user_id}")
 
-            statement = (
-                select(UserEmail)
-                .where(UserEmail.user_id == user_id)
-            )
+            statement = select(UserEmail).where(UserEmail.user_id == user_id)
             user_emails = session.exec(statement).all()
-    
+
             # If no records are found, return a 404 error
             if not user_emails:
                 logger.warning(f"No emails found for user_id: {user_id}")
-                raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id}")
-    
-            logger.info(f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}")
+                raise HTTPException(
+                    status_code=404, detail=f"No emails found for user_id: {user_id}"
+                )
+
+            logger.info(
+                f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}"
+            )
             return user_emails
-        
+
         except Exception as e:
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-        
-    
+
+
 @app.get("/success", response_class=HTMLResponse)
 def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
