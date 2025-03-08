@@ -152,7 +152,7 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     api_call_finished = True
 
 
-@app.get("/user-emails", response_model=List[UserEmail])
+@app.get("/get-emails", response_model=List[UserEmail])
 def query_emails(request: Request) -> None: 
     with Session(engine) as session:
         try:
