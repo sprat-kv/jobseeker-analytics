@@ -1,8 +1,9 @@
 import datetime
 import logging
 import os
+from typing import List
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -23,7 +24,6 @@ from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 
-from fastapi import Depends, HTTPException
 from db.user_email import UserEmail
 
 # Import Google login routes
