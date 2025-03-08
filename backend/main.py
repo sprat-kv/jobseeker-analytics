@@ -2,9 +2,7 @@ import datetime
 import logging
 import os
 from typing import List
-from typing import List
 
-from fastapi import FastAPI, Request, Depends, Response, HTTPException
 from fastapi import FastAPI, Request, Depends, Response, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
