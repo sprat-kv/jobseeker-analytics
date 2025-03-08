@@ -23,10 +23,8 @@ from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 
-from sqlmodel import select
 from fastapi import Depends, HTTPException
-from user_email import UserEmail
-from datetime import timedelta
+from db.user_email import UserEmail
 
 # Import Google login routes
 from login.google_login import router as google_login_router
