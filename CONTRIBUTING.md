@@ -85,7 +85,23 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ---
 
 
-### Run the App
+### Run the App: Two options  
+
+#### Option 1: Docker Compose (Preferred Option)
+
+1. If this is your first time using Docker, install as below:
+   - Install Docker. On Windows/Mac install [Docker Desktop](https://docs.docker.com/get-started/get-docker/). On Linux install [Docker Engine](https://docs.docker.com/engine/install/). 
+   - Start Docker Desktop or Docker Engine
+      - On Windows: make sure to select "Use the WSL 2 based engine" under Settings/general.
+      - On Linux: you may need to take additional post-installation steps, see (here)[https://docs.docker.com/engine/install/linux-postinstall/]. 
+2. Start the app using Docker compose-up. The first time you run this locally it may take a few minutes to set up.
+```
+docker-compose up --build
+```
+3. Then, visit [http://localhost:3000](http://localhost:3000) to begin testing the app locally.
+
+
+#### Option 2: Virtual Environment
 
 Once your `.env` file is set up, start the app by following the instructions below:
 1. Create and activate virtual environment:
@@ -99,7 +115,7 @@ Once your `.env` file is set up, start the app by following the instructions bel
    python -m venv .venv
    .venv\Scripts\activate
    ```
-   
+
 2. Install dependencies:
    ```bash
    pip install -r backend/requirements.txt

@@ -23,6 +23,11 @@ from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 
+from sqlmodel import select
+from fastapi import Depends, HTTPException
+from user_email import UserEmail
+from datetime import timedelta
+
 # Import Google login routes
 from login.google_login import router as google_login_router
 
@@ -64,7 +69,10 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
     if api_call_finished:
         logger.info("user_id: %s processing complete", user_id)
         return JSONResponse(
-            content={"message": "Processing complete", "redirect_url": f"{APP_URL}/success"}
+            content={
+                "message": "Processing complete",
+                "redirect_url": f"{APP_URL}/success",
+            }
         )
     else:
         logger.info("user_id: %s processing not complete for file", user_id)
@@ -94,41 +102,51 @@ async def logout(request: Request, response: RedirectResponse):
 
 def fetch_emails(user: AuthenticatedUser) -> None:
     global api_call_finished
-    
-    api_call_finished = False # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
+
+    api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails", user.user_id)
     service = build("gmail", "v1", credentials=user.creds)
     messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
-    
+
     # Directory to save the emails
     os.makedirs(user.filepath, exist_ok=True)
-    # if we're developing, flush the emails output instead of appending to it. 
-    if settings.ENV == "dev" and os.path.isfile(os.path.join(user.filepath, "emails.csv")):
+    # if we're developing, flush the emails output instead of appending to it.
+    if settings.ENV == "dev" and os.path.isfile(
+        os.path.join(user.filepath, "emails.csv")
+    ):
         os.remove(os.path.join(user.filepath, "emails.csv"))
-    
+
     if len(messages) > 1000:
-        logger.warning(f"**************detected {len(messages)} that passed the filter!")
+        logger.warning(
+            f"**************detected {len(messages)} that passed the filter!"
+        )
 
     for idx, message in enumerate(messages):
         message_data = {}
         # (email_subject, email_from, email_domain, company_name, email_dt)
         msg_id = message["id"]
-        logger.info(f"user_id:{user.user_id} begin processing for email {idx+1} of {len(messages)} with id {msg_id}")
+        logger.info(
+            f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
+        )
         msg = get_email(message_id=msg_id, gmail_instance=service)
         if msg:
             result = process_email(msg["text_content"])
             if not isinstance(result, str) and result:
-                logger.info(f"user_id:{user.user_id} successfully extracted email {idx+1} of {len(messages)} with id {msg_id}")
+                logger.info(
+                    f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
+                )
             else:
                 result = {}
-                logger.warning(f"user_id:{user.user_id} failed to extract email {idx+1} of {len(messages)} with id {msg_id}")
+                logger.warning(
+                    f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
+                )
             message_data["company_name"] = [result.get("company_name", "")]
             message_data["application_status"] = [result.get("application_status", "")]
             message_data["received_at"] = [msg.get("date", "")]
             message_data["subject"] = [msg.get("subject", "")]
             message_data["from"] = [msg.get("from", "")]
 
-            #expose the message id on the dev environment
+            # expose the message id on the dev environment
             if settings.ENV == "dev":
                 message_data["id"] = [msg_id]
             # Exporting the email data to a CSV file
@@ -136,6 +154,33 @@ def fetch_emails(user: AuthenticatedUser) -> None:
     api_call_finished = True
 
 
+@app.get("/user-emails", response_model=List[UserEmail])
+def query_emails(request: Request) -> None: 
+    with Session(engine) as session:
+        try:
+            user_id = request.session.get("user_id")
+
+            logger.info(f"Fetching emails for user_id: {user_id}")
+
+            statement = (
+                select(UserEmail)
+                .where(UserEmail.user_id == user_id)
+            )
+            user_emails = session.exec(statement).all()
+    
+            # If no records are found, return a 404 error
+            if not user_emails:
+                logger.warning(f"No emails found for user_id: {user_id}")
+                raise HTTPException(status_code=404, detail=f"No emails found for user_id: {user_id}")
+    
+            logger.info(f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}")
+            return user_emails
+        
+        except Exception as e:
+            logger.error(f"Error fetching emails for user_id {user_id}: {e}")
+            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        
+    
 @app.get("/success", response_class=HTMLResponse)
 def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
@@ -144,6 +189,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     return templates.TemplateResponse(
         "success.html", {"request": request, "today": today}
     )
+
 
 # Register Google login routes
 app.include_router(google_login_router)
