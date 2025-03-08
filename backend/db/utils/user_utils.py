@@ -1,6 +1,7 @@
 import logging
 from sqlmodel import Session, select
 from db.users import Users 
+from datetime import datetime, timedelta, timezone 
 
 logger = logging.getLogger(__name__)
 
@@ -28,12 +29,14 @@ def add_user(user) -> Users:
         existing_user = session.exec(select(Users).where(Users.user_id == user.user_id)).first()
 
         if not existing_user:
+
+            start_date = getattr(user, "start_date", None) or (datetime.now(timezone.utc) - timedelta(days=90))
+
             # add a new user record
             new_user = Users(
                 user_id=user.user_id,
                 user_email=user.user_email,
-                google_openid=user.google_openid,
-                start_date=user.start_date
+                start_date=start_date
             )
 
             session.add(new_user)
