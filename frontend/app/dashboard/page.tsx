@@ -11,8 +11,8 @@ export default function Dashboard() {
 	const [startDate, setStartDate] = useState<CalendarDate | null>(null);
 	const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
 	const [sessionData, setSessionData] = useState(null);
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
 	const router = useRouter();
 
 	useEffect(() => {
@@ -42,16 +42,16 @@ export default function Dashboard() {
 			await fetch("http://localhost:8000/api/save-start-date", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ start_date: selectedDate.toString() }),
+				body: JSON.stringify({ start_date: selectedDate.toString() })
 			});
 			//Pass token directly in request (ignoring session storage rn)
 			const emailResponse = await fetch("http://localhost:8000/api/fetch-emails", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${token}`
 				},
-				body: JSON.stringify({}),
+				body: JSON.stringify({})
 			});
 			const emailData = await emailResponse.json();
 			console.log("Fetch Emails Response:", emailData);
