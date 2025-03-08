@@ -50,3 +50,18 @@ def test_decode_scopes_empty_string():
     input_str = ""
     with pytest.raises(json.JSONDecodeError):
         Settings.decode_scopes(input_str)
+
+
+def test_prod_is_publicly_deployed_true():
+    settings = Settings(ENV="prod")
+    assert settings.is_publicly_deployed
+
+
+def test_dev_is_publicly_deployed_false():
+    settings = Settings(ENV="dev")
+    assert not settings.is_publicly_deployed
+
+
+def test_staging_is_publicly_deployed_true():
+    settings = Settings(ENV="staging")
+    assert settings.is_publicly_deployed
