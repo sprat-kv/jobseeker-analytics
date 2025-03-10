@@ -1,0 +1,25 @@
+name: 👶 Subtask Issue
+description: Create a structured subtask issue with clear description and acceptance criteria.
+title: "[Subtask] <Brief Description>"
+labels: ["subtask"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Provide a brief overview of what this subtask involves.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: The subtask is considered complete when all the following criteria are met
+      value: |
+        - [ ] Add a button
+        - [ ] Ensure UI updates smoothly without full refresh
+        - [ ] Display a timestamp showing when data was last updated
+        - [ ] etc.
+    validations:
+      required: true

@@ -65,26 +65,37 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 ---
 
 ### Set Up Environment Variables
-1. Copy `.env.example` to `.env`:
+1. Copy `backend\.env.example` to `backend\.env`:
    ```sh
-   cp .env.example .env
+   cp backend/.env.example backend/.env
    ```
-2. Edit the `.env` file with your credentials:  
-   ```ini
-   GOOGLE_CLIENT_ID=your-client-id-here
-   COOKIE_SECRET=your-random-secret-here
-   GOOGLE_API_KEY=your-api-key-here
-   DB_HOST=your-db-host-here
-   DB_NAME=your-db-name-here
-   DB_USER=your-db-user-here
-   DB_PASSWORD=your-db-password-here
-   ```
+2. Edit the `.env` file with your own credentials.
    **🔒 Never share your `.env` file or commit it to Git!**  
-
+3. Copy `frontend\.env.sample` to `frontend\.env`:
+   ```sh
+   cp frontend/.env.sample frontend/.env
+   ```
 ---
 
 
-### Run the App
+### Run the App: Two options  
+
+#### Option 1: Docker Compose (Preferred Option)
+
+1. If this is your first time using Docker, install as below:
+   - Install Docker. On Windows/Mac install [Docker Desktop](https://docs.docker.com/get-started/get-docker/). On Linux install [Docker Engine](https://docs.docker.com/engine/install/). 
+   - Start Docker Desktop or Docker Engine
+      - On Windows: make sure to select "Use the WSL 2 based engine" under Settings/general.
+      - On Linux: you may need to take additional post-installation steps, see (here)[https://docs.docker.com/engine/install/linux-postinstall/]. 
+2. Start the app using Docker compose-up. The first time you run this locally it may take a few minutes to set up.
+```
+docker-compose up --build
+```
+3. Then, visit [http://localhost:3000](http://localhost:3000) to begin testing the app locally.
+
+You can view logs from the app by finding your container in Docker Desktop/Docker Engine and clicking on it. The app will automatically refresh when you make changes. 
+
+#### Option 2: Virtual Environment
 
 Once your `.env` file is set up, start the app by following the instructions below:
 1. Create and activate virtual environment:
@@ -98,12 +109,18 @@ Once your `.env` file is set up, start the app by following the instructions bel
    python -m venv .venv
    .venv\Scripts\activate
    ```
-   
+
 2. Install dependencies:
    ```bash
    pip install -r backend/requirements.txt
    cd frontend && npm install
    ```
+3. Start the PostgreSQL database:
+   - Ensure Docker is installed and running.
+   - Use Docker to start the PostgreSQL database:
+     ```bash
+     docker run --name jobseeker-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=jobseeker_analytics -p 5433:5432 -d postgres:13
+     ```
 4. Run backend and frontend apps:
    In one terminal window, run:
    ```bash
@@ -113,13 +130,64 @@ Once your `.env` file is set up, start the app by following the instructions bel
    ```bash
    cd frontend && npm run dev
    ```
-6. Check it out @:
+5. Check it out @:
    http://127.0.0.1:8000
    
 Then, visit `http://localhost:8000/login` to test the authentication flow.  
 
-You can view logs from the app by finding your container in Docker Desktop/Docker Engine and clicking on it. The app will automatically refresh when you make changes. 
 ---
+
+
+### Inspect the Database with DBeaver
+
+To inspect your PostgreSQL database running in Docker, follow these steps:
+
+1. **Install DBeaver**:
+   - Go to the [DBeaver download page](https://dbeaver.io/download/).
+   - Download and install the appropriate version for your operating system (Windows, macOS, or Linux).
+
+2. **Start Docker Services (if you haven't already)**:
+   - Ensure your Docker services are running using the following command:
+     ```bash
+     docker-compose up --build
+     ```
+
+3. **Create a New Database Connection in DBeaver (if this is your first time opening DBeaver for this project)**:
+   - Open DBeaver.
+   - - Note: you may need to Download SQLLite driver files - Driver settings window will prompt you.
+   - Click on the `Database` menu and select `New Database Connection`.
+   - Select `PostgreSQL` and click `Next`.
+
+4. **Enter Connection Details**:
+   - **Host**: `localhost`
+   - **Port**: `5433` (as specified in your `docker-compose.yaml` file)
+   - **Database**: `jobseeker_analytics`
+   - **Username**: `postgres`
+   - **Password**: `postgres`
+   - Click on the `Test Connection` button to ensure the connection is successful.
+   - Note: you may need to Download PostgreSQL driver files - Driver settings window will prompt you.
+
+5. **Save the Connection**:
+   - If the connection test is successful, click `Finish` to save the connection.
+   - If the connection test fails, double-check the connection details and ensure that your Docker services are running.
+
+6. **Inspect the Database**:
+   - In the `Database Navigator` pane on the left side of DBeaver, expand the `PostgreSQL` node.
+   - Expand the `jobseeker_analytics` node to see the available schemas and tables.
+   - Right-click on a table (e.g., `test_table`) and select `View Data` to see the data in the table.
+
+7. **Open the Playground Page**:
+   - Open your browser and navigate to `http://localhost:3000/playground`.
+
+8. **Insert a Record**:
+   - Use the form on the playground page to insert a new record by entering a name and clicking "Insert Data".
+   - Observe the changes in DBeaver. You should see the new record appear in the `test_table`.
+
+9. **Delete All Records**:
+   - Click the "Delete All Data" button on the playground page to delete all records.
+   - Observe the changes in DBeaver. You should see the records being removed from the `test_table`.
+
+
 
 ### Troubleshooting Tips
 - **Not redirected after login?**  

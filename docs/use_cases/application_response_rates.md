@@ -1,5 +1,7 @@
 # Product Spec: Application Response Rates
-### Template Credit to Alex Chiou, Taro Co-Founder
+- Authors: [@AxisShine](https://www.github.com/AxisShine) 
+- Spec Template Author: [Alex Chiou](https://www.linkedin.com/in/alexander-chiou/), Co-Founder @ Taro, Ex-Robinhood, Ex-Meta Tech Lead
+
 
 ## Timeline
 **02/11** Finish Figma prototype of Statistics page
@@ -15,13 +17,13 @@
 **03/15** Deployment / Beta drop
 
 ## Context
-Jobba has been seeking to implement a cold response rate calculator feature, along with a page with various other statistics, since the beginning of the project. Determining the effectiveness of ones application strategy and resume is a helpful and motivating metric for Jobseekers, and we hope to be able to provide helpful job seeking tips.
+jobba.help has been seeking to implement a cold response rate calculator feature, along with a page with various other statistics, since the beginning of the project. Determining the effectiveness of ones application strategy and resume is a helpful and motivating metric for Jobseekers, and we hope to be able to provide helpful job seeking tips.
 
 ### What Do We Have Now?
 - The app uses Gmail API integration and data processing techniques to capture a CSV download of email records with rejections and initial applications.
 
 ## Jobs To Be Done
-At a high-level, here’s how statistics calculation can add value to the lives of Jobba users and Jobba overall:
+At a high-level, here’s how statistics calculation can add value to the lives of jobba.help users and jobba.help overall:
 
 **Cold Response Rate** - Users can determine the base effectiveness of their application strategy and compare with other users. It is a simple way of gamifying job applications, and providing a concrete metric for job seekers.
 
@@ -62,12 +64,14 @@ At a high-level, here’s how statistics calculation can add value to the lives 
 - Popup can be smaller for not many applications to list 
 
 **User can scroll through time graph or scaling large periods of time.**
+- Ensuring that time graph size is independent on volume of data and time
 
 **No data to display**
 - List the checklist and average statistics, but simply display “No Data to Display” in lieu of the graphs
 
 
 ## Data Model
+We will use PostgreSQL for the database, and store user data there, such that when a user is logged in and would like to see their statistics a simple request can be made that returns only the required data.
 
 **User History**
 In order to display a user’s statistics we will retrieve their History.
@@ -108,32 +112,35 @@ All fields are required.
 “time” (Long) - Date/time the application was submitted.
 
 ## Overall Approach
-The goal is to
+- The goal is to display useful information in an easily digestible, meaningful way.
+- This requires distinct colours, and clear sizing and spacing.
+- We also want these statistics to be available in a short amount of time so processing time should be minimized as well as overhead.
 
 ### Trade-offs
+An alternative would be to ignore any need for history viewing on the user’s end displaying only number totals which could be stored and rapidly displayed for each set time length. 
+This would be even faster if only set timelines were allowed to be displayed. 
+
+There is a big tradeoff between user flexibility / customizability and efficiency here.
 
 With that as the comparison, we can talk pros and cons of our chosen approach:
 ### Pros
+- Allows peace of mind in searching through previous job applications and time periods with ease
 
 ### Cons
+- More efficient / fast
 
 ## How Can This Really Break?
 
 This feature is relatively safe, assuming we handle gaps in information with care, so as not to create any system errors.
 
 **Poor Data collected**
-
-Inaccurate graphs and statistics due to faulty data scraping or data processing. 
-
-Missing information in email.
-
-Attenuate by filling in gaps in data with “Unreported” or something, and testing for accuracy
+- Inaccurate graphs and statistics due to faulty data scraping or data processing. 
+- Missing information in email.
+- Attenuate by filling in gaps in data with “Unreported” or something, and testing for accuracy
 
 **No data for a specific time period or at all**
-
-If the client requests their data from the past three months but they’ve only been on the app, an error might occur. 
-
-Need to ensure that out of bounds database requests are properly handled, and ignore non-existent data.
+- If the client requests their data from the past three months but they’ve only been on the app, an error might occur. 
+- Need to ensure that out of bounds database requests are properly handled, and ignore non-existent data.
 
 
 ## Potential Future Improvements
@@ -141,7 +148,11 @@ These will be ordered in terms of likelihood/priority descending (i.e. iteration
 
 - Sharing the Statistics (By link or email)
 - Other kinds of statistics (networking based, event based, etc)
+- User ability to edit checklist suggestions (add or remove them)
 
 ## Questions
+1. How many statistics are relevant to the user?
+2. What’s the best way to display the data?
+
 
 
