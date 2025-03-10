@@ -2,7 +2,7 @@ import { CogIcon } from "@heroicons/react/20/solid";
 
 const Spinner = () => {
 	return (
-		<div data-testid="Spinner" className="flex justify-center items-center">
+		<div className="flex justify-center items-center" data-testid="Spinner">
 			<CogIcon className="w-16 h-16 animate-spin" />
 		</div>
 	);
