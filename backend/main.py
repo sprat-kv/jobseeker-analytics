@@ -2,6 +2,7 @@ import datetime
 import logging
 import os
 from typing import List
+from backend.routes import playground_routes
 from database import engine
 
 from fastapi import FastAPI, Request, Depends, HTTPException
@@ -30,7 +31,7 @@ from session.session_layer import validate_session
 from db.user_email import UserEmail
 
 # Import Google login routes
-from routes import test_routes, google_login
+from routes import google_login
 
 from sqlmodel import Session, select
 
@@ -291,7 +292,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
 
 # Register routes
 app.include_router(google_login.router)
-app.include_router(test_routes.router)
+app.include_router(playground_routes.router)
 
 
 # Run the app using Uvicorn
