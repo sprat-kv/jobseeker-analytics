@@ -20,6 +20,8 @@ settings = get_settings()
 # FastAPI router for Google login
 router = APIRouter()
 
+APP_URL = settings.APP_URL
+
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
     """Handles Google OAuth2 login and authorization code exchange."""
@@ -87,3 +89,12 @@ async def login(request: Request, background_tasks: BackgroundTasks):
     except Exception as e:
         logger.error("Login error: %s", e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
+
+
+@router.get("/logout")
+async def logout(request: Request, response: RedirectResponse):
+    logger.info("Logging out")
+    request.session.clear()
+    response.delete_cookie(key="__Secure-Authorization")
+    response.delete_cookie(key="Authorization")
+    return RedirectResponse(f"{APP_URL}", status_code=303)
