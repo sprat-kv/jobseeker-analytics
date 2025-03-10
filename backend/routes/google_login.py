@@ -10,7 +10,6 @@ from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
 from utils.cookie_utils import set_conditional_cookie
 
-# from main import fetch_emails
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -20,7 +19,6 @@ settings = get_settings()
 
 # FastAPI router for Google login
 router = APIRouter()
-
 
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
