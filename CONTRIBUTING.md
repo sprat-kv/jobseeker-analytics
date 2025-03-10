@@ -146,19 +146,23 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    - Go to the [DBeaver download page](https://dbeaver.io/download/).
    - Download and install the appropriate version for your operating system (Windows, macOS, or Linux).
 
-2. **Start Docker Services (if you haven't already)**:
+2. **Start Docker Services (choose one of the commands below to start it if you haven't already)**:
    - Ensure your Docker services are running using the following command:
+     ```bash
+     docker-compose -f docker-compose-dev.yaml up --build
+     ```
+   - Or use the following command to simulate a production build:
      ```bash
      docker-compose up --build
      ```
 
-3. **Create a New Database Connection in DBeaver (if this is your first time opening DBeaver for this project)**:
+4. **Create a New Database Connection in DBeaver (if this is your first time opening DBeaver for this project)**:
    - Open DBeaver.
    - - Note: you may need to Download SQLLite driver files - Driver settings window will prompt you.
    - Click on the `Database` menu and select `New Database Connection`.
    - Select `PostgreSQL` and click `Next`.
 
-4. **Enter Connection Details**:
+5. **Enter Connection Details**:
    - **Host**: `localhost`
    - **Port**: `5433` (as specified in your `docker-compose.yaml` file)
    - **Database**: `jobseeker_analytics`
@@ -167,23 +171,23 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    - Click on the `Test Connection` button to ensure the connection is successful.
    - Note: you may need to Download PostgreSQL driver files - Driver settings window will prompt you.
 
-5. **Save the Connection**:
+6. **Save the Connection**:
    - If the connection test is successful, click `Finish` to save the connection.
    - If the connection test fails, double-check the connection details and ensure that your Docker services are running.
 
-6. **Inspect the Database**:
+7. **Inspect the Database**:
    - In the `Database Navigator` pane on the left side of DBeaver, expand the `PostgreSQL` node.
    - Expand the `jobseeker_analytics` node to see the available schemas and tables.
    - Right-click on a table (e.g., `test_table`) and select `View Data` to see the data in the table.
 
-7. **Open the Playground Page**:
+8. **Open the Playground Page**:
    - Open your browser and navigate to `http://localhost:3000/playground`.
 
-8. **Insert a Record**:
+9. **Insert a Record**:
    - Use the form on the playground page to insert a new record by entering a name and clicking "Insert Data".
    - Observe the changes in DBeaver. You should see the new record appear in the `test_table`.
 
-9. **Delete All Records**:
+10. **Delete All Records**:
    - Click the "Delete All Data" button on the playground page to delete all records.
    - Observe the changes in DBeaver. You should see the records being removed from the `test_table`.
 
