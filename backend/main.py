@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 from typing import List
-from backend.routes import playground_routes
+from routes import playground_routes
 from database import engine
 
 from fastapi import FastAPI, Request, Depends, HTTPException
