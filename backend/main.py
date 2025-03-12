@@ -3,7 +3,7 @@ import logging
 import os
 
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -53,8 +53,6 @@ templates = Jinja2Templates(directory="templates")
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
-api_call_finished = False
-
 @app.post("/api/add-user")
 async def add_user_endpoint(user_data: UserData):
     """
@@ -72,26 +70,6 @@ async def add_user_endpoint(user_data: UserData):
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
-
-
-@app.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, user_id: str = Depends(validate_session)):
-    logging.info("user_id:%s processing", user_id)
-    global api_call_finished
-    if not user_id:
-        logger.info("user_id: not found, redirecting to login")
-        return RedirectResponse("/logout", status_code=303)
-    if api_call_finished:
-        logger.info("user_id: %s processing complete", user_id)
-        return JSONResponse(
-            content={
-                "message": "Processing complete",
-                "redirect_url": f"{APP_URL}/success",
-            }
-        )
-    else:
-        logger.info("user_id: %s processing not complete for file", user_id)
-        return JSONResponse(content={"message": "Processing in progress"})
 
 
 @app.get("/download-file")
