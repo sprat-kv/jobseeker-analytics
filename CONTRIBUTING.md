@@ -151,7 +151,7 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
      ```bash
      docker-compose -f docker-compose-dev.yaml up --build
      ```
-   - Or use the following command to simulate a production build:
+   - Or use the following command to simulate a production build (useful if you do not need to test frontend changes and only want to test backend functionality changes - you won't need to wait for the frontend to compile every time you navigate to a different page):
      ```bash
      docker-compose up --build
      ```
