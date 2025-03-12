@@ -2,7 +2,6 @@ import datetime
 import logging
 import os
 from typing import List
-from routes import playground_routes
 from database import engine
 
 from fastapi import FastAPI, Request, Depends, HTTPException
@@ -30,8 +29,8 @@ from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from db.user_email import UserEmail
 
-# Import Google login routes
-from routes import google_login
+# Import routes
+from routes import playground_routes, auth
 
 from sqlmodel import Session, select
 
@@ -118,15 +117,6 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
-
-
-@app.get("/logout")
-async def logout(request: Request, response: RedirectResponse):
-    logger.info("Logging out")
-    request.session.clear()
-    response.delete_cookie(key="__Secure-Authorization")
-    response.delete_cookie(key="Authorization")
-    return RedirectResponse(f"{APP_URL}", status_code=303)
 
 
 def fetch_emails_to_db(user: AuthenticatedUser) -> None:
@@ -291,7 +281,7 @@ def success(request: Request, user_id: str = Depends(validate_session)):
 
 
 # Register routes
-app.include_router(google_login.router)
+app.include_router(auth.router)
 app.include_router(playground_routes.router)
 
 
