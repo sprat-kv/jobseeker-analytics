@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+from backend.routes import auth_routes
 from db.users import UserData
 from db.utils.user_utils import add_user
 from utils.file_utils import get_user_filepath
@@ -15,7 +16,7 @@ from utils.config_utils import get_settings
 from session.session_layer import validate_session
 
 # Import routes
-from routes import playground_routes, auth, email_routes
+from routes import playground_routes, email_routes
 
 app = FastAPI()
 settings = get_settings()
@@ -24,7 +25,7 @@ app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Register routes
-app.include_router(auth.router)
+app.include_router(auth_routes.router)
 app.include_router(playground_routes.router)
 app.include_router(email_routes.router)
 
