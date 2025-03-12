@@ -68,7 +68,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         if user_exists(user):
             logger.info("User already exists in the database.")
             response = RedirectResponse(
-                url=f"{settings.APP_URL}/dashboard", status_code=303
+                url=f"{settings.APP_URL}/processing", status_code=303
             )
         else:
             logger.info("Adding user to the database...")
