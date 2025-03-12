@@ -8,7 +8,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-from googleapiclient.discovery import build
 from db.users import UserData
 from db.utils.user_utils import add_user
 from utils.file_utils import get_user_filepath
@@ -106,15 +105,6 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
-
-
-
-
-
-
-
-
-
 
 
 @app.get("/success", response_class=HTMLResponse)
