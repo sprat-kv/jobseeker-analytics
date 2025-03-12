@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Button, Input } from "@heroui/react";
 
 const Playground = () => {
 	const router = useRouter();
@@ -44,10 +45,10 @@ const Playground = () => {
 			<p>This page is for developers to try out the database and get familiar with how Docker works.</p>
 			<form onSubmit={handleInsert}>
 				<label htmlFor="name">Name:</label>
-				<input required id="name" name="name" type="text" />
-				<button type="submit">Insert Data</button>
+				<Input required id="name" name="name" type="text" />
+				<Button type="submit">Insert Data</Button>
 			</form>
-			<button onClick={handleDelete}>Delete All Data</button>
+			<Button onPress={handleDelete}>Delete All Data</Button>
 		</div>
 	);
 };
