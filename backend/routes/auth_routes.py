@@ -25,7 +25,7 @@ APP_URL = settings.APP_URL
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
     """Handles Google OAuth2 login and authorization code exchange."""
-    from main import fetch_emails_to_db  # Move the import here to avoid circular import
+    from routes.email_routes import fetch_emails_to_db  # Move the import here to avoid circular import
 
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
