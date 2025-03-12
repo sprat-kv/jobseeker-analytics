@@ -146,8 +146,12 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    - Go to the [DBeaver download page](https://dbeaver.io/download/).
    - Download and install the appropriate version for your operating system (Windows, macOS, or Linux).
 
-2. **Start Docker Services (if you haven't already)**:
+2. **Start Docker Services (choose one of the commands below to start it if you haven't already)**:
    - Ensure your Docker services are running using the following command:
+     ```bash
+     docker-compose -f docker-compose-dev.yaml up --build
+     ```
+   - Or use the following command to simulate a production build (useful if you do not need to test frontend changes and only want to test backend functionality changes - you won't need to wait for the frontend to compile every time you navigate to a different page):
      ```bash
      docker-compose up --build
      ```
