@@ -2,8 +2,9 @@ import datetime
 import logging
 import os
 from typing import List
+from database import engine
 
-from fastapi import FastAPI, Request, Depends, Response, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -18,7 +19,6 @@ from utils.db_utils import export_to_csv
 from db.users import UserData
 from db.utils.user_utils import add_user
 from db.utils.user_email_utils import create_user_email
-from utils.cookie_utils import set_conditional_cookie
 from utils.email_utils import (
     get_email_ids,
     get_email,
@@ -29,11 +29,10 @@ from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from db.user_email import UserEmail
 
-# Import Google login routes
-from login.google_login import router as google_login_router
+# Import routes
+from routes import playground_routes, auth
 
-from pydantic import BaseModel
-from sqlmodel import SQLModel, create_engine, Session, Field, select
+from sqlmodel import Session, select
 
 app = FastAPI()
 settings = get_settings()
@@ -67,57 +66,6 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
 api_call_finished = False
-
-# Database setup
-IS_DOCKER_CONTAINER = os.environ.get("IS_DOCKER_CONTAINER", 0)
-if IS_DOCKER_CONTAINER:
-    DATABASE_URL = settings.DATABASE_URL_DOCKER
-elif settings.is_publicly_deployed:
-    DATABASE_URL = settings.DATABASE_URL
-else:
-    DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
-engine = create_engine(DATABASE_URL)
-
-
-class TestTable(SQLModel, table=True):
-    id: int = Field(default=None, primary_key=True)
-    name: str
-    __tablename__ = "test_table"
-
-
-SQLModel.metadata.create_all(engine)
-
-
-class TestData(BaseModel):
-    name: str
-
-
-if settings.ENV == "dev":
-
-    @app.get("/set-cookie")
-    def set_cookie(response: Response):
-        set_conditional_cookie(response=response, key="test_cookie", value="test_value")
-        return {"message": "Cookie set"}
-
-    @app.post("/insert")
-    def insert_data(data: TestData):
-        with Session(engine) as session:
-            test_entry = TestTable(name=data.name)
-            session.add(test_entry)
-            session.commit()
-            session.refresh(test_entry)
-            return {"message": "Data inserted successfully", "id": test_entry.id}
-
-    @app.delete("/delete")
-    def delete_data():
-        with Session(engine) as session:
-            statement = select(TestTable)
-            results = session.exec(statement)
-            for test_entry in results:
-                session.delete(test_entry)
-            session.commit()
-            return {"message": "All data deleted successfully"}
-
 
 @app.post("/api/add-user")
 async def add_user_endpoint(user_data: UserData):
@@ -169,15 +117,6 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
-
-
-@app.get("/logout")
-async def logout(request: Request, response: RedirectResponse):
-    logger.info("Logging out")
-    request.session.clear()
-    response.delete_cookie(key="__Secure-Authorization")
-    response.delete_cookie(key="Authorization")
-    return RedirectResponse(f"{APP_URL}", status_code=303)
 
 
 def fetch_emails_to_db(user: AuthenticatedUser) -> None:
@@ -341,8 +280,10 @@ def success(request: Request, user_id: str = Depends(validate_session)):
     )
 
 
-# Register Google login routes
-app.include_router(google_login_router)
+# Register routes
+app.include_router(auth.router)
+app.include_router(playground_routes.router)
+
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
