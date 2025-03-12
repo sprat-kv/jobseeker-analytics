@@ -2,6 +2,7 @@ import os
 import logging
 from typing import List
 from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select
 from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
@@ -20,9 +21,32 @@ logger = logging.getLogger(__name__)
 
 # Get settings
 settings = get_settings()
+APP_URL = settings.APP_URL
+
+api_call_finished = False
 
 # FastAPI router for email routes
 router = APIRouter()
+
+@router.get("/processing", response_class=HTMLResponse)
+async def processing(request: Request, user_id: str = Depends(validate_session)):
+    logging.info("user_id:%s processing", user_id)
+    global api_call_finished
+    if not user_id:
+        logger.info("user_id: not found, redirecting to login")
+        return RedirectResponse("/logout", status_code=303)
+    if api_call_finished:
+        logger.info("user_id: %s processing complete", user_id)
+        return JSONResponse(
+            content={
+                "message": "Processing complete",
+                "redirect_url": f"{APP_URL}/success",
+            }
+        )
+    else:
+        logger.info("user_id: %s processing not complete for file", user_id)
+        return JSONResponse(content={"message": "Processing in progress"})
+    
 
 @router.get("/get-emails", response_model=List[UserEmail])
 def query_emails(request: Request, user_id: str = Depends(validate_session)) -> None:
