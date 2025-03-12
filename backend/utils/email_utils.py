@@ -62,7 +62,7 @@ def get_email_content(email_data: Dict[str, Any]) -> str:
     parses html content of email data and appends it to text content and subject conent
 
     Note 1: linkedIn easy apply messages have *different* html and text_content, so we need to keep both
-    Note 2: some automated emails only contain the information about hte company in the subject and
+    Note 2: some automated emails only contain the information about the company in the subject and
         not the email body, so we need to append this to make sure the email processor gets to see it.
 
     """
