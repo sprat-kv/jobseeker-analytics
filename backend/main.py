@@ -3,7 +3,7 @@ import logging
 import os
 
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -13,11 +13,18 @@ from db.utils.user_utils import add_user
 from utils.file_utils import get_user_filepath
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
+from contextlib import asynccontextmanager
+from database import create_db_and_tables
 
 # Import routes
 from routes import playground_routes, email_routes, auth_routes
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 settings = get_settings()
 APP_URL = settings.APP_URL
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
@@ -53,8 +60,6 @@ templates = Jinja2Templates(directory="templates")
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
-api_call_finished = False
-
 @app.post("/api/add-user")
 async def add_user_endpoint(user_data: UserData):
     """
@@ -72,26 +77,6 @@ async def add_user_endpoint(user_data: UserData):
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
-
-
-@app.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, user_id: str = Depends(validate_session)):
-    logging.info("user_id:%s processing", user_id)
-    global api_call_finished
-    if not user_id:
-        logger.info("user_id: not found, redirecting to login")
-        return RedirectResponse("/logout", status_code=303)
-    if api_call_finished:
-        logger.info("user_id: %s processing complete", user_id)
-        return JSONResponse(
-            content={
-                "message": "Processing complete",
-                "redirect_url": f"{APP_URL}/success",
-            }
-        )
-    else:
-        logger.info("user_id: %s processing not complete for file", user_id)
-        return JSONResponse(content={"message": "Processing in progress"})
 
 
 @app.get("/download-file")
