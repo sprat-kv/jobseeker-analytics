@@ -17,4 +17,3 @@ elif settings.is_publicly_deployed:
 else:
     DATABASE_URL = settings.DATABASE_URL_LOCAL_VIRTUAL_ENV
 engine = create_engine(DATABASE_URL)
-create_db_and_tables()
