@@ -79,7 +79,7 @@ export default function Dashboard() {
 			const link = document.createElement("a");
 			const url = URL.createObjectURL(blob);
 			link.href = url;
-			link.download = `job_applications_${new Date().toISOString().replace(/[:.]/g, '-')}.csv`;
+			link.download = `job_applications_${new Date().toISOString().split("T")[0]}.csv`;
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
