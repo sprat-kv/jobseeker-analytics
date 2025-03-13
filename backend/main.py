@@ -15,7 +15,7 @@ from utils.config_utils import get_settings
 from session.session_layer import validate_session
 
 # Import routes
-from routes import playground_routes, email_routes, auth_routes
+from routes import playground_routes, email_routes, auth_routes, file_routes
 
 app = FastAPI()
 settings = get_settings()
@@ -27,6 +27,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(auth_routes.router)
 app.include_router(playground_routes.router)
 app.include_router(email_routes.router)
+app.include_router(file_routes.router)
 
 # Configure CORS
 if settings.is_publicly_deployed:
