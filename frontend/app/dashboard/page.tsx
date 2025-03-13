@@ -68,7 +68,7 @@ export default function Dashboard() {
 			if (!response.ok) {
 				addToast({
 					title: "Failed to download CSV",
-					description: "Please try again",
+					description: "Please email help@jobba.help",
 					color: "danger"
 				});
 				return;
