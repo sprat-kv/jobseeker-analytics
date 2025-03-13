@@ -13,11 +13,18 @@ from db.utils.user_utils import add_user
 from utils.file_utils import get_user_filepath
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
+from contextlib import asynccontextmanager
+from database import create_db_and_tables
 
 # Import routes
 from routes import playground_routes, email_routes, auth_routes, file_routes
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 settings = get_settings()
 APP_URL = settings.APP_URL
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
