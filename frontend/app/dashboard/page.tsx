@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
 import { useRouter } from "next/navigation";
+import { Button } from "@heroui/react";
+import { addToast } from "@heroui/toast";
 
 interface Application {
 	id?: string;
@@ -17,6 +19,7 @@ export default function Dashboard() {
 	const router = useRouter();
 	const [data, setData] = useState<Application[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [downloading, setDownloading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -52,20 +55,65 @@ export default function Dashboard() {
 		};
 
 		fetchData();
-	}, [router, apiUrl]);
+	}, [router]);
+
+	async function downloadCsv() {
+		setDownloading(true);
+		try {
+			const response = await fetch(`${apiUrl}/process-csv`, {
+				method: "GET",
+				credentials: "include"
+			});
+
+			if (!response.ok) {
+				addToast({
+					title: "Failed to download CSV",
+					description: "Please try again",
+					color: "danger"
+				});
+				return;
+			}
+
+			// Create a download link to trigger the file download
+			const blob = await response.blob();
+			const link = document.createElement("a");
+			const url = URL.createObjectURL(blob);
+			link.href = url;
+			link.download = "job_applications.csv";
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			URL.revokeObjectURL(url);
+		} catch (error) {
+			error;
+			addToast({
+				title: "Something went wrong",
+				description: "Please try again",
+				color: "danger"
+			});
+		} finally {
+			setDownloading(false);
+		}
+	}
 
 	return (
 		<div className="p-6">
 			<h1 className="text-2xl font-bold mb-4">Job Applications Dashboard</h1>
+
+			<div className="mb-4">
+				<Button color="primary" isLoading={downloading} onPress={downloadCsv}>
+					Download CSV
+				</Button>
+			</div>
 
 			{loading ? (
 				<p>Loading applications...</p>
 			) : error ? (
 				<div className="text-red-500">
 					<p>{error}</p>
-					<button className="mt-4 text-blue-500 hover:underline" onClick={() => window.location.reload()}>
+					<Button color="warning" onPress={() => window.location.reload()}>
 						Try again
-					</button>
+					</Button>
 				</div>
 			) : (
 				<div className="overflow-x-auto bg-white shadow-md rounded-lg">
