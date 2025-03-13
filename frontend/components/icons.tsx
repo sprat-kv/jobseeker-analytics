@@ -165,3 +165,41 @@ export const LogOutIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, .
 		</svg>
 	);
 };
+
+export const DownloadIcon: React.FC<IconSvgProps> = ({ size = 22, width, height, ...props }) => {
+	return (
+		<svg
+			fill="none"
+			height={size || height}
+			viewBox="0 0 24 24"
+			width={size || width}
+			xmlns="http://www.w3.org/2000/svg"
+			{...props}
+		>
+			<path
+				d="M3 12.3v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<polyline
+				points="7.9 12.3 12 16.3 16.1 12.3"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+			/>
+			<line
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				x1="12"
+				x2="12"
+				y1="2.7"
+				y2="14.2"
+			/>
+		</svg>
+	);
+};

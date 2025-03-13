@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 
+import { DownloadIcon } from "@/components/icons";
+
 interface Application {
 	id?: string;
 	company_name: string;
@@ -98,12 +100,18 @@ export default function Dashboard() {
 
 	return (
 		<div className="p-6">
-			<h1 className="text-2xl font-bold mb-4">Job Applications Dashboard</h1>
-
-			<div className="mb-4">
-				<Button color="primary" isLoading={downloading} onPress={downloadCsv}>
-					Download CSV
-				</Button>
+			<div className="flex items-center justify-between mb-4">
+				<h1 className="text-2xl font-bold">Job Applications Dashboard</h1>
+				<div className="flex gap-x-4">
+					<Button
+						color="success"
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={downloadCsv}
+					>
+						Download CSV
+					</Button>
+				</div>
 			</div>
 
 			{loading ? (
