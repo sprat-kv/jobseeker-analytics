@@ -26,7 +26,8 @@ export default function Dashboard() {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 
 	// Load sort key from localStorage or use default "Sort By"
-	const storedSortKey = typeof window !== "undefined" ? localStorage.getItem("sortKey") || "Date (Newest)" : "Date (Newest)";	
+	const storedSortKey =
+		typeof window !== "undefined" ? localStorage.getItem("sortKey") || "Date (Newest)" : "Date (Newest)";
 	const [selectedKeys, setSelectedKeys] = useState(new Set([storedSortKey]));
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
