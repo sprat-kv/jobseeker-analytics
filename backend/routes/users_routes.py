@@ -1,17 +1,7 @@
-import os
 import logging
-from typing import List
-from fastapi import APIRouter, Depends, Request, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session, select
-from googleapiclient.discovery import build
-from constants import QUERY_APPLIED_EMAIL_FILTER
 from db.user_email import UserEmail
-from db.utils.user_email_utils import create_user_email
-from utils.auth_utils import AuthenticatedUser
-from utils.email_utils import get_email_ids, get_email
-from utils.llm_utils import process_email
-from utils.db_utils import export_to_csv
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from database import engine
@@ -28,8 +18,8 @@ api_call_finished = False
 # FastAPI router for email routes
 router = APIRouter()
 
-@router.get("/user/{user_id}/response_rate")
-def calculate_response_rate(user_id: str, request: Request) -> None:
+@router.get("/user-response-rate")
+def calculate_response_rate(request: Request, user_id: str = Depends(validate_session)) -> None:
     with Session(engine) as session:
         user_emails = session.exec(select(UserEmail).where(UserEmail.user_id == user_id)).all()
 
