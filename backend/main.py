@@ -2,12 +2,16 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from db.users import UserData
 from db.utils.user_utils import add_user
 from utils.file_utils import get_user_filepath
@@ -36,6 +40,9 @@ app.include_router(playground_routes.router)
 app.include_router(email_routes.router)
 app.include_router(file_routes.router)
 
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter  # Ensure limiter is assigned
+
 # Configure CORS
 if settings.is_publicly_deployed:
     # Production CORS settings
@@ -46,6 +53,18 @@ else:
         "http://localhost:3000",  # Assuming frontend runs on port 3000
         "http://127.0.0.1:3000",
     ]
+
+# Add SlowAPI middleware for rate limiting
+app.add_middleware(SlowAPIMiddleware)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow frontend origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -60,6 +79,16 @@ templates = Jinja2Templates(directory="templates")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
+
+
+# Rate limit exception handler
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    raise HTTPException(
+        status_code=429,
+        detail="Too many requests. Please try again later.",
+    )
+
 
 @app.post("/api/add-user")
 async def add_user_endpoint(user_data: UserData):

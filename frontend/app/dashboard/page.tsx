@@ -68,11 +68,20 @@ export default function Dashboard() {
 			});
 
 			if (!response.ok) {
+				let description = "Something went wrong. Please try again.";
+				
+				if (response.status === 429) {
+					description = "Download limit reached. Please wait before trying again.";
+				} else {
+					description = "Please try again or contact help@jobba.help if the issue persists.";
+				}
+			
 				addToast({
 					title: "Failed to download CSV",
-					description: "Please email help@jobba.help",
+					description,
 					color: "danger"
 				});
+			
 				return;
 			}
 

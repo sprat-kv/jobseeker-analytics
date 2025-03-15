@@ -3,6 +3,8 @@ import os
 import logging
 from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import FileResponse, RedirectResponse
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from utils.file_utils import get_user_filepath
 from session.session_layer import validate_session
 from routes.email_routes import query_emails
@@ -12,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 # FastAPI router for file routes
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 @router.get("/download-file")
 async def download_file(request: Request, user_id: str = Depends(validate_session)):
@@ -24,6 +27,7 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     raise HTTPException(status_code=400, detail="File not found")
+
 
 @router.get("/write-to-csv")
 async def write_to_csv(request: Request, user_id: str = Depends(validate_session)):
@@ -71,6 +75,7 @@ async def write_to_csv(request: Request, user_id: str = Depends(validate_session
 
 # Write and download csv
 @router.get("/process-csv")
+@limiter.limit("2/minute")
 async def process_csv(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
