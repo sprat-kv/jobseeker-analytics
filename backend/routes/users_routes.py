@@ -26,11 +26,12 @@ def calculate_response_rate(request: Request, user_id: str = Depends(validate_se
         # if user has no application just return 0.0
         total_apps = len(user_emails)
         if total_apps == 0:
-            return {"response_rate": 0.0}
+            return 0.0
 
         interview_requests = 0
         for email in user_emails:
-            if email.application_status and email.application_status.lower() == "request for availability":
+            # using request for avalability as an interview request as it should come before the offer and shecduled interview
+            if email.application_status and email.application_status.lower() == "request for availability": 
                 interview_requests += 1
 
         response_rate_percent = (interview_requests / total_apps) * 100
