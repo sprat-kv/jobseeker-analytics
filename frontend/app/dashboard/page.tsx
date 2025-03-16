@@ -69,7 +69,7 @@ export default function Dashboard() {
 	// Sort data based on selected key
 	useEffect(() => {
 		const sortData = () => {
-			let sorted = [...data];
+			const sorted = [...data];
 			const sortKey = Array.from(selectedKeys)[0];
 
 			switch (sortKey) {
