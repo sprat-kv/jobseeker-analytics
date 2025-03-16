@@ -10,4 +10,5 @@ class UserEmail(SQLModel, table=True):
     application_status: str
     received_at: datetime
     subject: str
+    job_title: str
     email_from: str  # to avoid 'from' being a reserved key word
