@@ -17,6 +17,10 @@ interface Application {
 	email_from: string;
 }
 
+// Load sort key from localStorage or use default "Sort By"
+const storedSortKey =
+	typeof window !== "undefined" ? localStorage.getItem("sortKey") || "Date (Newest)" : "Date (Newest)";
+
 export default function Dashboard() {
 	const router = useRouter();
 	const [data, setData] = useState<Application[]>([]);
@@ -24,10 +28,6 @@ export default function Dashboard() {
 	const [downloading, setDownloading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const [sortedData, setSortedData] = useState<Application[]>([]);
-
-	// Load sort key from localStorage or use default "Sort By"
-	const storedSortKey =
-		typeof window !== "undefined" ? localStorage.getItem("sortKey") || "Date (Newest)" : "Date (Newest)";
 	const [selectedKeys, setSelectedKeys] = useState(new Set([storedSortKey]));
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
