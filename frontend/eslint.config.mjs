@@ -12,6 +12,19 @@ import globals from 'globals';
 
 export default tseslint.config(
   eslint.configs.recommended,
+
+  // Global ignores - this will be applied to all files
+  {
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",          // This will ignore all files in .next and subdirectories
+      "**/dist/**",
+      "**/build/**",
+      "**/.vercel/**",
+      "**/.vscode/**",
+      "**/coverage/**"
+    ]
+  },
   
   // Language options
   {
@@ -36,14 +49,6 @@ export default tseslint.config(
   // Files to lint
   {
     files: ['**/*.ts', '**/*.tsx'],
-    // Ignore patterns from previous config
-    ignores: [
-      "node_modules/",
-      "dist/",
-      ".next/**",         // Add this line
-      ".next",            // Add this line
-      "build/",
-    ],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
