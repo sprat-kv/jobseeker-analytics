@@ -37,6 +37,13 @@ export default tseslint.config(
   {
     files: ['**/*.ts', '**/*.tsx'],
     // Ignore patterns from previous config
+    ignores: [
+      "node_modules/",
+      "dist/",
+      ".next/**",         // Add this line
+      ".next",            // Add this line
+      "build/",
+    ],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
