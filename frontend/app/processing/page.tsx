@@ -22,8 +22,8 @@ const ProcessingPage = () => {
 					clearInterval(interval);
 					router.push("/dashboard");
 				}
-			} catch (error) {
-				error;
+			} catch {
+				router.push("/logout");
 			}
 		}, 3000);
 

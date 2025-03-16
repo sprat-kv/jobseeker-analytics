@@ -176,6 +176,7 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
                 "application_status": [result.get("application_status", "")],
                 "received_at": [msg.get("date", "")],
                 "subject": [msg.get("subject", "")],
+                "job_title": [result.get("job_title", "")],
                 "from": [msg.get("from", "")],
             }
 

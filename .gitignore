@@ -5,7 +5,7 @@
 .vscode/
 *.csv
 *.txt
-*.json
+credentials.json
 .venv/
 __pycache__/
 

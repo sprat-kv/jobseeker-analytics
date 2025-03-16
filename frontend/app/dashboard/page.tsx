@@ -56,8 +56,7 @@ export default function Dashboard() {
 				} else {
 					setData(result);
 				}
-			} catch (error) {
-				error;
+			} catch {
 				setError("Failed to load applications");
 			} finally {
 				setLoading(false);
@@ -140,8 +139,7 @@ export default function Dashboard() {
 			link.click();
 			document.body.removeChild(link);
 			URL.revokeObjectURL(url);
-		} catch (error) {
-			error;
+		} catch {
 			addToast({
 				title: "Something went wrong",
 				description: "Please try again",
