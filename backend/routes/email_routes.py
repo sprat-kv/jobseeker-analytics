@@ -172,11 +172,12 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
 
             message_data = {
                 "id": msg_id,
-                "company_name": result.get("company_name", ""), 
-                "application_status": result.get("application_status", ""), 
-                "received_at": msg.get("date", ""),
-                "subject": msg.get("subject", ""), 
-                "from": msg.get("from", ""), 
+                "company_name": [result.get("company_name", "")],
+                "application_status": [result.get("application_status", "")],
+                "received_at": [msg.get("date", "")],
+                "subject": [msg.get("subject", "")],
+                "job_title": [result.get("job_title", "")],
+                "from": [msg.get("from", "")],
             }
 
             email_record = create_user_email(user, message_data)

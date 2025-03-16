@@ -45,6 +45,7 @@ def create_user_email(user, message_data: dict) -> UserEmail:
         company_name=message_data["company_name"],
         application_status=message_data["application_status"],
         received_at=received_at,
-        subject=message_data["subject"],
-        email_from=message_data["from"]
+        subject=message_data["subject"][0],
+        job_title=message_data["job_title"][0],
+        email_from=message_data["from"][0]
     )
