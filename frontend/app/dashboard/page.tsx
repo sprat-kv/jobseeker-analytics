@@ -22,7 +22,7 @@ export default function Dashboard() {
 	const [data, setData] = useState<Application[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
-	const [, setError] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	useEffect(() => {
