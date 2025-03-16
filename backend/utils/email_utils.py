@@ -16,7 +16,7 @@ def clean_whitespace(text: str) -> str:
     """
     remove \n, \r, and \t from strings
     """
-    return text.replace("\n", "").replace("\r", "").replace("\t", "")
+    return text.replace("\n", "").replace("\r", "").replace("\t", "") if text else ""
 
 
 def is_automated_email(email: str) -> bool:
