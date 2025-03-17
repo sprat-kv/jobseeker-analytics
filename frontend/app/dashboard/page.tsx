@@ -83,6 +83,9 @@ export default function Dashboard() {
 				case "Company":
 					sorted.sort((a, b) => a.company_name.localeCompare(b.company_name));
 					break;
+				case "Job Title":
+					sorted.sort((a, b) => a.job_title.localeCompare(b.job_title));
+					break;
 				case "Status":
 					sorted.sort((a, b) => a.application_status.localeCompare(b.application_status));
 					break;
@@ -180,6 +183,7 @@ export default function Dashboard() {
 								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
 								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
 								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
+								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
 								<DropdownItem key="Status">Application Status</DropdownItem>
 							</DropdownSection>
 						</DropdownMenu>
