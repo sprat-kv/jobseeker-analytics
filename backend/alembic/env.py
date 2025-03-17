@@ -10,8 +10,6 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-# Import both SQLModel and Base
-from database import Base
 from sqlmodel import SQLModel
 
 # This is the Alembic Config object
