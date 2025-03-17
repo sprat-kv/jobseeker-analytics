@@ -106,31 +106,37 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
 
+            result = {}
+
             if msg:
-                result = process_email(msg["text_content"])
+                try:
+                    result = process_email(msg["text_content"])
+                except Exception as e:
+                    logger.error(
+                        f"user_id:{user.user_id} Error processing email {idx + 1} of {len(messages)} with id {msg_id}: {e}"
+                    )
                 if not isinstance(result, str) and result:
                     logger.info(
                         f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
                 else:
-                    result = {}
                     logger.warning(
                         f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
 
-            message_data = {
-                "id": msg_id,
-                "company_name": [result.get("company_name", "")],
-                "application_status": [result.get("application_status", "")],
-                "received_at": [msg.get("date", "")],
-                "subject": [msg.get("subject", "")],
-                "job_title": [result.get("job_title", "")],
-                "from": [msg.get("from", "")],
-            }
+                message_data = {
+                    "id": msg_id,
+                    "company_name": [result.get("company_name", "")],
+                    "application_status": [result.get("application_status", "")],
+                    "received_at": [msg.get("date", "")],
+                    "subject": [msg.get("subject", "")],
+                    "job_title": [result.get("job_title", "")],
+                    "from": [msg.get("from", "")],
+                }
 
-            email_record = create_user_email(user, message_data)
-            if email_record:
-                email_records.append(email_record)
+                email_record = create_user_email(user, message_data)
+                if email_record:
+                    email_records.append(email_record)
 
         # batch insert all records at once
         if email_records:
