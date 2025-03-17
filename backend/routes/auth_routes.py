@@ -4,9 +4,12 @@ from fastapi import APIRouter, Request, BackgroundTasks
 from fastapi.responses import RedirectResponse, HTMLResponse
 from google_auth_oauthlib.flow import Flow
 
+from db.utils.user_utils import user_exists, add_user
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
+from utils.cookie_utils import set_conditional_cookie
+
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -17,8 +20,13 @@ settings = get_settings()
 # FastAPI router for Google login
 router = APIRouter()
 
+APP_URL = settings.APP_URL
+
 @router.get("/login")
 async def login(request: Request, background_tasks: BackgroundTasks):
+    """Handles Google OAuth2 login and authorization code exchange."""
+    from routes.email_routes import fetch_emails_to_db  # Move the import here to avoid circular import
+
     code = request.query_params.get("code")
     flow = Flow.from_client_secrets_file(
         settings.CLIENT_SECRETS_FILE,
@@ -55,18 +63,37 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["creds"] = creds.to_json() 
         request.session["access_token"] = creds.token
 
-        response = RedirectResponse(
-            url=f"{settings.APP_URL}/dashboard",
-            status_code=303
-        )
-        response.set_cookie(
-            key="Authorization", value=session_id, secure=True, httponly=True
+        # NOTE: change redirection once dashboard is completed
+        if user_exists(user):
+            logger.info("User already exists in the database.")
+            response = RedirectResponse(
+                url=f"{settings.APP_URL}/processing", status_code=303
+            )
+        else:
+            logger.info("Adding user to the database...")
+            add_user(user)
+            response = RedirectResponse(
+                url=f"{settings.APP_URL}/processing", status_code=303
+            )
+
+        response = set_conditional_cookie(
+            key="Authorization", value=session_id, response=response
         )
 
-        logger.info("User logged in with user_id: %s", user.user_id)
-        logger.info(f"Session after login: {request.session}")  # Debugging
+        # Start email fetching in the background
+        background_tasks.add_task(fetch_emails_to_db, user)
+        logger.info("Background task started for user_id: %s", user.user_id)
 
         return response
     except Exception as e:
         logger.error("Login error: %s", e)
         return HTMLResponse(content="An error occurred, sorry!", status_code=500)
+
+
+@router.get("/logout")
+async def logout(request: Request, response: RedirectResponse):
+    logger.info("Logging out")
+    request.session.clear()
+    response.delete_cookie(key="__Secure-Authorization")
+    response.delete_cookie(key="Authorization")
+    return RedirectResponse(f"{APP_URL}", status_code=303)

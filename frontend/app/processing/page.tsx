@@ -20,10 +20,10 @@ const ProcessingPage = () => {
 
 				if (result.message === "Processing complete") {
 					clearInterval(interval);
-					router.push("/success");
+					router.push("/dashboard");
 				}
-			} catch (error) {
-				error;
+			} catch {
+				router.push("/logout");
 			}
 		}, 3000);
 

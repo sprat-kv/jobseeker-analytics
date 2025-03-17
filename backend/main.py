@@ -2,41 +2,73 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, Request, Depends, BackgroundTasks
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
-
-from googleapiclient.discovery import build
-
-from constants import QUERY_APPLIED_EMAIL_FILTER
-from utils.auth_utils import AuthenticatedUser
-from utils.db_utils import export_to_csv
-from utils.email_utils import (
-    get_email_ids,
-    get_email,
-)
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from db.users import UserData
+from db.utils.user_utils import add_user
 from utils.file_utils import get_user_filepath
-from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
-#replace with db once it's ready
-from start_date.storage import start_date_storage
+from contextlib import asynccontextmanager
+from database import create_db_and_tables
 
-# Import Google login routes
-from login.google_login import router as google_login_router
+# Import routes
+from routes import playground_routes, email_routes, auth_routes, file_routes
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 settings = get_settings()
 APP_URL = settings.APP_URL
 app.add_middleware(SessionMiddleware, secret_key=settings.COOKIE_SECRET)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+# Register routes
+app.include_router(auth_routes.router)
+app.include_router(playground_routes.router)
+app.include_router(email_routes.router)
+app.include_router(file_routes.router)
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter  # Ensure limiter is assigned
+
+# Configure CORS
+if settings.is_publicly_deployed:
+    # Production CORS settings
+    origins = ["https://www.jobba.help", "https://www.staging.jobba.help"]
+else:
+    # Development CORS settings
+    origins = [
+        "http://localhost:3000",  # Assuming frontend runs on port 3000
+        "http://127.0.0.1:3000",
+    ]
+
+# Add SlowAPI middleware for rate limiting
+app.add_middleware(SlowAPIMiddleware)
+
+# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[APP_URL],  # Allow frontend origins
+    allow_origins=origins,  # Allow frontend origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allow frontend origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
@@ -48,32 +80,33 @@ templates = Jinja2Templates(directory="templates")
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format="%(levelname)s - %(message)s")
 
-api_call_finished = False
+
+# Rate limit exception handler
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    raise HTTPException(
+        status_code=429,
+        detail="Too many requests. Please try again later.",
+    )
+
+
+@app.post("/api/add-user")
+async def add_user_endpoint(user_data: UserData):
+    """
+    This endpoint adds a user to the database
+    """
+    try:
+        add_user(user_data)
+        return {"message": "User added successfully"}
+    except Exception as e:
+        # Log the error for debugging purposes
+        logger.error(f"An error occurred while adding user: {e}")
+        return {"error": "An error occurred while adding the user."}
 
 
 @app.get("/")
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
-
-
-@app.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, user_id: str = Depends(validate_session)):
-    logging.info("user_id:%s processing", user_id)
-    global api_call_finished
-    if not user_id:
-        logger.info("user_id: not found, redirecting to login")
-        return RedirectResponse("/login", status_code=303)
-    if api_call_finished:
-        logger.info("user_id: %s processing complete", user_id)
-        return JSONResponse(
-            content={
-                "message": "Processing complete",
-                "redirect_url": f"{APP_URL}/dashboard",
-            }
-        )
-    else:
-        logger.info("user_id: %s processing not complete for file", user_id)
-        return JSONResponse(content={"message": "Processing in progress"})
 
 
 @app.get("/download-file")
@@ -87,68 +120,6 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
         logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
         return FileResponse(filepath)
     return HTMLResponse(content="File not found :( ", status_code=404)
-
-
-@app.get("/logout")
-async def logout(request: Request, response: RedirectResponse):
-    logger.info("Logging out")
-    request.session.clear()
-    response.delete_cookie(key="Authorization")
-    return RedirectResponse("/", status_code=303)
-
-
-def fetch_emails(user: AuthenticatedUser) -> None:
-    global api_call_finished
-
-    api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
-    logger.info("user_id:%s fetch_emails", user.user_id)
-    service = build("gmail", "v1", credentials=user.creds)
-    messages = get_email_ids(query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service)
-
-    # Directory to save the emails
-    os.makedirs(user.filepath, exist_ok=True)
-    # if we're developing, flush the emails output instead of appending to it.
-    if settings.ENV == "dev" and os.path.isfile(
-        os.path.join(user.filepath, "emails.csv")
-    ):
-        os.remove(os.path.join(user.filepath, "emails.csv"))
-
-    if len(messages) > 1000:
-        logger.warning(
-            f"**************detected {len(messages)} that passed the filter!"
-        )
-
-    for idx, message in enumerate(messages):
-        message_data = {}
-        # (email_subject, email_from, email_domain, company_name, email_dt)
-        msg_id = message["id"]
-        logger.info(
-            f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
-        )
-        msg = get_email(message_id=msg_id, gmail_instance=service)
-        if msg:
-            result = process_email(msg["text_content"])
-            if not isinstance(result, str) and result:
-                logger.info(
-                    f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
-                )
-            else:
-                result = {}
-                logger.warning(
-                    f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
-                )
-            message_data["company_name"] = [result.get("company_name", "")]
-            message_data["application_status"] = [result.get("application_status", "")]
-            message_data["received_at"] = [msg.get("date", "")]
-            message_data["subject"] = [msg.get("subject", "")]
-            message_data["from"] = [msg.get("from", "")]
-
-            # expose the message id on the dev environment
-            if settings.ENV == "dev":
-                message_data["id"] = [msg_id]
-            # Exporting the email data to a CSV file
-            export_to_csv(user.filepath, user.user_id, message_data)
-    api_call_finished = True
 
 
 @app.get("/success", response_class=HTMLResponse)
@@ -197,9 +168,6 @@ async def get_session_data(request: Request):
         "session_id": request.session.get("session_id"),
     }
     return JSONResponse(content=session_data)
-
-# Register Google login routes
-app.include_router(google_login_router)
 
 # Run the app using Uvicorn
 if __name__ == "__main__":
