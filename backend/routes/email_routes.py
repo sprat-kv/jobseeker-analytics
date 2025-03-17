@@ -11,7 +11,6 @@ from db.utils.user_email_utils import create_user_email
 from utils.auth_utils import AuthenticatedUser
 from utils.email_utils import get_email_ids, get_email
 from utils.llm_utils import process_email
-from utils.db_utils import export_to_csv
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from database import engine
@@ -106,7 +105,6 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
 
-            result = {}
 
             if msg:
                 try:
@@ -115,6 +113,7 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
                     logger.error(
                         f"user_id:{user.user_id} Error processing email {idx + 1} of {len(messages)} with id {msg_id}: {e}"
                     )
+
                 if not isinstance(result, str) and result:
                     logger.info(
                         f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
@@ -123,17 +122,23 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
                     logger.warning(
                         f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
+                    logger.info("IMHERE")
+                    result = {"company_name": "", "application_status": "", "job_title": ""}
+                    logger.info("IMHERE2")
 
                 message_data = {
                     "id": msg_id,
-                    "company_name": [result.get("company_name", "")],
-                    "application_status": [result.get("application_status", "")],
-                    "received_at": [msg.get("date", "")],
-                    "subject": [msg.get("subject", "")],
-                    "job_title": [result.get("job_title", "")],
-                    "from": [msg.get("from", "")],
+                    "company_name": result.get("company_name", ""),
+                    "application_status": result.get("application_status", ""),
+                    "received_at": msg.get("date", ""),
+                    "subject": msg.get("subject", ""),
+                    "job_title": result.get("job_title", ""),
+                    "from": msg.get("from", ""),
                 }
-
+                logger.info("MESSAGEDAYAAAAA")
+                logger.info(
+                    f"user_id:{user.user_id} message_data for email {idx + 1} of {len(messages)} with id {msg_id}: {message_data}"
+                )
                 email_record = create_user_email(user, message_data)
                 if email_record:
                     email_records.append(email_record)
