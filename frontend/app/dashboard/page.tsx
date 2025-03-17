@@ -13,6 +13,7 @@ interface Application {
 	company_name: string;
 	application_status: string;
 	received_at: string;
+	job_title: string;
 	subject: string;
 	email_from: string;
 }
@@ -137,6 +138,7 @@ export default function Dashboard() {
 							<TableColumn>Company</TableColumn>
 							<TableColumn>Status</TableColumn>
 							<TableColumn>Received</TableColumn>
+							<TableColumn>Job Title</TableColumn>
 							<TableColumn>Subject</TableColumn>
 							<TableColumn>Sender</TableColumn>
 						</TableHeader>
@@ -156,6 +158,7 @@ export default function Dashboard() {
 										</span>
 									</TableCell>
 									<TableCell>{new Date(item.received_at).toLocaleDateString() || "--"}</TableCell>
+									<TableCell>{item.job_title || "--"}</TableCell>
 									<TableCell className="max-w-[300px] truncate">{item.subject || "--"}</TableCell>
 									<TableCell>{item.email_from || "--"}</TableCell>
 								</TableRow>
