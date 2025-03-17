@@ -34,18 +34,22 @@ def create_user_email(user, message_data: dict) -> UserEmails:
     """
     Creates a UserEmail record instance from the provided data.
     """
-    received_at_str = message_data["received_at"]
-    received_at = parse_email_date(received_at_str)  # parse_email_date function was created as different date formats were being pulled from the data
-    if check_email_exists(user.user_id, message_data["id"]):
-        logger.info(f"Email with ID {message_data['id']} already exists in the database.")
+    try:
+        received_at_str = message_data["received_at"]
+        received_at = parse_email_date(received_at_str)  # parse_email_date function was created as different date formats were being pulled from the data
+        if check_email_exists(user.user_id, message_data["id"]):
+            logger.info(f"Email with ID {message_data['id']} already exists in the database.")
+            return None
+        return UserEmails(
+            id=message_data["id"],
+            user_id=user.user_id,
+            company_name=message_data["company_name"],
+            application_status=message_data["application_status"],
+            received_at=received_at,
+            subject=message_data["subject"],
+            job_title=message_data["job_title"],
+            email_from=message_data["from"]
+        )
+    except Exception as e:
+        logger.error(f"Error creating UserEmail record: {e}")
         return None
-    return UserEmails(
-        id=message_data["id"],
-        user_id=user.user_id,
-        company_name=message_data["company_name"],
-        application_status=message_data["application_status"],
-        received_at=received_at,
-        subject=message_data["subject"][0],
-        job_title=message_data["job_title"][0],
-        email_from=message_data["from"][0]
-    )
