@@ -80,7 +80,7 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
     global api_call_finished
 
     api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
-    logger.info("user_id:%s fetch_emails", user.user_id)
+    logger.info("user_id:%s fetch_emails_to_db", user.user_id)
 
     with Session(engine) as session:
         service = build("gmail", "v1", credentials=user.creds)
