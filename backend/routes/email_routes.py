@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select
 from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
-from db.user_email import UserEmail
+from db.user_emails import UserEmails
 from db.utils.user_email_utils import create_user_email
 from utils.auth_utils import AuthenticatedUser
 from utils.email_utils import get_email_ids, get_email
@@ -48,13 +48,13 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
         return JSONResponse(content={"message": "Processing in progress"})
     
 
-@router.get("/get-emails", response_model=List[UserEmail])
+@router.get("/get-emails", response_model=List[UserEmails])
 def query_emails(request: Request, user_id: str = Depends(validate_session)) -> None:
     with Session(engine) as session:
         try:
             logger.info(f"Fetching emails for user_id: {user_id}")
 
-            statement = select(UserEmail).where(UserEmail.user_id == user_id)
+            statement = select(UserEmails).where(UserEmails.user_id == user_id)
             user_emails = session.exec(statement).all()
 
             # If no records are found, return a 404 error
