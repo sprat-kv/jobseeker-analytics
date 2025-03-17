@@ -67,12 +67,9 @@ def process_email(email_text):
                 logger.warning(
                     f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
                 )
-                logger.warning(
-                    f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
-                )
                 time.sleep(delay)
             else:
-                logger.exception(f"Error processing email: {e}")
+                logger.error(f"process_email exception: {e}")
                 return None
     logger.error(f"Failed to process email after {retries} attempts.")
     return None
