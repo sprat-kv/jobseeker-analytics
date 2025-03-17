@@ -2,7 +2,7 @@ import logging
 from typing import List
 from fastapi import APIRouter, Depends, Request, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
-from sqlmodel import Session, select
+from sqlmodel import Session, select, desc
 from googleapiclient.discovery import build
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from db.user_emails import UserEmails
@@ -52,7 +52,8 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
         try:
             logger.info(f"Fetching emails for user_id: {user_id}")
 
-            statement = select(UserEmails).where(UserEmails.user_id == user_id)
+            # Query emails sorted by date (newest first)
+            statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
             user_emails = session.exec(statement).all()
 
             # If no records are found, return a 404 error
