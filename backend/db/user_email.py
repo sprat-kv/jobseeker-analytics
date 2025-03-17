@@ -2,8 +2,8 @@ from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime
 
-class UserEmail(SQLModel, table=True):
-    __tablename__ = "user_email"  
+class UserEmails(SQLModel, table=True):
+    __tablename__ = "user_emails"  
     id: str = Field(primary_key=True)  # Gmail email ID (not unique globally)
     user_id: str = Field(primary_key=True)  # Unique per user (composite key)
     company_name: str
