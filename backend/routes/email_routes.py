@@ -112,6 +112,7 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
                     logger.error(
                         f"user_id:{user.user_id} Error processing email {idx + 1} of {len(messages)} with id {msg_id}: {e}"
                     )
+                    result = {"company_name": "", "application_status": "", "job_title": ""}
 
                 if not isinstance(result, str) and result:
                     logger.info(
@@ -121,9 +122,7 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
                     logger.warning(
                         f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
-                    logger.info("IMHERE")
                     result = {"company_name": "", "application_status": "", "job_title": ""}
-                    logger.info("IMHERE2")
 
                 message_data = {
                     "id": msg_id,
@@ -134,10 +133,6 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
                     "job_title": result.get("job_title", ""),
                     "from": msg.get("from", ""),
                 }
-                logger.info("MESSAGEDAYAAAAA")
-                logger.info(
-                    f"user_id:{user.user_id} message_data for email {idx + 1} of {len(messages)} with id {msg_id}: {message_data}"
-                )
                 email_record = create_user_email(user, message_data)
                 if email_record:
                     email_records.append(email_record)
