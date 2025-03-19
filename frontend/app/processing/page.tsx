@@ -1,10 +1,11 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/react";
 
 import Spinner from "../../components/spinner";
+
 import { checkAuth } from "@/utils/auth";
-import { addToast } from "@heroui/react";
 
 const ProcessingPage = () => {
 	const router = useRouter();
@@ -18,20 +19,20 @@ const ProcessingPage = () => {
 				addToast({
 					title: "You need to be logged in to access this page.",
 					color: "warning"
-				});					
-				router.push("/");	
+				});
+				router.push("/");
 				return;
 			}
-	
+
 			const interval = setInterval(async () => {
 				try {
 					const res = await fetch(`${apiUrl}/processing`, {
 						method: "GET",
 						credentials: "include"
 					});
-	
+
 					const result = await res.json();
-	
+
 					if (result.message === "Processing complete") {
 						clearInterval(interval);
 						router.push("/dashboard");
@@ -40,10 +41,10 @@ const ProcessingPage = () => {
 					router.push("/logout");
 				}
 			}, 3000);
-	
+
 			return () => clearInterval(interval);
 		};
-	
+
 		process();
 	}, [router]);
 

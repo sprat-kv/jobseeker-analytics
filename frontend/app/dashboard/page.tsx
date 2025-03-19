@@ -40,15 +40,15 @@ export default function Dashboard() {
 			try {
 				// Check if user is logged in
 				const isAuthenticated = await checkAuth(apiUrl);
-				if (!isAuthenticated){
+				if (!isAuthenticated) {
 					addToast({
 						title: "You need to be logged in to access this page.",
 						color: "warning"
-					});					
+					});
 					router.push("/");
-					return;			
-				} 
-				
+					return;
+				}
+
 				// Fetch applicaions (if user is logged in)
 				const response = await fetch(`${apiUrl}/get-emails`, {
 					method: "GET",
