@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarDate } from "@internationalized.date";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
 import { Button, DatePicker, Modal, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { addToast } from "@heroui/toast";
+import { CalendarDate } from "@internationalized/date";
 
 import { DownloadIcon } from "@/components/icons";
 
@@ -18,11 +18,15 @@ interface Application {
     email_from: string;
 }
 
+interface SessionData {
+    start_date?: string;
+}
+
 export default function Dashboard() {
     const [showModal, setShowModal] = useState(false);
-    const [startDate, setStartDate] = useState<CalendarDate | null>(null);
+    const [startDate, setStartDate] = useState<Date | null>(null);
     const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
-    const [sessionData, setSessionData] = useState(null);
+    const [sessionData, setSessionData] = useState<SessionData | null>(null);
     const router = useRouter();
     const [data, setData] = useState<Application[]>([]);
     const [loading, setLoading] = useState(true);
@@ -31,35 +35,6 @@ export default function Dashboard() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${apiUrl}/get-emails`, {
-                    method: "GET",
-                    credentials: "include" // Include cookies for session management
-                });
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        setError("No applications found");
-                    } else {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                }
-
-                const result = await response.json();
-
-                if (result.length === 0) {
-                    setError("No applications found");
-                } else {
-                    setData(result);
-                }
-            } catch {
-                setError("Failed to load applications");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         const fetchSessionData = async () => {
             try {
                 const response = await fetch("http://localhost:8000/api/get-start-date");
@@ -73,7 +48,6 @@ export default function Dashboard() {
             }
         };
 
-        fetchData();
         fetchSessionData();
     }, [router]);
 
@@ -131,19 +105,20 @@ export default function Dashboard() {
             return;
         }
         try {
-            setStartDate(selectedDate);
+            const date = selectedDate.toDate("UTC");
+            setStartDate(date);
             setShowModal(false);
             // Save the start date
             await fetch("http://localhost:8000/api/save-start-date", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ start_date: selectedDate.toString() })
+                body: JSON.stringify({ start_date: date.toISOString() })
             });
             // Fetch emails
             const emailResponse = await fetch("http://localhost:8000/api/fetch-emails", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({})
             });
@@ -185,7 +160,7 @@ export default function Dashboard() {
                     <DatePicker
                         className="mt-4 w-full p-2 border rounded-lg"
                         value={selectedDate}
-                        onChange={(date) => setSelectedDate(date as CalendarDate)}
+                        onChange={(date) => setSelectedDate(date)}
                     />
                 </ModalBody>
                 <ModalFooter>
