@@ -67,22 +67,22 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         if user_exists(user):
             logger.info("User already exists in the database.")
             response = RedirectResponse(
-                url=f"{settings.APP_URL}/processing", status_code=303
+                url=f"{settings.APP_URL}/dashboard", status_code=303
             )
         else:
             logger.info("Adding user to the database...")
             add_user(user)
             response = RedirectResponse(
-                url=f"{settings.APP_URL}/processing", status_code=303
+                url=f"{settings.APP_URL}/dashboard", status_code=303
             )
 
         response = set_conditional_cookie(
             key="Authorization", value=session_id, response=response
         )
 
-        # Start email fetching in the background
-        background_tasks.add_task(fetch_emails_to_db, user)
-        logger.info("Background task started for user_id: %s", user.user_id)
+        # Debugging
+        logger.info("User logged in with user_id: %s", user.user_id)
+        logger.info(f"Session after login: {request.session}") 
 
         return response
     except Exception as e:
