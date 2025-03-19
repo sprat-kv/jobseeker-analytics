@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session, select
-from db.user_email import UserEmail
+from db.user_emails import UserEmails
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from database import engine
