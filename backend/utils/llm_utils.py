@@ -10,7 +10,7 @@ settings = get_settings()
 
 # Configure Google Gemini API
 genai.configure(api_key=settings.GOOGLE_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash-8b")
+model = genai.GenerativeModel("gemini-2.0-flash-lite")
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
