@@ -25,7 +25,7 @@ def calculate_response_rate(
 ) -> None:
     with Session(engine) as session:
         user_emails = session.exec(
-            select(UserEmail).where(UserEmail.user_id == user_id)
+            select(UserEmails).where(UserEmails.user_id == user_id)
         ).all()
 
         # if user has no application just return 0.0
