@@ -18,10 +18,15 @@ api_call_finished = False
 # FastAPI router for email routes
 router = APIRouter()
 
+
 @router.get("/user-response-rate")
-def calculate_response_rate(request: Request, user_id: str = Depends(validate_session)) -> None:
+def calculate_response_rate(
+    request: Request, user_id: str = Depends(validate_session)
+) -> None:
     with Session(engine) as session:
-        user_emails = session.exec(select(UserEmail).where(UserEmail.user_id == user_id)).all()
+        user_emails = session.exec(
+            select(UserEmail).where(UserEmail.user_id == user_id)
+        ).all()
 
         # if user has no application just return 0.0
         total_apps = len(user_emails)
@@ -31,7 +36,10 @@ def calculate_response_rate(request: Request, user_id: str = Depends(validate_se
         interview_requests = 0
         for email in user_emails:
             # using request for avalability as an interview request as it should come before the offer and shecduled interview
-            if email.application_status and email.application_status.lower() == "request for availability": 
+            if (
+                email.application_status
+                and email.application_status.lower() == "request for availability"
+            ):
                 interview_requests += 1
 
         response_rate_percent = (interview_requests / total_apps) * 100
