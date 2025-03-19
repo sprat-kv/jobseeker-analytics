@@ -25,7 +25,7 @@ We'd love to have you on board! Here's how you can join:
    - Mention how you heard about the app (community, friend’s name, etc.).
    - We'll respond as soon as possible to grant you access (subject to Google’s beta testing user limits).
 2. **Join our Discord:** [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw)
-3. **Provide Feedback and Request New Features:** [https://forms.gle/CSiiU7CGtbuDMi5z8](https://forms.gle/CSiiU7CGtbuDMi5z8)
+3. **Provide Feedback and Request New Features:** https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing
 
 ## **Latest Feature: Automated Job Tracker**
 
@@ -90,5 +90,7 @@ This is especially important if I, the maintainer, ever win the lottery, retire 
 ## **Support & Feedback**
 
 If you experience any errors or want to share feedback, join our Discord at [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw).
+
+Or submit feedback by form: https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing
 
 You can also always email us at [help@jobba.help](mailto:help@jobba.help).
