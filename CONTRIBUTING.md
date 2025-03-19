@@ -92,6 +92,10 @@ This project uses **Google OAuth** for authentication. To run the app locally, y
 docker-compose up --build
 ```
 3. Then, visit [http://localhost:3000](http://localhost:3000) to begin testing the app locally.
+4. Troubleshooting:
+   - Attempted import error
+      - `cd frontend`
+      - `npm ci`
 
 You can view logs from the app by finding your container in Docker Desktop/Docker Engine and clicking on it. The app will automatically refresh when you make changes. 
 
