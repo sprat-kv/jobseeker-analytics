@@ -25,7 +25,7 @@ We'd love to have you on board! Here's how you can join:
    - Mention how you heard about the app (community, friend’s name, etc.).
    - We'll respond as soon as possible to grant you access (subject to Google’s beta testing user limits).
 2. **Join our Discord:** [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw)
-3. **Provide Feedback and Request New Features** [https://forms.gle/CSiiU7CGtbuDMi5z8](https://forms.gle/CSiiU7CGtbuDMi5z8)
+3. **Provide Feedback and Request New Features:** [https://forms.gle/CSiiU7CGtbuDMi5z8](https://forms.gle/CSiiU7CGtbuDMi5z8)
 
 ## **Latest Feature: Automated Job Tracker**
 
