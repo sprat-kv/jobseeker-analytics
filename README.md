@@ -26,7 +26,7 @@ Imagine the perfect job search:
 
 If you choose option 2, I'd be happy to walk you through the process step-by-step. 
 - This gives you full access to all features while we work on publishing the app outside of beta.
-- Feel free to email help@jobba.help for personalized assistance with setting up the app on your computer. 
+- Feel free to email [help@jobba.help](mailto:help@jobba.help?subject=Help%20Running%20App%20On%20Personal%20Computer) for personalized assistance with setting up the app on your computer. 
 - For those familiar with GitHub, the [CONTRIBUTING.md](https://github.com/lnovitz/jobseeker-analytics/blob/main/CONTRIBUTING.md) file in our repository also contains setup instructions.
 
 ## **Latest Feature: Automated Job Tracker**
