@@ -22,6 +22,8 @@ settings = get_settings()
 APP_URL = settings.APP_URL
 
 api_call_finished = False
+total_emails = 0
+processed_emails = 0
 
 # FastAPI router for email routes
 router = APIRouter()
@@ -29,7 +31,7 @@ router = APIRouter()
 @router.get("/processing", response_class=HTMLResponse)
 async def processing(request: Request, user_id: str = Depends(validate_session)):
     logging.info("user_id:%s processing", user_id)
-    global api_call_finished
+    global api_call_finished, total_emails, processed_emails
     if not user_id:
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
@@ -38,12 +40,19 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
         return JSONResponse(
             content={
                 "message": "Processing complete",
-                "redirect_url": f"{APP_URL}/success",
+                "processed_emails": processed_emails,
+                "total_emails": total_emails,
             }
         )
     else:
         logger.info("user_id: %s processing not complete for file", user_id)
-        return JSONResponse(content={"message": "Processing in progress"})
+        return JSONResponse(
+            content={
+                    "message": "Processing in progress",
+                    "processed_emails": processed_emails,
+                    "total_emails": total_emails
+                }
+            )
     
 
 @router.get("/get-emails", response_model=List[UserEmails])
@@ -71,12 +80,10 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
         except Exception as e:
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-        
-
 
 
 def fetch_emails_to_db(user: AuthenticatedUser) -> None:
-    global api_call_finished
+    global api_call_finished, total_emails, processed_emails
 
     api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails_to_db", user.user_id)
@@ -92,6 +99,7 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
             return
 
         logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
+        total_emails = len(messages)
 
         email_records = []  # list to collect email records
 
@@ -102,9 +110,9 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
             logger.info(
                 f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
             )
+            processed_emails = idx + 1
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
-
 
             if msg:
                 try:
