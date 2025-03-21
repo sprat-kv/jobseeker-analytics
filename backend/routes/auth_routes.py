@@ -68,8 +68,8 @@ async def login(request: Request, background_tasks: BackgroundTasks):
                 url=f"{settings.APP_URL}/dashboard", status_code=303
             )
         else:
-            logger.info("Adding user to the database...")
-            add_user(user)
+            logger.info("Redirecting user to start date prompt...")
+            request.session["new_user_id"] = user.user_id
             response = RedirectResponse(
                 url=f"{settings.APP_URL}/dashboard", status_code=303
             )

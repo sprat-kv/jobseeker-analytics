@@ -93,12 +93,12 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
 
 
 @app.post("/api/add-user")
-async def add_user_endpoint(user_data: UserData):
+async def add_user_endpoint(user_data: UserData, request: Request):
     """
-    This endpoint adds a user to the database
+    This endpoint adds a user to the database and session storage
     """
     try:
-        add_user(user_data)
+        add_user(user_data, request)
         return {"message": "User added successfully"}
     except Exception as e:
         # Log the error for debugging purposes

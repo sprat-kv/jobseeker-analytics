@@ -37,28 +37,28 @@ export default function Dashboard() {
 	useEffect(() => {
 		async function fetchSessionData() {
 			try {
-			  const response = await fetch("/api/session-data");
-			  const data = await response.json();
-			  setSessionData(data);
+				const response = await fetch("/api/session-data");
+				const data = await response.json();
+				setSessionData(data);
 			} catch (error) {
-			  console.error("Error fetching session data:", error);
+				console.error("Error fetching session data:", error);
 			}
-		  }
-	  
-		  // Fetch start date
-		  async function fetchStartDate() {
+		}
+
+		// Fetch start date
+		async function fetchStartDate() {
 			try {
-			  const response = await fetch("/api/get-start-date");
-			  const data = await response.json();
-			  setStartDate(data.start_date || "Not set");
+				const response = await fetch("/api/get-start-date");
+				const data = await response.json();
+				setStartDate(data.start_date || "Not set");
 			} catch (error) {
-			  console.error("Error fetching start date:", error);
+				console.error("Error fetching start date:", error);
 			}
-		  }
-	  
-		  fetchSessionData();
-		  fetchStartDate();
-		}, []);
+		}
+
+		fetchSessionData();
+		fetchStartDate();
+	}, []);
 
 	async function downloadCsv() {
 		setDownloading(true);

@@ -1,7 +1,8 @@
 import logging
-from fastapi import APIRouter, Request, FastAPI, BackgroundTasks
+from fastapi import APIRouter, Request, FastAPI, BackgroundTasks, Form, HTMLResponse
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
+from db.utils.user_utils import add_user
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -11,13 +12,25 @@ api_call_finished = False
 # FastAPI router for email routes
 router = APIRouter()
 
-@router.post("/api/save-start-date")
-async def save_start_date(request: Request):
-    logger.info(f"Session after save-start-date: {request.session}")  # Debugging
-    data = await request.json()
-    start_date_storage["start_date"] = data.get("start_date")
-    return JSONResponse(content={"message": "Start date saved successfully"})
+@router.post("/set-start-date")
+async def set_start_date(request: Request, start_date: str = Form(...)):
+    """Updates the user's job search start date in the database."""
+    user_id = request.session.get("user_id")
 
+    if not user_id:
+        return HTMLResponse(content="Invalid request. Please log in again.", status_code=400)
+
+    try:
+        add_user(user_id, request, start_date)  # Save start date in DB
+
+        # Update session to remove "new user" status
+        request.session["is_new_user"] = False
+
+        return {"message": "Start date updated successfully"}
+    except Exception as e:
+        logger.error("Error saving start date: %s", e)
+        return HTMLResponse(content="Failed to save start date. Try again.", status_code=500)
+    
 @router.get("/api/get-start-date")
 async def get_start_date():
     start_date = start_date_storage.get("start_date")
