@@ -19,8 +19,6 @@ Imagine the perfect job search:
 
 ## **Want to sign up?**
 
-We've currently reached our capacity for beta users and aren't officially accepting new sign-ups at this time, which means you won't be able to use our hosted website.
-
 **You have two options:**
 
 1. **Join the waitlist** to receive updates when we launch outside of beta: https://dashboard.mailerlite.com/forms/1348245/149432531062621442/share
