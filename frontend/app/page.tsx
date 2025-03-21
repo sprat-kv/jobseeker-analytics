@@ -117,7 +117,7 @@ export default function Home() {
 					setErrorMessage("Something went wrong. Please try again later.");
 				}
 			}
-		} catch (error) {
+		} catch {
 			setErrorMessage("Failed to connect to subscription service. Please try again later.");
 		}
 
