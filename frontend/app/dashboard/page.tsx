@@ -237,7 +237,7 @@ export default function Dashboard() {
 					</Dropdown>
 					<Button
 						color="primary"
-						// isDisabled={!data || data.length === 0}
+						isDisabled={!data || data.length === 0}
 						isLoading={downloading}
 						startContent={<DownloadIcon />}
 						onPress={downloadSankey}
@@ -246,7 +246,7 @@ export default function Dashboard() {
 					</Button>
 					<Button
 						color="success"
-						// isDisabled={!data || data.length === 0}
+						isDisabled={!data || data.length === 0}
 						isLoading={downloading}
 						startContent={<DownloadIcon />}
 						onPress={downloadCsv}
