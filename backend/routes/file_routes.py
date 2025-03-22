@@ -148,18 +148,20 @@ async def process_sankey(request: Request, user_id: str = Depends(validate_sessi
     emails = query_emails(request, user_id)
     if not emails:
         raise HTTPException(status_code=400, detail="No data found to write")
-    
+ 
     for email in emails:
-        num_applications += 1
-        if email["application_status"] == "offer":
+        # normalize the output
+        status = email.application_status.strip().lower()
+        num_applications += 1   
+        if status == "offer":
             num_offers += 1
-        elif email["application_status"] == "rejected":
+        elif status == "rejected":
             num_rejected += 1
-        elif email["application_status"] == "request for_availability":
+        elif status == "request for availability":
             num_request_for_availability += 1
-        elif email["application_status"] == "interview_scheduled":
+        elif status == "interview scheduled":
             num_interview_scheduled += 1
-        elif email["application_status"] == "no_response":
+        elif status == "no response":
             num_no_response += 1
 
     # Create the Sankey diagram
@@ -171,8 +173,8 @@ async def process_sankey(request: Request, user_id: str = Depends(validate_sessi
                          f"Interview Scheduled ({num_interview_scheduled})", 
                          f"No Response ({num_no_response})"]),
         link=dict(source=[0, 0, 0, 0, 0], target=[1, 2, 3, 4, 5], 
-                  value=[num_applications, num_offers, num_rejected, num_request_for_availability, num_interview_scheduled])
-    ))
+                  value=[num_offers, num_rejected, num_request_for_availability, num_interview_scheduled, num_no_response])))
+
 
     # Define the user's file path and ensure the directory exists
     directory = get_user_filepath(user_id)
