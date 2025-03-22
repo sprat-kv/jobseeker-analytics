@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Progress } from "@heroui/react";
+import { addToast, Progress } from "@heroui/react";
 
 import Spinner from "../../../components/spinner";
 
@@ -10,6 +10,13 @@ export default function PreviewProcessing() {
 	const [progress, setProgress] = useState(0);
 
 	useEffect(() => {
+		addToast({
+			title: "Previewing the app...",
+			description: "We are processing our sample data",
+			color: "warning",
+			timeout: 5000
+		});
+
 		// Set an interval to update progress and a timeout to redirect after 5 seconds
 		const interval = setInterval(() => {
 			setProgress((prev) => (prev >= 100 ? 100 : prev + 10));
