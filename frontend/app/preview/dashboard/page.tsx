@@ -2,7 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure
+} from "@heroui/react";
+import { useRouter } from "next/navigation";
 
 import { DownloadIcon, SortIcon } from "@/components/icons";
 import { mockData } from "@/utils/mockData";
@@ -22,21 +36,31 @@ export default function Dashboard() {
 		email_from: string;
 	}
 
+	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [data, setData] = useState<Application[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([storedSortKey]));
+	const router = useRouter();
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
 	useEffect(() => {
-		// Simulate fetching data
 		setLoading(true);
-		setTimeout(() => {
+		const dataTimeout = setTimeout(() => {
 			setData(mockData);
 			setLoading(false);
 		}, 1500);
+
+		const openTimeout = setTimeout(() => {
+			onOpen();
+		}, 10000);
+
+		return () => {
+			clearTimeout(dataTimeout);
+			clearTimeout(openTimeout);
+		};
 	}, []);
 
 	// Sort data based on selected key
@@ -106,6 +130,40 @@ export default function Dashboard() {
 
 	return (
 		<div className="p-6">
+			<Modal backdrop="blur" isOpen={isOpen} size="xl" onClose={onClose}>
+				<ModalContent>
+					{(onClose) => (
+						<>
+							<ModalHeader className="flex flex-col gap-1">
+								Enjoying the preview? Join the waitlist!
+							</ModalHeader>
+							<ModalBody>
+								<p>
+									Be the first to experience all the amazing features of our app! We're launching
+									soon, and you can get early access by joining our exclusive waitlist.
+								</p>
+								<p>
+									By joining the waitlist, you'll receive updates and an early invitation to unlock
+									the full potential of our platform.
+								</p>
+								<p>
+									Don't miss out — secure your spot today and be among the first to enjoy everything
+									we have to offer!
+								</p>
+							</ModalBody>
+							<ModalFooter>
+								<Button color="danger" variant="light" onPress={onClose}>
+									Close
+								</Button>
+								<Button color="primary" onPress={() => router.push("/")}>
+									Sign Up Now
+								</Button>
+							</ModalFooter>
+						</>
+					)}
+				</ModalContent>
+			</Modal>
+
 			<div className="flex items-center justify-between mb-4">
 				<h1 className="text-2xl font-bold">Job Applications Dashboard</h1>
 				<div className="flex gap-x-4">
