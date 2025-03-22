@@ -154,6 +154,53 @@ export default function Dashboard() {
 		}
 	}
 
+	async function downloadSankey() {
+		setDownloading(true);
+		try {
+			const response = await fetch(`${apiUrl}/process-sankey`, {
+				method: "GET",
+				credentials: "include"
+			});
+
+			if (!response.ok) {
+				let description = "Something went wrong. Please try again.";
+
+				if (response.status === 429) {
+					description = "Download limit reached. Please wait before trying again.";
+				} else {
+					description = "Please try again or contact help@jobba.help if the issue persists.";
+				}
+
+				addToast({
+					title: "Failed to download Sankey Diagram",
+					description,
+					color: "danger"
+				});
+
+				return;
+			}
+
+			// Create a download link to trigger the file download
+			const blob = await response.blob();
+			const link = document.createElement("a");
+			const url = URL.createObjectURL(blob);
+			link.href = url;
+			link.download = `sankey_diagram_${new Date().toISOString().split("T")[0]}.png`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			URL.revokeObjectURL(url);
+		} catch {
+			addToast({
+				title: "Something went wrong",
+				description: "Please try again",
+				color: "danger"
+			});
+		} finally {
+			setDownloading(false);
+		}
+	}
+
 	return (
 		<div className="p-6">
 			<div className="flex items-center justify-between mb-4">
@@ -189,8 +236,17 @@ export default function Dashboard() {
 						</DropdownMenu>
 					</Dropdown>
 					<Button
+						color="primary"
+						// isDisabled={!data || data.length === 0}
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={downloadSankey}
+					>
+						Download Sankey Diagram
+					</Button>
+					<Button
 						color="success"
-						isDisabled={!data || data.length === 0}
+						// isDisabled={!data || data.length === 0}
 						isLoading={downloading}
 						startContent={<DownloadIcon />}
 						onPress={downloadCsv}
