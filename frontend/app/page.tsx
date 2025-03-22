@@ -208,6 +208,64 @@ export default function Home() {
 			`}</style>
 
 			<main className="max-w-2xl mx-auto p-6 shadow-md rounded-lg bg-white dark:bg-gray-800">
+				<div className="mb-8 p-5 border border-blue-100 dark:border-blue-900 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+					<h2 className="text-2xl font-bold text-blue-800 dark:text-blue-300 mb-4">
+						<span className="inline-block mr-2">📊</span>
+						jobba.help
+					</h2>
+
+					<p className="text-gray-700 dark:text-gray-300 mb-4">
+						An open-source job application tracker that works automatically with your email.
+					</p>
+
+					<div className="space-y-3">
+						{/* Feature 1 */}
+						<div className="flex items-start">
+							<div className="flex-shrink-0 mt-1">
+								<svg
+									className="h-5 w-5 text-blue-600 dark:text-blue-400"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+									/>
+								</svg>
+							</div>
+							<p className="ml-3 text-sm text-gray-700 dark:text-gray-300">
+								<span className="font-medium text-gray-900 dark:text-white">Automatic tracking</span> —
+								Connects to your email inbox to find job applications
+							</p>
+						</div>
+
+						{/* Feature 2 */}
+						<div className="flex items-start">
+							<div className="flex-shrink-0 mt-1">
+								<svg
+									className="h-5 w-5 text-blue-600 dark:text-blue-400"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+									/>
+								</svg>
+							</div>
+							<p className="ml-3 text-sm text-gray-700 dark:text-gray-300">
+								<span className="font-medium text-gray-900 dark:text-white">No manual data entry</span>{" "}
+								— Simply log in and see your application history
+							</p>
+						</div>
+					</div>
+				</div>
 				{/* MailerLite Signup Form */}
 				<div className="mb-10 p-6 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
 					<h2 className="text-2xl font-bold mb-3 text-gray-900 dark:text-white">Join the Waitlist</h2>
