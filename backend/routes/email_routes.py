@@ -82,21 +82,6 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
-# def build_email_query(user_id: str, session: Session) -> str:
-#     # fetch the emails after the last updated time based on the date of the most recent email
-#     last_updated = session.exec(
-#         select(UserEmails.received_at).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
-#     ).first()
-
-#     query = QUERY_APPLIED_EMAIL_FILTER
-#     if last_updated:
-#         query += f" after:{last_updated.strftime('%Y/%m/%d')}"
-#         logger.info(f"Fetching emails for user_id: {user_id} starting from {last_updated.strftime('%Y/%m/%d')}")
-#     else:
-#         logger.info(f"Fetching emails for user_id: {user_id} starting from the default date")
-    
-#     return query
-
 def fetch_emails_to_db(user: AuthenticatedUser, last_updated: Optional[datetime] = None) -> None:
     global api_call_finished, total_emails, processed_emails
 
