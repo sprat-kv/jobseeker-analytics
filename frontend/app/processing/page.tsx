@@ -33,11 +33,11 @@ const ProcessingPage = () => {
 					});
 
 					const result = await res.json();
-				if (result.total_emails === 0) {
-					setProgress(100);
-				} else {
-					setProgress(100 * (result.processed_emails / result.total_emails));
-				}
+					if (result.total_emails === 0) {
+						setProgress(100);
+					} else {
+						setProgress(100 * (result.processed_emails / result.total_emails));
+					}
 					if (result.message === "Processing complete") {
 						clearInterval(interval);
 						router.push("/dashboard");
