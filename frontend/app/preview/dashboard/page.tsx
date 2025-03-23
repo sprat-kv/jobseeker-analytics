@@ -139,16 +139,7 @@ export default function Dashboard() {
 							</ModalHeader>
 							<ModalBody>
 								<p>
-									Be the first to experience all the amazing features of our app! We're launching
-									soon, and you can get early access by joining our exclusive waitlist.
-								</p>
-								<p>
-									By joining the waitlist, you'll receive updates and an early invitation to unlock
-									the full potential of our platform.
-								</p>
-								<p>
-									Don't miss out — secure your spot today and be among the first to enjoy everything
-									we have to offer!
+By joining the waitlist, you'll receive updates on new features and an invitation to signup when we launch outside of beta.
 								</p>
 							</ModalBody>
 							<ModalFooter>
