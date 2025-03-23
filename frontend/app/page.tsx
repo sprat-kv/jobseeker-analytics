@@ -349,8 +349,8 @@ export default function Home() {
 					<p className="mb-4 text-gray-600 dark:text-gray-300">
 						Click the button below to simulate the app using sample data
 					</p>
-					<Button color="primary" isLoading={loading} variant="ghost" onPress={tryPreview}>
-						Try it out
+					<Button className="w-full" color="primary" isLoading={loading} variant="ghost" onPress={tryPreview}>
+						Try it out!
 					</Button>
 				</div>
 				<h2 className="text-2xl font-bold mt-6 mb-4 text-gray-900 dark:text-white">Resources</h2>
