@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { addToast. Button, Card, CardHeader, Checkbox, Input } from "@heroui/react";
-
+import { addToast, Button, Card, CardHeader, Checkbox, Input } from "@heroui/react";
 import { useState, useRef, useEffect } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 

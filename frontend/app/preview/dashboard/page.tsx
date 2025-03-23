@@ -139,7 +139,8 @@ export default function Dashboard() {
 							</ModalHeader>
 							<ModalBody>
 								<p>
-By joining the waitlist, you'll receive updates on new features and an invitation to signup when we launch outside of beta.
+									By joining the waitlist, you'll receive updates on new features and an invitation to
+									signup when we launch outside of beta.
 								</p>
 							</ModalBody>
 							<ModalFooter>
