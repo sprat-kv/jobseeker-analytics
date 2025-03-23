@@ -1,6 +1,5 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import Image from "next/image";
 import clsx from "clsx";
 
 import { Providers, PostHogProvider } from "./providers";
@@ -38,16 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<Navbar />
 							<main className="container mx-auto flex-grow max-w-7xl px-6 pt-16">{children}</main>
 							<footer className="flex w-full flex-col items-center py-3">
-								<div className="flex h-[5rem] w-[10rem] items-center justify-center overflow-hidden rounded-lg">
-									<Image
-										alt="jobba.help logo"
-										className="h-full w-full object-cover"
-										height={80}
-										src="/logo.png"
-										width={160}
-									/>
-								</div>
-								<p className="mt-2 text-center">&copy; 2025 Lianna Novitz</p>
+								<p className="mt-2 text-center">&copy; 2025 jobba.help</p>
 							</footer>
 						</div>
 					</Providers>
