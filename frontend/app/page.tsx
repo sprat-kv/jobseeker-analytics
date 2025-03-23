@@ -239,7 +239,7 @@ export default function Home() {
 							<div className="mb-4">
 								<Input
 									isRequired
-									classNames={{ inputWrapper: "bg-default-200" }}
+									classNames={{ inputWrapper: "bg-default-200 dark:bg-gray-700" }}
 									label="Email Address"
 									placeholder="you@example.com"
 									type="email"
