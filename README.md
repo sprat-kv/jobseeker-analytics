@@ -17,15 +17,17 @@ Imagine the perfect job search:
 - **Interview scheduling** is effortless, eliminating back-and-forth emails
 - **Asking for help is easy** - Share job search updates with your support system and keep your search visible to the people who can vouch for you
 
-## **Want to Beta Test?**
+## **Want to sign up?**
 
-We'd love to have you on board! Here's how you can join:
+**You have two options:**
 
-1. **Send an Email:** [Click here to email us](mailto:help@jobba.help?subject=jobba.help%20beta%20signup&body=my%20google%20gmail%20address%20is)
-   - Mention how you heard about the app (community, friend’s name, etc.).
-   - We'll respond as soon as possible to grant you access (subject to Google’s beta testing user limits).
-2. **Join our Discord:** [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw)
-3. **Provide Feedback and Request New Features:** https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing
+1. **Join the waitlist** to receive updates when we launch outside of beta: https://dashboard.mailerlite.com/forms/1348245/149432531062621442/share
+2. **Use the app right away on your personal computer**: This means downloading our code and installing the app directly on your computer instead of using our website. Don't worry if you're not technical - this is actually a great learning opportunity, and we're here to help!
+
+If you choose option 2, I'd be happy to walk you through the process step-by-step. 
+- This gives you full access to all features while we work on publishing the app outside of beta.
+- Feel free to email [help@jobba.help](mailto:help@jobba.help?subject=Help%20Running%20App%20On%20Personal%20Computer) for personalized assistance with setting up the app on your computer. 
+- For those familiar with GitHub, the [CONTRIBUTING.md](https://github.com/lnovitz/jobseeker-analytics/blob/main/CONTRIBUTING.md) file in our repository also contains setup instructions.
 
 ## **Latest Feature: Automated Job Tracker**
 

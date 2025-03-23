@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Progress } from "@heroui/react";
+import { addToast, Progress } from "@heroui/react";
 
 import Spinner from "../../components/spinner";
+
+import { checkAuth } from "@/utils/auth";
 
 const ProcessingPage = () => {
 	const router = useRouter();
@@ -11,29 +13,44 @@ const ProcessingPage = () => {
 	const [progress, setProgress] = useState(0);
 
 	useEffect(() => {
-		const interval = setInterval(async () => {
-			try {
-				const res = await fetch(`${apiUrl}/processing`, {
-					method: "GET",
-					credentials: "include"
+		const process = async () => {
+			// Check if user is logged in
+			const isAuthenticated = await checkAuth(apiUrl);
+			if (!isAuthenticated) {
+				addToast({
+					title: "You need to be logged in to access this page.",
+					color: "warning"
 				});
-
-				const result = await res.json();
-				if (result.total_emails === 0) {
-					setProgress(100);
-				} else {
-					setProgress(100 * (result.processed_emails / result.total_emails));
-				}
-				if (result.message === "Processing complete") {
-					clearInterval(interval);
-					router.push("/dashboard");
-				}
-			} catch {
-				router.push("/logout");
+				router.push("/");
+				return;
 			}
-		}, 3000);
 
-		return () => clearInterval(interval);
+			const interval = setInterval(async () => {
+				try {
+					const res = await fetch(`${apiUrl}/processing`, {
+						method: "GET",
+						credentials: "include"
+					});
+
+					const result = await res.json();
+					if (result.total_emails === 0) {
+						setProgress(100);
+					} else {
+						setProgress(100 * (result.processed_emails / result.total_emails));
+					}
+					if (result.message === "Processing complete") {
+						clearInterval(interval);
+						router.push("/dashboard");
+					}
+				} catch {
+					router.push("/logout");
+				}
+			}, 3000);
+
+			return () => clearInterval(interval);
+		};
+
+		process();
 	}, [router]);
 
 	return (
