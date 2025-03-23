@@ -32,8 +32,8 @@ def user_exists(user) -> Tuple[bool, Optional[datetime]]:
         if not existing_user:
             return False, None
         else:
-            last_date = get_last_email_date(user.user_id)
-            return True, last_date
+            last_fetched_date = get_last_email_date(user.user_id)
+            return True, last_fetched_date
 
 def add_user(user) -> Users:
     """
