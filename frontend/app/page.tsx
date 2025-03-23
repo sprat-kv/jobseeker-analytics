@@ -239,18 +239,23 @@ export default function Home() {
 							<div className="mb-4">
 								<Input
 									isRequired
+									classNames={{ inputWrapper: "bg-default-200" }}
 									label="Email Address"
 									placeholder="you@example.com"
 									type="email"
 									value={email}
-									variant="bordered"
+									variant="faded"
 									onChange={(e) => setEmail(e.target.value)}
 								/>
 							</div>
 
 							<div className="mb-4">
 								<label className="inline-flex items-center">
-									<Checkbox checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)}>
+									<Checkbox
+										isRequired
+										checked={isChecked}
+										onChange={(e) => setIsChecked(e.target.checked)}
+									>
 										Opt in to receive updates by email about jobba.help
 									</Checkbox>
 								</label>
@@ -283,7 +288,7 @@ export default function Home() {
 					<Card
 						isHoverable
 						isPressable
-						className="w-full p-2 border border-default-300"
+						className="w-full p-2 border border-default-300 bg-white dark:bg-gray-800"
 						onPress={() => (window.location.href = "https://discord.gg/5tTT6WVQyw")}
 					>
 						<CardHeader className="flex gap-3 w-full">
@@ -303,7 +308,7 @@ export default function Home() {
 					<Card
 						isHoverable
 						isPressable
-						className="w-full p-2 border border-default-300"
+						className="w-full p-2 border border-default-300 bg-white dark:bg-gray-800"
 						onPress={() => (window.location.href = "https://www.phyl.org")}
 					>
 						<CardHeader className="flex gap-3 w-full">
