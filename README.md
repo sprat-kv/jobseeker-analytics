@@ -25,6 +25,7 @@ We'd love to have you on board! Here's how you can join:
    - Mention how you heard about the app (community, friend’s name, etc.).
    - We'll respond as soon as possible to grant you access (subject to Google’s beta testing user limits).
 2. **Join our Discord:** [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw)
+3. **Provide Feedback and Request New Features:** https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing
 
 ## **Latest Feature: Automated Job Tracker**
 
@@ -55,14 +56,18 @@ View contributing guidelines [here.](https://github.com/lnovitz/jobseeker-analyt
 
  🏗 **Tech Stack**
 
-- **Frontend:** Next, TypeScript
+- **Frontend:** Next.js, TypeScript
 - **Backend:** FastAPI, Python
 - **Database:** PostgreSQL
-- **Integrations:** Gmail API
+- **Integrations:** Gmail API, Posthog
 
 ## 🔒 **Privacy & Security**
 
 We take data privacy seriously. jobba.help is currently in beta (100 user testing limit), and we have a code scanning tool in place to actively address security issues. Since jobba.help integrates with Gmail, the application will undergo a strict verification process before it is published to the public. 
+
+If you see something (a vulnerability), say something! 
+
+mailto:security@jobba.help
 
 ## 📢 **A note from the maintainer**
 
@@ -85,5 +90,7 @@ This is especially important if I, the maintainer, ever win the lottery, retire 
 ## **Support & Feedback**
 
 If you experience any errors or want to share feedback, join our Discord at [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw).
+
+Or submit feedback by form: https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing
 
 You can also always email us at [help@jobba.help](mailto:help@jobba.help).

@@ -10,7 +10,7 @@ settings = get_settings()
 
 # Configure Google Gemini API
 genai.configure(api_key=settings.GOOGLE_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash-8b")
+model = genai.GenerativeModel("gemini-2.0-flash-lite")
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -67,12 +67,9 @@ def process_email(email_text):
                 logger.warning(
                     f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
                 )
-                logger.warning(
-                    f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
-                )
                 time.sleep(delay)
             else:
-                logger.exception(f"Error processing email: {e}")
+                logger.error(f"process_email exception: {e}")
                 return None
     logger.error(f"Failed to process email after {retries} attempts.")
     return None

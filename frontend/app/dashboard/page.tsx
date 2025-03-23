@@ -3,17 +3,19 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
-import { Button, DatePicker, Modal, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, DatePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import { CalendarDate } from "@internationalized/date";
+import React from "react"
 
-import { DownloadIcon } from "@/components/icons";
+import { DownloadIcon, SortIcon } from "@/components/icons";
 
 interface Application {
 	id?: string;
 	company_name: string;
 	application_status: string;
 	received_at: string;
+	job_title: string;
 	subject: string;
 	email_from: string;
 }
@@ -21,6 +23,10 @@ interface Application {
 interface SessionData {
 	start_date?: string;
 }
+
+// Load sort key from localStorage or use default "Sort By"
+const storedSortKey =
+	typeof window !== "undefined" ? localStorage.getItem("sortKey") || "Date (Newest)" : "Date (Newest)";
 
 export default function Dashboard() {
 	const [showModal, setShowModal] = useState(false);
@@ -32,33 +38,102 @@ export default function Dashboard() {
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [sortedData, setSortedData] = useState<Application[]>([]);
+	const [selectedKeys, setSelectedKeys] = useState(new Set([storedSortKey]));
+	const [isNewUser, setIsNewUser] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+	
+	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
 	useEffect(() => {
 		async function fetchSessionData() {
 			try {
 				const response = await fetch("/api/session-data");
+				const text = await response.text();
+				console.log("Raw response:", text); // Log the raw response text
+				if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+				}
 				const data = await response.json();
 				setSessionData(data);
+				setIsNewUser(!!data.is_new_user); // Set the new user flag
+				setShowModal(!!data.is_new_user);  // Show modal if new user
 			} catch (error) {
 				console.error("Error fetching session data:", error);
+				setError("Failed to load session data");
 			}
 		}
-
-		// Fetch start date
-		async function fetchStartDate() {
-			try {
-				const response = await fetch("/api/get-start-date");
-				const data = await response.json();
-				setStartDate(data.start_date || "Not set");
-			} catch (error) {
-				console.error("Error fetching start date:", error);
-			}
-		}
-
 		fetchSessionData();
-		fetchStartDate();
-	}, []);
+	  }, []);
+
+	useEffect(() => {
+		console.log("isNewUser:", isNewUser);
+		setShowModal(isNewUser);
+	}, [isNewUser]);
+
+	// Sort data based on selected key
+	useEffect(() => {
+		const sortData = () => {
+			const sorted = [...data];
+			const sortKey = Array.from(selectedKeys)[0];
+
+			switch (sortKey) {
+				case "Date (Newest)":
+					sorted.sort((a, b) => new Date(b.received_at).getTime() - new Date(a.received_at).getTime());
+					break;
+				case "Date (Oldest)":
+					sorted.sort((a, b) => new Date(a.received_at).getTime() - new Date(b.received_at).getTime());
+					break;
+				case "Company":
+					sorted.sort((a, b) => a.company_name.localeCompare(b.company_name));
+					break;
+				case "Job Title":
+					sorted.sort((a, b) => a.job_title.localeCompare(b.job_title));
+					break;
+				case "Status":
+					sorted.sort((a, b) => a.application_status.localeCompare(b.application_status));
+					break;
+				default:
+					break;
+			}
+			setSortedData(sorted);
+		};
+
+		if (data.length > 0) {
+			sortData();
+		}
+	}, [selectedKeys, data]);
+
+	const handleSave = async () => {
+		if (!selectedDate) return alert("Please select a start date");
+
+		setIsSaving(true);
+		try {
+			const response = await fetch(`${apiUrl}/set-start-date`, {
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: new URLSearchParams({ start_date: selectedDate.toString() }),
+				credentials: "include",
+			});
+
+			if (!response.ok) throw new Error("Failed to save start date");
+
+			setIsNewUser(false); // Hide the modal after saving
+			setShowModal(false);
+		} catch (error) {
+			alert("Error saving start date. Please try again.");
+		} finally {
+			setIsSaving(false);
+		}
+	};
+
+	// Handle sorting selection change and store it in localStorage
+	const handleSortChange = (keys: Set<string>) => {
+		const sortKey = Array.from(keys)[0];
+		localStorage.setItem("sortKey", sortKey);
+		setSelectedKeys(new Set([sortKey]));
+	};
 
 	async function downloadCsv() {
 		setDownloading(true);
@@ -105,38 +180,6 @@ export default function Dashboard() {
 		} finally {
 			setDownloading(false);
 		}
-	}
-
-	const handleConfirm = async () => {
-		console.log("Confirm button clicked");
-		if (!selectedDate) {
-			console.error("No start date selected");
-			return;
-		}
-		try {
-			const date = selectedDate.toDate("UTC");
-			setStartDate(date);
-			setShowModal(false);
-			// Save the start date
-			await fetch("http://localhost:8000/api/save-start-date", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ start_date: date.toISOString() })
-			});
-			// Fetch emails
-			const emailResponse = await fetch("http://localhost:8000/api/fetch-emails", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({})
-			});
-			const emailData = await emailResponse.json();
-			console.log("Fetch Emails Response:", emailData);
-			pollProcessingStatus();
-		} catch (error) {
-			console.error("Error in handleConfirm:", error);
-		}
 	};
 
 	const pollProcessingStatus = async () => {
@@ -158,35 +201,68 @@ export default function Dashboard() {
 
 	return (
 		<div className="flex flex-col items-center justify-center text-center pt-64">
-			{/* Modal */}
-			<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-				<ModalHeader>
-					<h2 className="text-xl font-semibold text-black">
-						Please enter the start date of your current job search:
-					</h2>
-				</ModalHeader>
-				<ModalBody>
-					<DatePicker
-						className="mt-4 w-full p-2 border rounded-lg"
-						value={selectedDate}
-						onChange={(date) => setSelectedDate(date)}
-					/>
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						className="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-						onPress={handleConfirm}
-					>
-						Confirm
-					</Button>
-				</ModalFooter>
+			{/* Modal for New User */}
+			<Modal isOpen={showModal} onOpenChange={setShowModal}>
+				<ModalContent>
+					<ModalHeader>Select Your Job Search Start Date</ModalHeader>
+					<ModalBody>
+						<DatePicker value={selectedDate} onChange={setSelectedDate} />
+					</ModalBody>
+					<ModalFooter>
+						<Button onPress={handleSave} isLoading={isSaving} color="primary">
+							Save and Continue
+						</Button>
+					</ModalFooter>
+				</ModalContent>
 			</Modal>
+			{showModal && (
+				<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+					<ModalHeader>Welcome New User!</ModalHeader>
+					<ModalBody>
+					<p>Let's get started by selecting your start date.</p>
+					<DatePicker value={selectedDate} onChange={setSelectedDate} />
+					</ModalBody>
+					<ModalFooter>
+					<Button onClick={handleSave} disabled={isSaving}>Save</Button>
+					</ModalFooter>
+				</Modal>
+			)}
 
 			<div className="flex items-center justify-between mb-4">
 				<h1 className="text-2xl font-bold">Job Applications Dashboard</h1>
 				<div className="flex gap-x-4">
+					<Dropdown>
+						<DropdownTrigger>
+							<Button
+								className="pl-3"
+								color="primary"
+								isDisabled={!data || data.length === 0}
+								startContent={<SortIcon />}
+								variant="bordered"
+							>
+								{selectedValue}
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu
+							disallowEmptySelection
+							aria-label="Single selection example"
+							selectedKeys={selectedKeys}
+							selectionMode="single"
+							variant="flat"
+							onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
+						>
+							<DropdownSection title="Sort By">
+								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
+								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
+								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
+								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
+								<DropdownItem key="Status">Application Status</DropdownItem>
+							</DropdownSection>
+						</DropdownMenu>
+					</Dropdown>
 					<Button
 						color="success"
+						isDisabled={!data || data.length === 0}
 						isLoading={downloading}
 						startContent={<DownloadIcon />}
 						onPress={downloadCsv}
@@ -212,11 +288,12 @@ export default function Dashboard() {
 							<TableColumn>Company</TableColumn>
 							<TableColumn>Status</TableColumn>
 							<TableColumn>Received</TableColumn>
+							<TableColumn>Job Title</TableColumn>
 							<TableColumn>Subject</TableColumn>
 							<TableColumn>Sender</TableColumn>
 						</TableHeader>
 						<TableBody>
-							{data.map((item) => (
+							{sortedData.map((item) => (
 								<TableRow key={item.id || item.received_at}>
 									<TableCell>{item.company_name || "--"}</TableCell>
 									<TableCell>
@@ -231,6 +308,7 @@ export default function Dashboard() {
 										</span>
 									</TableCell>
 									<TableCell>{new Date(item.received_at).toLocaleDateString() || "--"}</TableCell>
+									<TableCell>{item.job_title || "--"}</TableCell>
 									<TableCell className="max-w-[300px] truncate">{item.subject || "--"}</TableCell>
 									<TableCell>{item.email_from || "--"}</TableCell>
 								</TableRow>

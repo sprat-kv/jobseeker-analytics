@@ -4,11 +4,12 @@ from fastapi import APIRouter, Request, BackgroundTasks
 from fastapi.responses import RedirectResponse, HTMLResponse
 from google_auth_oauthlib.flow import Flow
 
-from db.utils.user_utils import user_exists, add_user
+from db.utils.user_utils import user_exists
 from utils.auth_utils import AuthenticatedUser
 from session.session_layer import create_random_session_string
 from utils.config_utils import get_settings
 from utils.cookie_utils import set_conditional_cookie
+from routes.email_routes import fetch_emails_to_db
 
 
 # Logger setup
@@ -61,18 +62,17 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["creds"] = creds.to_json() 
         request.session["access_token"] = creds.token
 
-        # NOTE: change redirection once dashboard is completed
         if user_exists(user):
-            logger.info("User already exists in the database.")
-            response = RedirectResponse(
-                url=f"{settings.APP_URL}/dashboard", status_code=303
-            )
+            request.session["is_new_user"] = False
+            redirect_url = f"{APP_URL}/processing"
+            background_tasks.add_task(fetch_emails_to_db, user)
+            print("User exists")
         else:
-            logger.info("Redirecting user to start date prompt...")
-            request.session["new_user_id"] = user.user_id
-            response = RedirectResponse(
-                url=f"{settings.APP_URL}/dashboard", status_code=303
-            )
+            request.session["is_new_user"] = True
+            redirect_url = f"{APP_URL}/dashboard"  # Prompt for start date
+            print("User does not exist")
+
+        response = RedirectResponse(url=redirect_url, status_code=303)
 
         response = set_conditional_cookie(
             key="Authorization", value=session_id, response=response

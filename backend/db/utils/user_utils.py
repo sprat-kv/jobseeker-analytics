@@ -30,6 +30,9 @@ def add_user(user, request, start_date=None) -> Users:
 
         if not existing_user:
 
+            if start_date is None:
+                start_date = datetime.utcnow().date()
+
             # add a new user record
             new_user = Users(
                 user_id=user.user_id,
