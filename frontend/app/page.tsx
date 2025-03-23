@@ -288,7 +288,7 @@ export default function Home() {
 					<Card
 						isHoverable
 						isPressable
-						className="w-full p-2 border border-default-300 bg-white dark:bg-gray-800"
+						className="w-full p-1.5 border border-default-300 bg-white dark:bg-gray-800"
 						onPress={() => (window.location.href = "https://discord.gg/5tTT6WVQyw")}
 					>
 						<CardHeader className="flex gap-3 w-full">
@@ -308,7 +308,7 @@ export default function Home() {
 					<Card
 						isHoverable
 						isPressable
-						className="w-full p-2 border border-default-300 bg-white dark:bg-gray-800"
+						className="w-full p-1.5 border border-default-300 bg-white dark:bg-gray-800"
 						onPress={() => (window.location.href = "https://www.phyl.org")}
 					>
 						<CardHeader className="flex gap-3 w-full">
