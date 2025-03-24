@@ -9,14 +9,11 @@ export default function ResponseRateCard() {
 
   async function fetchResponseRate() {
     try {
-      // Simulate API delay
       await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Mock response: generates a random response rate only on refresh
       const mockRate = parseFloat((Math.random() * 100).toFixed(2)); 
       setResponseRate(mockRate);
       setLastUpdated(new Date().toLocaleTimeString());
-    } catch (err) {
+    } catch {
       setError("Failed to load response rate");
     } finally {
       setLoading(false);
@@ -25,7 +22,7 @@ export default function ResponseRateCard() {
 
   useEffect(() => {
     fetchResponseRate();
-  }, []); // Empty dependency array ensures it only runs once on mount
+  }, []); 
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
