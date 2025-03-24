@@ -34,7 +34,7 @@ async def set_start_date(request: Request, start_date: str = Form(...)):
         # Convert JSON string back to Credentials object
         creds_dict = json.loads(creds_json)
         creds = Credentials.from_authorized_user_info(creds_dict)  # Convert dict to Credentials
-        user = AuthenticatedUser(creds)  # Corrected: Now passing Credentials object
+        user = AuthenticatedUser(creds, start_date)  # Corrected: Now passing Credentials object
 
         # Save start date in DB
         add_user(user, request, start_date)
@@ -46,6 +46,11 @@ async def set_start_date(request: Request, start_date: str = Form(...)):
     except Exception as e:
         logger.error(f"Error reconstructing credentials: {e}")
         return HTMLResponse(content="Failed to save start date. Try again.", status_code=500)
+    
+def get_start_date(request: Request) -> str:
+    """Fetches the user's job search start date from the database."""
+    # Query the database for the user's start date
+    return request.session.get("start_date")
 
 
 @router.get("/api/session-data")

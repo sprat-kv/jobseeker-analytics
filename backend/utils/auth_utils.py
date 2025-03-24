@@ -23,10 +23,11 @@ class AuthenticatedUser:
     successfully authenticated with Google.
     """
 
-    def __init__(self, creds: Credentials):
+    def __init__(self, creds: Credentials, start_date=None):
         self.creds = creds
         self.user_id, self.user_email = self.get_user_id_and_email()
         self.filepath = get_user_filepath(self.user_id)
+        self.start_date = start_date
 
     def get_user_id_and_email(self) -> tuple:
         """

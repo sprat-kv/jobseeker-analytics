@@ -70,9 +70,7 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
             # If no records are found, return a 404 error
             if not user_emails:
                 logger.warning(f"No emails found for user_id: {user_id}")
-                raise HTTPException(
-                    status_code=404, detail=f"No emails found for user_id: {user_id}"
-                )
+                return []
 
             logger.info(
                 f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}"
@@ -92,7 +90,7 @@ async def start_fetch_emails(
     
     if not user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
-    print("this is fetching emails:" + request.session)
+    print("this is fetching emails:")
     # Retrieve stored credentials
     creds_json = request.session.get("creds")
     if not creds_json:
@@ -124,8 +122,9 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
 
     with Session(engine) as session:
         service = build("gmail", "v1", credentials=user.creds)
+        start_date = user.start_date
         messages = get_email_ids(
-            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
+            query=('after: {}}'), gmail_instance=service
         )
 
         if not messages:

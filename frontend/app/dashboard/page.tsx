@@ -61,7 +61,7 @@ export default function Dashboard() {
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
 	useEffect(() => {
-		async function fetchSessionData() {
+		const fetchData = async () => {
 			try {
 				// Check if user is logged in
 				const isAuthenticated = await checkAuth(apiUrl);
@@ -77,20 +77,49 @@ export default function Dashboard() {
 				// Fetch applicaions (if user is logged in)
 				const response = await fetch(`${apiUrl}/get-emails`, {
 					method: "GET",
-					credentials: "include"
+					credentials: "include" // Include cookies for session management
 				});
 
-				const response_session = await fetch("http://localhost:8000/api/session-data", {
+				if (!response.ok) {
+					if (response.status === 404) {
+						setError("No applications found");
+					} else {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+				}
+				console.log("Got emails!");
+
+				const result = await response.json();
+
+				if (result.length === 0) {
+					setError("No applications found");
+				} else {
+					setData(result);
+				}
+			} catch {
+				setError("Failed to load applications");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchData();
+	}, [router]);
+
+	useEffect(() => {
+		async function fetchSessionData() {
+			try {
+				const response = await fetch("http://localhost:8000/api/session-data", {
 					method: "GET",
 					credentials: "include"
 				});
-				const text = await response_session.text();
-				console.log("Raw response:", text); // Log the raw response text
-				if (!response_session.ok) {
-					throw new Error(`HTTP error! status: ${response_session.status}`);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
 				}
-				const data = await response_session.json();
+				const data = await response.json();
+				console.log("Session data after fetch session:", data);
 				setSessionData(data);
+				console.log("Session data b4 is_new_user:", data);
 				setIsNewUser(!!data.is_new_user); // Set the new user flag
 				setShowModal(!!data.is_new_user); // Show modal if new user
 			} catch (error) {

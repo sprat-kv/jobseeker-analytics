@@ -23,7 +23,7 @@ from database import create_db_and_tables
 from start_date.storage import start_date_storage
 
 # Import routes
-from routes import playground_routes, email_routes, auth_routes, file_routes, users_routes, start_date_routes
+from routes import email_routes, auth_routes, file_routes, users_routes, start_date_routes
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
