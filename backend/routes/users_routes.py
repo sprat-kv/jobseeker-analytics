@@ -51,9 +51,9 @@ def response_rate_by_job_title(user_id: str = Depends(validate_session)):
                 if email.job_title not in job_titles:
                     status = email.application_status.strip().lower()
                     if status == "request for availability" or status == "offer" or status == "interview scheduled":
-                        response_rate_data.append({"title": email.company_name, "responses": 1, "total": 1})
+                        response_rate_data.append({"title": email.job_title, "responses": 1, "total": 1})
                     else:
-                        response_rate_data.append({"title": email.company_name, "responses": 0, "total": 1})
+                        response_rate_data.append({"title": email.job_title, "responses": 0, "total": 1})
                     companies.append((email.company_name, email.job_title))
                     job_titles[email.job_title] = index
                     index += 1
