@@ -1,3 +1,9 @@
-export default function ResponseRates() {
-	return <div>Response rates page</div>;
+import UniqueOpenRateChart from '@/components/response_rate_chart';
+
+export default function Home() {
+  return (
+    <main className="p-8">
+      <UniqueOpenRateChart />
+    </main>
+  );
 }
