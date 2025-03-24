@@ -110,7 +110,7 @@ def response_rate_by_job_title(user_id: str = Depends(validate_session)):
             for email in user_emails:
                 if email.job_title not in job_titles:
                     response_rate.append({"title": email.job_title, "rate": 1})
-                    job_titles.append({"email.job_title": index})
+                    job_titles[email.job_title] = index
                     index += 1
                 else:
                     response_rate[job_titles[email.job_title]]["rate"] += 1
