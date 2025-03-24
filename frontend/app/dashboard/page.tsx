@@ -22,6 +22,7 @@ import { CalendarDate } from "@internationalized/date";
 import React from "react";
 
 import { DownloadIcon, SortIcon } from "@/components/icons";
+import { checkAuth } from "@/utils/auth";
 
 interface Application {
 	id?: string;
@@ -62,16 +63,33 @@ export default function Dashboard() {
 	useEffect(() => {
 		async function fetchSessionData() {
 			try {
-				const response = await fetch("http://localhost:8000/api/session-data", {
+				// Check if user is logged in
+				const isAuthenticated = await checkAuth(apiUrl);
+				if (!isAuthenticated) {
+					addToast({
+						title: "You need to be logged in to access this page.",
+						color: "warning"
+					});
+					router.push("/");
+					return;
+				}
+
+				// Fetch applicaions (if user is logged in)
+				const response = await fetch(`${apiUrl}/get-emails`, {
 					method: "GET",
 					credentials: "include"
 				});
-				const text = await response.text();
+
+				const response_session = await fetch("http://localhost:8000/api/session-data", {
+					method: "GET",
+					credentials: "include"
+				});
+				const text = await response_session.text();
 				console.log("Raw response:", text); // Log the raw response text
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
+				if (!response_session.ok) {
+					throw new Error(`HTTP error! status: ${response_session.status}`);
 				}
-				const data = await response.json();
+				const data = await response_session.json();
 				setSessionData(data);
 				setIsNewUser(!!data.is_new_user); // Set the new user flag
 				setShowModal(!!data.is_new_user); // Show modal if new user
@@ -241,6 +259,53 @@ export default function Dashboard() {
 		}, 5000); // Poll every 5 seconds
 	};
 
+	async function downloadSankey() {
+		setDownloading(true);
+		try {
+			const response = await fetch(`${apiUrl}/process-sankey`, {
+				method: "GET",
+				credentials: "include"
+			});
+
+			if (!response.ok) {
+				let description = "Something went wrong. Please try again.";
+
+				if (response.status === 429) {
+					description = "Download limit reached. Please wait before trying again.";
+				} else {
+					description = "Please try again or contact help@jobba.help if the issue persists.";
+				}
+
+				addToast({
+					title: "Failed to download Sankey Diagram",
+					description,
+					color: "danger"
+				});
+
+				return;
+			}
+
+			// Create a download link to trigger the file download
+			const blob = await response.blob();
+			const link = document.createElement("a");
+			const url = URL.createObjectURL(blob);
+			link.href = url;
+			link.download = `sankey_diagram_${new Date().toISOString().split("T")[0]}.png`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			URL.revokeObjectURL(url);
+		} catch {
+			addToast({
+				title: "Something went wrong",
+				description: "Please try again",
+				color: "danger"
+			});
+		} finally {
+			setDownloading(false);
+		}
+	}
+
 	return (
 		<div className="flex flex-col items-center justify-center text-center pt-64">
 			{/* Modal for New User */}
@@ -291,6 +356,15 @@ export default function Dashboard() {
 						</DropdownMenu>
 					</Dropdown>
 					<Button
+						color="primary"
+						isDisabled={!data || data.length === 0}
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={downloadSankey}
+					>
+						Download Sankey Diagram
+					</Button>
+					<Button
 						color="success"
 						isDisabled={!data || data.length === 0}
 						isLoading={downloading}
@@ -328,7 +402,7 @@ export default function Dashboard() {
 									<TableCell>{item.company_name || "--"}</TableCell>
 									<TableCell>
 										<span
-											className={`px-2 py-1 rounded ${
+											className={`inline-flex items-center justify-center px-2 py-1 rounded ${
 												item.application_status.toLowerCase() === "rejected"
 													? "bg-red-100 text-red-800"
 													: "bg-green-100 text-green-800"
