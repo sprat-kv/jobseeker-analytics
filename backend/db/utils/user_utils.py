@@ -1,7 +1,7 @@
 import logging
 from typing import Optional, Tuple
 from db.user_emails import UserEmails
-from sqlmodel import Session, select, desc
+from sqlmodel import Session, select, func
 from db.users import Users 
 from datetime import datetime, timedelta, timezone 
 
@@ -15,10 +15,9 @@ def get_last_email_date(user_id: str) -> Optional[datetime]:
     """
     with Session(engine) as session:
         row = session.exec(
-            select(UserEmails.received_at)
+            select(func.max(UserEmails.received_at))
             .where(UserEmails.user_id == user_id)
-            .order_by(desc(UserEmails.received_at))
-        ).first()
+        ).one() # aggregates in SQL to a single row
     return row
 
 def user_exists(user) -> Tuple[bool, Optional[datetime]]:

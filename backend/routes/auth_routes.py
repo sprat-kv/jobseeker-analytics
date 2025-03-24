@@ -65,7 +65,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["user_id"] = user.user_id
 
         # NOTE: change redirection once dashboard is completed
-        exists, last_updated = user_exists(user)
+        exists, last_fetched_date = user_exists(user)
         if exists:
             logger.info("User already exists in the database.")
             response = RedirectResponse(
@@ -83,7 +83,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         )
 
         # Start email fetching in the background
-        background_tasks.add_task(fetch_emails_to_db, user, last_updated)
+        background_tasks.add_task(fetch_emails_to_db, user, last_fetched_date)
         logger.info("Background task started for user_id: %s", user.user_id)
 
         return response
