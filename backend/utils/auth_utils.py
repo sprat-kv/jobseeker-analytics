@@ -1,5 +1,6 @@
 import logging
 import uuid
+import json
 
 from utils.file_utils import get_user_filepath
 
@@ -39,6 +40,16 @@ class AuthenticatedUser:
         """
         try:
             logger.info("Verifying ID token...")
+
+            # Ensure we have an ID token
+            if not self.creds.id_token:
+                logger.warning("ID token is missing, trying to refresh credentials...")
+                self.creds.refresh(Request())  # Refresh credentials
+
+            # If still missing, raise an error
+            if not self.creds.id_token:
+                raise ValueError("No ID token available after refresh.")
+    
             decoded_token = id_token.verify_oauth2_token(
                 self.creds.id_token, Request(), audience=settings.GOOGLE_CLIENT_ID
             )

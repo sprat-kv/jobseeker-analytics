@@ -3,6 +3,9 @@ from fastapi import APIRouter, Request, FastAPI, BackgroundTasks, Form
 from fastapi.responses import JSONResponse, HTMLResponse
 from contextlib import asynccontextmanager
 from db.utils.user_utils import add_user
+import json
+from utils.auth_utils import AuthenticatedUser
+from google.oauth2.credentials import Credentials
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -15,21 +18,35 @@ router = APIRouter()
 @router.post("/set-start-date")
 async def set_start_date(request: Request, start_date: str = Form(...)):
     """Updates the user's job search start date in the database."""
+    print(request.session)
     user_id = request.session.get("user_id")
 
     if not user_id:
         return HTMLResponse(content="Invalid request. Please log in again.", status_code=400)
 
+    # Retrieve stored credentials
+    creds_json = request.session.get("creds")
+    if not creds_json:
+        logger.error(f"Missing credentials for user_id: {user_id}")
+        return HTMLResponse(content="User not authenticated. Please log in again.", status_code=401)
+
     try:
-        add_user(user_id, request, start_date)  # Save start date in DB
+        # Convert JSON string back to Credentials object
+        creds_dict = json.loads(creds_json)
+        creds = Credentials.from_authorized_user_info(creds_dict)  # Convert dict to Credentials
+        user = AuthenticatedUser(creds)  # Corrected: Now passing Credentials object
+
+        # Save start date in DB
+        add_user(user, request, start_date)
 
         # Update session to remove "new user" status
         request.session["is_new_user"] = False
 
-        return {"message": "Start date updated successfully"}
+        return JSONResponse(content={"message": "Start date updated successfully"}, status_code=200)
     except Exception as e:
-        logger.error("Error saving start date: %s", e)
+        logger.error(f"Error reconstructing credentials: {e}")
         return HTMLResponse(content="Failed to save start date. Try again.", status_code=500)
+
 
 @router.get("/api/session-data")
 async def get_session_data(request: Request):

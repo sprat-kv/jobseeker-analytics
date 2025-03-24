@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, Depends, Request, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select, desc
 from googleapiclient.discovery import build
@@ -13,6 +13,8 @@ from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from database import engine
+from google.oauth2.credentials import Credentials
+import json
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -80,6 +82,38 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
         except Exception as e:
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+        
+
+@router.post("/fetch-emails")
+async def start_fetch_emails(
+    request: Request, background_tasks: BackgroundTasks, user_id: str = Depends(validate_session)
+):
+    """Starts the background task for fetching and processing emails."""
+    
+    if not user_id:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    # Retrieve stored credentials from the session
+    creds_json = request.session.get("creds")
+    if not creds_json:
+        logger.error(f"Missing credentials for user_id: {user_id}")
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    try:
+        # Convert JSON string back to Credentials object
+        creds_dict = json.loads(creds_json)
+        creds = Credentials.from_authorized_user_info(creds_dict)  # Convert dict to Credentials
+        user = AuthenticatedUser(creds)  # Corrected: Now passing Credentials object
+
+        logger.info(f"Starting email fetching process for user_id: {user_id}")
+
+        # Start email fetching in the background
+        background_tasks.add_task(fetch_emails_to_db, user)
+
+        return JSONResponse(content={"message": "Email fetching started"}, status_code=200)
+    except Exception as e:
+        logger.error(f"Error reconstructing credentials: {e}")
+        raise HTTPException(status_code=500, detail="Failed to authenticate user")
 
 
 def fetch_emails_to_db(user: AuthenticatedUser) -> None:

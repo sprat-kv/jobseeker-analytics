@@ -3,10 +3,23 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, DatePicker, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
+	DatePicker,
+	Modal,
+	ModalContent,
+	ModalHeader,
+	ModalBody,
+	ModalFooter
+} from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import { CalendarDate } from "@internationalized/date";
-import React from "react"
+import React from "react";
 
 import { DownloadIcon, SortIcon } from "@/components/icons";
 
@@ -43,29 +56,32 @@ export default function Dashboard() {
 	const [isNewUser, setIsNewUser] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-	
+
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
 	useEffect(() => {
 		async function fetchSessionData() {
 			try {
-				const response = await fetch("/api/session-data");
+				const response = await fetch("http://localhost:8000/api/session-data", {
+					method: "GET",
+					credentials: "include"
+				})
 				const text = await response.text();
 				console.log("Raw response:", text); // Log the raw response text
 				if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				const data = await response.json();
 				setSessionData(data);
 				setIsNewUser(!!data.is_new_user); // Set the new user flag
-				setShowModal(!!data.is_new_user);  // Show modal if new user
+				setShowModal(!!data.is_new_user); // Show modal if new user
 			} catch (error) {
 				console.error("Error fetching session data:", error);
 				setError("Failed to load session data");
 			}
 		}
 		fetchSessionData();
-	  }, []);
+	}, []);
 
 	useEffect(() => {
 		console.log("isNewUser:", isNewUser);
@@ -107,26 +123,51 @@ export default function Dashboard() {
 
 	const handleSave = async () => {
 		if (!selectedDate) return alert("Please select a start date");
-
+	  
 		setIsSaving(true);
 		try {
-			const response = await fetch(`${apiUrl}/set-start-date`, {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: new URLSearchParams({ start_date: selectedDate.toString() }),
-				credentials: "include",
-			});
-
-			if (!response.ok) throw new Error("Failed to save start date");
-
-			setIsNewUser(false); // Hide the modal after saving
-			setShowModal(false);
+		  // Step 1: Save the start date
+		  const response = await fetch(`${apiUrl}/set-start-date`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({ start_date: selectedDate.toString() }),
+			credentials: "include",
+		  });
+	  
+		  if (!response.ok) throw new Error("Failed to save start date");
+	  
+		  // Step 2: Start background task (fetch emails)
+		  startFetchEmailsBackgroundTask();
+	  
+		  // Step 3: Navigate to processing page
+		  setIsNewUser(false); // Hide the modal after saving
+		  setShowModal(false);
+		  router.push("/processing"); // Navigate to the processing page
 		} catch (error) {
-			alert("Error saving start date. Please try again.");
+		  alert("Error saving start date. Please try again.");
 		} finally {
-			setIsSaving(false);
+		  setIsSaving(false);
 		}
-	};
+	  };
+	  
+	  const startFetchEmailsBackgroundTask = async () => {
+		try {
+		  // Example background task: Start fetching emails
+		  const response = await fetch(`${apiUrl}/fetch-emails`, {
+			method: "POST", // or GET, depending on your API
+			credentials: "include",
+		  });
+	  
+		  if (!response.ok) {
+			console.error("Failed to fetch emails:", await response.text());
+			return;
+		  }
+	  
+		  console.log("Email fetching started successfully!");
+		} catch (error) {
+		  console.error("Error starting background task:", error);
+		}
+	  };
 
 	// Handle sorting selection change and store it in localStorage
 	const handleSortChange = (keys: Set<string>) => {
@@ -180,7 +221,7 @@ export default function Dashboard() {
 		} finally {
 			setDownloading(false);
 		}
-	};
+	}
 
 	const pollProcessingStatus = async () => {
 		const interval = setInterval(async () => {
@@ -209,24 +250,12 @@ export default function Dashboard() {
 						<DatePicker value={selectedDate} onChange={setSelectedDate} />
 					</ModalBody>
 					<ModalFooter>
-						<Button onPress={handleSave} isLoading={isSaving} color="primary">
+						<Button color="primary" isLoading={isSaving} onPress={handleSave}>
 							Save and Continue
 						</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-			{showModal && (
-				<Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-					<ModalHeader>Welcome New User!</ModalHeader>
-					<ModalBody>
-					<p>Let's get started by selecting your start date.</p>
-					<DatePicker value={selectedDate} onChange={setSelectedDate} />
-					</ModalBody>
-					<ModalFooter>
-					<Button onClick={handleSave} disabled={isSaving}>Save</Button>
-					</ModalFooter>
-				</Modal>
-			)}
 
 			<div className="flex items-center justify-between mb-4">
 				<h1 className="text-2xl font-bold">Job Applications Dashboard</h1>
