@@ -108,7 +108,6 @@ export default function Dashboard() {
 		}
 	}
 
-	// Rest of your component remains unchanged
 	if (error) {
 		return (
 			<div className="p-6 flex flex-col items-center justify-center min-h-[50vh]">
@@ -116,6 +115,107 @@ export default function Dashboard() {
 				<button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={() => window.location.reload()}>
 					Retry
 				</button>
+
+	async function downloadSankey() {
+		setDownloading(true);
+		try {
+			const response = await fetch(`${apiUrl}/process-sankey`, {
+				method: "GET",
+				credentials: "include"
+			});
+
+			if (!response.ok) {
+				let description = "Something went wrong. Please try again.";
+
+				if (response.status === 429) {
+					description = "Download limit reached. Please wait before trying again.";
+				} else {
+					description = "Please try again or contact help@jobba.help if the issue persists.";
+				}
+
+				addToast({
+					title: "Failed to download Sankey Diagram",
+					description,
+					color: "danger"
+				});
+
+				return;
+			}
+
+			// Create a download link to trigger the file download
+			const blob = await response.blob();
+			const link = document.createElement("a");
+			const url = URL.createObjectURL(blob);
+			link.href = url;
+			link.download = `sankey_diagram_${new Date().toISOString().split("T")[0]}.png`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			URL.revokeObjectURL(url);
+		} catch {
+			addToast({
+				title: "Something went wrong",
+				description: "Please try again",
+				color: "danger"
+			});
+		} finally {
+			setDownloading(false);
+		}
+	}
+
+	return (
+		<div className="p-6">
+			<div className="flex items-center justify-between mb-4">
+				<h1 className="text-2xl font-bold">Job Applications Dashboard</h1>
+				<div className="flex gap-x-4">
+					<Dropdown>
+						<DropdownTrigger>
+							<Button
+								className="pl-3"
+								color="primary"
+								isDisabled={!data || data.length === 0}
+								startContent={<SortIcon />}
+								variant="bordered"
+							>
+								{selectedValue}
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu
+							disallowEmptySelection
+							aria-label="Single selection example"
+							selectedKeys={selectedKeys}
+							selectionMode="single"
+							variant="flat"
+							onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
+						>
+							<DropdownSection title="Sort By">
+								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
+								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
+								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
+								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
+								<DropdownItem key="Status">Application Status</DropdownItem>
+							</DropdownSection>
+						</DropdownMenu>
+					</Dropdown>
+					<Button
+						color="primary"
+						isDisabled={!data || data.length === 0}
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={downloadSankey}
+					>
+						Download Sankey Diagram
+					</Button>
+					<Button
+						color="success"
+						isDisabled={!data || data.length === 0}
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={downloadCsv}
+					>
+						Download CSV
+					</Button>
+				</div>
 			</div>
 		);
 	}
