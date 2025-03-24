@@ -22,6 +22,7 @@ interface JobApplicationsDashboardProps {
 	loading: boolean;
 	downloading: boolean;
 	onDownloadCsv: () => void;
+	onDownloadSankey: () => void;
 	initialSortKey?: string;
 	extraHeader?: React.ReactNode;
 }
@@ -37,6 +38,7 @@ export default function JobApplicationsDashboard({
 	loading,
 	downloading,
 	onDownloadCsv,
+	onDownloadSankey,
 	initialSortKey = "Date (Newest)",
 	extraHeader
 }: JobApplicationsDashboardProps) {
@@ -123,6 +125,15 @@ export default function JobApplicationsDashboard({
 							</DropdownSection>
 						</DropdownMenu>
 					</Dropdown>
+					<Button
+						color="primary"
+						isDisabled={!data || data.length === 0}
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={onDownloadSankey}
+					>
+						Download Sankey Diagram
+					</Button>
 					<Button
 						color="success"
 						isDisabled={!data || data.length === 0}
