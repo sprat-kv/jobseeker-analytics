@@ -167,6 +167,12 @@ export default function Dashboard() {
 	}
 
 	return (
-		<JobApplicationsDashboard data={data} downloading={downloading} loading={loading} onDownloadCsv={downloadCsv} onDownloadSankey={downloadSankey} />
+		<JobApplicationsDashboard
+			data={data}
+			downloading={downloading}
+			loading={loading}
+			onDownloadCsv={downloadCsv}
+			onDownloadSankey={downloadSankey}
+		/>
 	);
 }
