@@ -19,9 +19,10 @@ def user_exists(user) -> bool:
         else:
             return True
 
-def add_user(user : AuthenticatedUser, request, start_date=None) -> Users:
+def add_user(user, request, start_date=None) -> Users:
     """
     Writes user data to the users model and session storage
+
     """
     from database import engine
     with Session(engine) as session:
@@ -30,8 +31,7 @@ def add_user(user : AuthenticatedUser, request, start_date=None) -> Users:
 
         if not existing_user:
 
-            if start_date is None:
-                start_date = datetime.utcnow()  # Use datetime (not just date)
+            start_date = getattr(user, "start_date", None) or (datetime.now(timezone.utc) - timedelta(days=90))
 
             # add a new user record
             new_user = Users(
@@ -45,7 +45,7 @@ def add_user(user : AuthenticatedUser, request, start_date=None) -> Users:
             session.refresh(new_user)
             logger.info(f"Created new user record for user_id: {user.user_id}")
 
-            # Write start date to session storage (ensure this is ISO format)
+            # Write start date to session storage
             request.session["start_date"] = start_date.isoformat()
 
             return new_user

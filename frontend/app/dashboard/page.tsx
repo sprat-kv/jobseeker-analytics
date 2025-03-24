@@ -65,7 +65,7 @@ export default function Dashboard() {
 				const response = await fetch("http://localhost:8000/api/session-data", {
 					method: "GET",
 					credentials: "include"
-				})
+				});
 				const text = await response.text();
 				console.log("Raw response:", text); // Log the raw response text
 				if (!response.ok) {
@@ -123,51 +123,52 @@ export default function Dashboard() {
 
 	const handleSave = async () => {
 		if (!selectedDate) return alert("Please select a start date");
-	  
+
 		setIsSaving(true);
 		try {
-		  // Step 1: Save the start date
-		  const response = await fetch(`${apiUrl}/set-start-date`, {
-			method: "POST",
-			headers: { "Content-Type": "application/x-www-form-urlencoded" },
-			body: new URLSearchParams({ start_date: selectedDate.toString() }),
-			credentials: "include",
-		  });
-	  
-		  if (!response.ok) throw new Error("Failed to save start date");
-	  
-		  // Step 2: Start background task (fetch emails)
-		  startFetchEmailsBackgroundTask();
-	  
-		  // Step 3: Navigate to processing page
-		  setIsNewUser(false); // Hide the modal after saving
-		  setShowModal(false);
-		  router.push("/processing"); // Navigate to the processing page
+			// Step 1: Save the start date
+			const response = await fetch(`${apiUrl}/set-start-date`, {
+				method: "POST",
+				headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				body: new URLSearchParams({ start_date: selectedDate.toString() }),
+				credentials: "include"
+			});
+
+			if (!response.ok) throw new Error("Failed to save start date");
+
+			// Step 2: Start background task (fetch emails)
+			startFetchEmailsBackgroundTask();
+
+			// Step 3: Navigate to processing page
+			setIsNewUser(false); // Hide the modal after saving
+			setShowModal(false);
+			router.push("/processing"); // Navigate to the processing page
 		} catch (error) {
-		  alert("Error saving start date. Please try again.");
+			alert("Error saving start date. Please try again.");
 		} finally {
-		  setIsSaving(false);
+			setIsSaving(false);
 		}
-	  };
-	  
-	  const startFetchEmailsBackgroundTask = async () => {
+	};
+
+	const startFetchEmailsBackgroundTask = async () => {
 		try {
-		  // Example background task: Start fetching emails
-		  const response = await fetch(`${apiUrl}/fetch-emails`, {
-			method: "POST", // or GET, depending on your API
-			credentials: "include",
-		  });
-	  
-		  if (!response.ok) {
-			console.error("Failed to fetch emails:", await response.text());
-			return;
-		  }
-	  
-		  console.log("Email fetching started successfully!");
+			// Example background task: Start fetching emails
+			console.log("Starting background task to fetch emails...");
+			const response = await fetch(`${apiUrl}/fetch-emails`, {
+				method: "POST", // or GET, depending on your API
+				credentials: "include"
+			});
+
+			if (!response.ok) {
+				console.error("Failed to fetch emails:", await response.text());
+				return;
+			}
+
+			console.log("Email fetching started successfully!");
 		} catch (error) {
-		  console.error("Error starting background task:", error);
+			console.error("Error starting background task:", error);
 		}
-	  };
+	};
 
 	// Handle sorting selection change and store it in localStorage
 	const handleSortChange = (keys: Set<string>) => {

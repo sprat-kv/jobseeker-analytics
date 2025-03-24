@@ -92,18 +92,18 @@ async def start_fetch_emails(
     
     if not user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
-
-    # Retrieve stored credentials from the session
+    print("this is fetching emails:" + request.session)
+    # Retrieve stored credentials
     creds_json = request.session.get("creds")
     if not creds_json:
         logger.error(f"Missing credentials for user_id: {user_id}")
-        raise HTTPException(status_code=401, detail="User not authenticated")
+        return HTMLResponse(content="User not authenticated. Please log in again.", status_code=401)
 
     try:
         # Convert JSON string back to Credentials object
         creds_dict = json.loads(creds_json)
         creds = Credentials.from_authorized_user_info(creds_dict)  # Convert dict to Credentials
-        user = AuthenticatedUser(creds)  # Corrected: Now passing Credentials object
+        user = AuthenticatedUser(creds)
 
         logger.info(f"Starting email fetching process for user_id: {user_id}")
 
