@@ -1,24 +1,65 @@
 "use client";
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface ResponseData {
 	title: string;
 	rate: number;
 }
 
-const data: ResponseData[] = [
-	{ title: "Software Engineer", rate: 72 },
-	{ title: "Product Manager", rate: 68 },
-	{ title: "Data Scientist", rate: 65 },
-	{ title: "UX Designer", rate: 58 },
-	{ title: "DevOps Engineer", rate: 70 }
-];
+// const data: ResponseData[] = [
+// 	{ title: "Software Engineer", rate: 72 },
+// 	{ title: "Product Manager", rate: 68 },
+// 	{ title: "Data Scientist", rate: 65 },
+// 	{ title: "UX Designer", rate: 58 },
+// 	{ title: "DevOps Engineer", rate: 70 },
+// 	{ title: "test", rate: 80 },
+// ];
 
 const BLUE_COLOR = "#3b82f6";
 
 export default function JobTitleResponseChart() {
+	const router = useRouter();
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const [data, setData] = useState<ResponseData[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+	useEffect(() => {
+			const fetchData = async () => {
+				try {
+					const response = await fetch(`${apiUrl}/get-response-rate`, {
+						method: "GET",
+						credentials: "include" // Include cookies for session management
+					});
+	
+					if (!response.ok) {
+						if (response.status === 404) {
+							setError("No data found");
+						} else {
+							throw new Error(`HTTP error! status: ${response.status}`);
+						}
+					}
+	
+					const result = await response.json();
+	
+					if (result.length === 0) {
+						setError("No data found");
+					} else {
+						setData(result);
+					}
+				} catch {
+					setError("Failed to load data");
+				} finally {
+					setLoading(false);
+				}
+			};
+	
+			fetchData();
+		}, [router]);
 
 	return (
 		<div className="bg-gray p-6 rounded-xl border border-[#1e293b]">
