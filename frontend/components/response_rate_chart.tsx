@@ -23,43 +23,42 @@ export default function JobTitleResponseChart() {
 	const router = useRouter();
 	const [activeIndex, setActiveIndex] = useState<number | null>(null);
 	const [data, setData] = useState<ResponseData[]>([]);
-	const [error, setError] = useState<string | null>(null);
-	const [loading, setLoading] = useState(true);
+
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	useEffect(() => {
-			const fetchData = async () => {
-				try {
-					const response = await fetch(`${apiUrl}/get-response-rate`, {
-						method: "GET",
-						credentials: "include" // Include cookies for session management
-					});
-	
-					if (!response.ok) {
-						if (response.status === 404) {
-							setError("No data found");
-						} else {
-							throw new Error(`HTTP error! status: ${response.status}`);
-						}
-					}
-	
-					const result = await response.json();
-	
-					if (result.length === 0) {
-						setError("No data found");
+		const fetchData = async () => {
+			try {
+				const response = await fetch(`${apiUrl}/get-response-rate`, {
+					method: "GET",
+					credentials: "include" // Include cookies for session management
+				});
+
+				if (!response.ok) {
+					if (response.status === 404) {
+						// No data found
 					} else {
-						setData(result);
+						throw new Error(`HTTP error! status: ${response.status}`);
 					}
-				} catch {
-					setError("Failed to load data");
-				} finally {
-					setLoading(false);
 				}
-			};
-	
-			fetchData();
-		}, [router]);
+
+				const result = await response.json();
+
+				if (result.length === 0) {
+					// No data found
+				} else {
+					setData(result);
+				}
+			} catch {
+				// Failed to load data
+			} finally {
+				// Set loading to false
+			}
+		};
+
+		fetchData();
+	}, [router]);
 
 	return (
 		<div className="bg-gray p-6 rounded-xl border border-[#1e293b]">
@@ -134,5 +133,6 @@ export default function JobTitleResponseChart() {
 				</ResponsiveContainer>
 			</div>
 		</div>
+		
 	);
 }
