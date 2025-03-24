@@ -81,46 +81,6 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
-@router.get("/get-response-rate")       
-def response_rate_by_job_title(user_id: str = Depends(validate_session)):
-    with Session(engine) as session:
-        try:
-            statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
-            user_emails = session.exec(statement).all()
-
-            # If no records are found, return a 404 error
-            if not user_emails:
-                logger.warning(f"No emails found for user_id: {user_id}")
-                raise HTTPException(
-                    status_code=404, detail=f"No emails found for user_id: {user_id}"
-                )
-
-            logger.info(
-                f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}"
-            )
-
-            index = 0
-
-            # Tracks all job titles and their index in response_rate
-            job_titles = {}
-
-            # List of dictionaries to store job titles and their response rates
-            response_rate = []
-
-            for email in user_emails:
-                if email.job_title not in job_titles:
-                    response_rate.append({"title": email.job_title, "rate": 1})
-                    job_titles[email.job_title] = index
-                    index += 1
-                else:
-                    response_rate[job_titles[email.job_title]]["rate"] += 1
-
-            return response_rate
-        
-        except Exception as e:
-            logger.error(f"Error fetching job titles for user_id {user_id}: {e}")
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
-
 def fetch_emails_to_db(user: AuthenticatedUser) -> None:
     global api_call_finished, total_emails, processed_emails
 
