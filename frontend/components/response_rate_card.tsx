@@ -17,7 +17,6 @@ export default function ResponseRateCard() {
       setResponseRate(mockRate);
       setLastUpdated(new Date().toLocaleTimeString());
     } catch (err) {
-      console.error("Error fetching response rate:", err);
       setError("Failed to load response rate");
     } finally {
       setLoading(false);
