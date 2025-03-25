@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { user } from "@heroui/theme";
 
 export default function ResponseRateCard() {
 	const [lastUpdated, setLastUpdated] = useState<string>("");
@@ -26,8 +25,8 @@ export default function ResponseRateCard() {
 					}
 				}
 				const result = await response.json();
-				console.log(result.value)
-				
+				console.log(result.value);
+
 				if (result.length === 0) {
 					// No data found
 				} else {
