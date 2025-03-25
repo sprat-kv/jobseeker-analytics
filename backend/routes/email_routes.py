@@ -114,7 +114,6 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     logger.info("user_id:%s fetch_emails_to_db", user.user_id)
 
     with Session(engine) as session:
-        query = QUERY_APPLIED_EMAIL_FILTER
         # check for users last updated email
         if last_updated:
             # this converts our date time to number of seconds 

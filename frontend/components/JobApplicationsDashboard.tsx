@@ -10,10 +10,6 @@ import { useRouter } from "next/navigation";
 
 import { DownloadIcon, SortIcon } from "@/components/icons";
 
-interface SessionData {
-	start_date?: string;
-}
-
 export interface Application {
 	id?: string;
 	company_name: string;
@@ -53,12 +49,9 @@ export default function JobApplicationsDashboard({
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
 	const [showModal, setShowModal] = useState(false);
-	const [startDate, setStartDate] = useState<Date | null>(null);
 	const [selectedDate, setSelectedDate] = useState<CalendarDate | null>(null);
 	const [isSaving, setIsSaving] = useState(false);
 	const [isNewUser, setIsNewUser] = useState(false);
-	const [sessionData, setSessionData] = useState<SessionData | null>(null);
-	const [error, setError] = useState<string | null>(null);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 	const router = useRouter();
 
@@ -68,77 +61,54 @@ export default function JobApplicationsDashboard({
 		if (!selectedDate) return alert("Please select a start date");
 
 		setIsSaving(true);
-		try {
-			const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
-			// Step 1: Save the start date
-			const response = await fetch(`${apiUrl}/set-start-date`, {
-				method: "POST",
-				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: new URLSearchParams({ start_date: formattedDate.toString() }),
-				credentials: "include"
-			});
+		const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
+		// Step 1: Save the start date
+		const response = await fetch(`${apiUrl}/set-start-date`, {
+			method: "POST",
+			headers: { "Content-Type": "application/x-www-form-urlencoded" },
+			body: new URLSearchParams({ start_date: formattedDate.toString() }),
+			credentials: "include"
+		});
 
-			if (!response.ok) throw new Error("Failed to save start date");
+		if (!response.ok) throw new Error("Failed to save start date");
 
-			// Step 2: Start background task (fetch emails)
-			startFetchEmailsBackgroundTask();
+		// Step 2: Start background task (fetch emails)
+		startFetchEmailsBackgroundTask();
 
-			// Step 3: Navigate to processing page
-			setIsNewUser(false); // Hide the modal after saving
-			setShowModal(false);
-			router.push("/processing"); // Navigate to the processing page
-		} catch (error) {
-			alert("Error saving start date. Please try again.");
-		} finally {
-			setIsSaving(false);
-		}
+		// Step 3: Navigate to processing page
+		setIsNewUser(false); // Hide the modal after saving
+		setShowModal(false);
+		router.push("/processing"); // Navigate to the processing page
 	};
 
 	const startFetchEmailsBackgroundTask = async () => {
-		try {
-			// Example background task: Start fetching emails
-			console.log("Starting background task to fetch emails...");
-			const response = await fetch(`${apiUrl}/fetch-emails`, {
-				method: "POST", // or GET, depending on your API
-				credentials: "include"
-			});
+		// Example background task: Start fetching emails
+		const response = await fetch(`${apiUrl}/fetch-emails`, {
+			method: "POST", // or GET, depending on your API
+			credentials: "include"
+		});
 
-			if (!response.ok) {
-				console.error("Failed to fetch emails:", await response.text());
-				return;
-			}
-
-			console.log("Email fetching started successfully!");
-		} catch (error) {
-			console.error("Error starting background task:", error);
+		if (!response.ok) {
+			return;
 		}
 	};
 
 	useEffect(() => {
-		console.log("isNewUser:", isNewUser);
 		setShowModal(isNewUser);
 	}, [isNewUser]);
 
 	useEffect(() => {
 		async function fetchSessionData() {
-			try {
-				const response = await fetch("http://localhost:8000/api/session-data", {
-					method: "GET",
-					credentials: "include"
-				});
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				const data = await response.json();
-				console.log("Session data after fetch session:", data);
-				setSessionData(data);
-				console.log("Session data b4 is_new_user:", data);
-				setIsNewUser(!!data.is_new_user); // Set the new user flag
-				setShowModal(!!data.is_new_user); // Show modal if new user
-			} catch (error) {
-				console.error("Error fetching session data:", error);
-				setError("Failed to load session data");
+			const response = await fetch("http://localhost:8000/api/session-data", {
+				method: "GET",
+				credentials: "include"
+			});
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
 			}
+			const data = await response.json();
+			setIsNewUser(!!data.is_new_user); // Set the new user flag
+			setShowModal(!!data.is_new_user); // Show modal if new user
 		}
 		fetchSessionData();
 	}, []);

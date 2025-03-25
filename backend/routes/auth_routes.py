@@ -36,7 +36,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
     try:
         if not code:
             authorization_url, state = flow.authorization_url(prompt="consent")
-            return RedirectResponse(url=authorization_ur
+            return RedirectResponse(url=authorization_url)
         logger.info("Authorization code received, exchanging for token...")
         try:
             flow.fetch_token(code=code)
