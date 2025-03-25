@@ -14,7 +14,6 @@ from session.session_layer import validate_session
 from database import engine
 from google.oauth2.credentials import Credentials
 import json
-from datetime import datetime, timedelta, timezone
 from start_date.storage import get_start_date_email_filter
 from constants import QUERY_APPLIED_EMAIL_FILTER
 

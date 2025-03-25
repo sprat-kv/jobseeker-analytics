@@ -1,6 +1,5 @@
 import logging
 import uuid
-import json
 
 from utils.file_utils import get_user_filepath
 
