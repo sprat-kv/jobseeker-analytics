@@ -16,6 +16,7 @@ from google.oauth2.credentials import Credentials
 import json
 from datetime import datetime, timedelta, timezone
 from start_date.storage import get_start_date_email_filter
+from constants import QUERY_APPLIED_EMAIL_FILTER
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -113,30 +114,36 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails_to_db", user.user_id)
 
+    start_date = request.session.get("start_date")
+    start_date_query = get_start_date_email_filter(start_date)
+    is_new_user = request.session.get("is_new_user")
+
+    query = QUERY_APPLIED_EMAIL_FILTER
     with Session(engine) as session:
         # check for users last updated email
         if last_updated:
+            
             # this converts our date time to number of seconds 
             additional_time = int(last_updated.timestamp())
             # we append it to query so we get only emails recieved after however many seconds
             # for example, if the newest email you’ve stored was received at 2025‑03‑20 14:32 UTC, we convert that to 1710901920s 
             # and tell Gmail to fetch only messages received after March 20, 2025 at 14:32 UTC.
-            query += f" after:{additional_time}"
+            if start_date and is_new_user:
+                query = start_date_query
+            elif not is_new_user:
+                query += f" after:{additional_time}"
+            
             logger.info(f"user_id:{user.user_id} Fetching emails after {last_updated.isoformat()}")
         else:
             logger.info(f"user_id:{user.user_id} Fetching all emails (no last_date)")
 
         service = build("gmail", "v1", credentials=user.creds)
 
-        start_date = request.session.get("start_date")
-        if not start_date:
-            start_date = (datetime.now(timezone.utc) - timedelta(days=90)).strftime("%Y-%m-%d").isoformat()
-
-        start_date_query = get_start_date_email_filter(start_date)
-
         messages = get_email_ids(
-            query=start_date_query, gmail_instance=service
+            query=query, gmail_instance=service
         )
+        # Update session to remove "new user" status
+        request.session["is_new_user"] = False
 
         if not messages:
             logger.info(f"user_id:{user.user_id} No job application emails found.")
