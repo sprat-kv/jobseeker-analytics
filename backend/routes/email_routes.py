@@ -15,6 +15,8 @@ from session.session_layer import validate_session
 from database import engine
 from google.oauth2.credentials import Credentials
 import json
+from datetime import datetime, timedelta, timezone
+from start_date.storage import get_start_date_email_filter
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -106,7 +108,7 @@ async def start_fetch_emails(
         logger.info(f"Starting email fetching process for user_id: {user_id}")
 
         # Start email fetching in the background
-        background_tasks.add_task(fetch_emails_to_db, user)
+        background_tasks.add_task(fetch_emails_to_db, user, request)
 
         return JSONResponse(content={"message": "Email fetching started"}, status_code=200)
     except Exception as e:
@@ -114,7 +116,7 @@ async def start_fetch_emails(
         raise HTTPException(status_code=500, detail="Failed to authenticate user")
 
 
-def fetch_emails_to_db(user: AuthenticatedUser) -> None:
+def fetch_emails_to_db(user: AuthenticatedUser, request: Request) -> None:
     global api_call_finished, total_emails, processed_emails
 
     api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
@@ -122,9 +124,17 @@ def fetch_emails_to_db(user: AuthenticatedUser) -> None:
 
     with Session(engine) as session:
         service = build("gmail", "v1", credentials=user.creds)
-        start_date = user.start_date
+
+        start_date = request.session.get("start_date")
+        if not start_date:
+            start_date = (datetime.now(timezone.utc) - timedelta(days=90)).strftime("%Y-%m-%d").isoformat()
+        
+        print(get_start_date_email_filter(start_date))
+
+        start_date_query = get_start_date_email_filter(start_date)
+
         messages = get_email_ids(
-            query=('after: {}}'), gmail_instance=service
+            query=(start_date_query), gmail_instance=service
         )
 
         if not messages:

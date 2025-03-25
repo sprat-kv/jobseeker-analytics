@@ -33,6 +33,9 @@ def add_user(user, request, start_date=None) -> Users:
 
             start_date = getattr(user, "start_date", None) or (datetime.now(timezone.utc) - timedelta(days=90))
 
+            if isinstance(start_date, datetime):
+                start_date = start_date.strftime("%Y-%m-%d")
+
             # add a new user record
             new_user = Users(
                 user_id=user.user_id,
@@ -46,7 +49,10 @@ def add_user(user, request, start_date=None) -> Users:
             logger.info(f"Created new user record for user_id: {user.user_id}")
 
             # Write start date to session storage
-            request.session["start_date"] = start_date.isoformat()
+            if isinstance(start_date, str):
+                request.session["start_date"] = start_date  # Already a string, no need to convert
+            else:
+                request.session["start_date"] = start_date.isoformat()  # Convert only if it's a datetime object
 
             return new_user
         else:

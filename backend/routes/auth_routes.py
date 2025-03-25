@@ -65,7 +65,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         if user_exists(user):
             request.session["is_new_user"] = False
             redirect_url = f"{APP_URL}/processing"
-            background_tasks.add_task(fetch_emails_to_db, user)
+            background_tasks.add_task(fetch_emails_to_db, user, request)
             print("User exists")
         else:
             request.session["is_new_user"] = True

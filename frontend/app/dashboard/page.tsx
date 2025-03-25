@@ -173,11 +173,12 @@ export default function Dashboard() {
 
 		setIsSaving(true);
 		try {
+			const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
 			// Step 1: Save the start date
 			const response = await fetch(`${apiUrl}/set-start-date`, {
 				method: "POST",
 				headers: { "Content-Type": "application/x-www-form-urlencoded" },
-				body: new URLSearchParams({ start_date: selectedDate.toString() }),
+				body: new URLSearchParams({ start_date: formattedDate.toString() }),
 				credentials: "include"
 			});
 
@@ -270,23 +271,6 @@ export default function Dashboard() {
 			setDownloading(false);
 		}
 	}
-
-	const pollProcessingStatus = async () => {
-		const interval = setInterval(async () => {
-			try {
-				const response = await fetch("http://localhost:8000/processing");
-				const text = await response.text();
-				console.log("API Response:", text);
-				const data = JSON.parse(text);
-				if (data.message === "Processing complete") {
-					clearInterval(interval);
-					router.replace(data.redirect_url);
-				}
-			} catch (error) {
-				console.error("Error parsing JSON:", error);
-			}
-		}, 5000); // Poll every 5 seconds
-	};
 
 	async function downloadSankey() {
 		setDownloading(true);

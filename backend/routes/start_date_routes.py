@@ -42,6 +42,8 @@ async def set_start_date(request: Request, start_date: str = Form(...)):
         # Update session to remove "new user" status
         request.session["is_new_user"] = False
 
+        print("Start date updated successfully")
+
         return JSONResponse(content={"message": "Start date updated successfully"}, status_code=200)
     except Exception as e:
         logger.error(f"Error reconstructing credentials: {e}")
