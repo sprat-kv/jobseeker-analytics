@@ -173,7 +173,7 @@ export default function Dashboard() {
 
 		setIsSaving(true);
 		try {
-			const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, '0')}-${String(selectedDate.day).padStart(2, '0')}`;
+			const formattedDate = `${selectedDate.year}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}`;
 			// Step 1: Save the start date
 			const response = await fetch(`${apiUrl}/set-start-date`, {
 				method: "POST",
