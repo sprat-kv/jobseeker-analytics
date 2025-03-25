@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
-
-import { DownloadIcon, SortIcon } from "@/components/icons";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date";
 import { useRouter } from "next/navigation";
+
+import { DownloadIcon, SortIcon } from "@/components/icons";
 
 interface SessionData {
 	start_date?: string;
@@ -59,7 +59,7 @@ export default function JobApplicationsDashboard({
 	const [isNewUser, setIsNewUser] = useState(false);
 	const [sessionData, setSessionData] = useState<SessionData | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"; 
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 	const router = useRouter();
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
@@ -115,35 +115,33 @@ export default function JobApplicationsDashboard({
 	};
 
 	useEffect(() => {
-			console.log("isNewUser:", isNewUser);
-			setShowModal(isNewUser);
-		}, [isNewUser]);
+		console.log("isNewUser:", isNewUser);
+		setShowModal(isNewUser);
+	}, [isNewUser]);
 
 	useEffect(() => {
-			async function fetchSessionData() {
-				try {
-					const response = await fetch("http://localhost:8000/api/session-data", {
-						method: "GET",
-						credentials: "include"
-					});
-					if (!response.ok) {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
-					const data = await response.json();
-					console.log("Session data after fetch session:", data);
-					setSessionData(data);
-					console.log("Session data b4 is_new_user:", data);
-					setIsNewUser(!!data.is_new_user); // Set the new user flag
-					setShowModal(!!data.is_new_user); // Show modal if new user
-				} catch (error) {
-					console.error("Error fetching session data:", error);
-					setError("Failed to load session data");
+		async function fetchSessionData() {
+			try {
+				const response = await fetch("http://localhost:8000/api/session-data", {
+					method: "GET",
+					credentials: "include"
+				});
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
 				}
+				const data = await response.json();
+				console.log("Session data after fetch session:", data);
+				setSessionData(data);
+				console.log("Session data b4 is_new_user:", data);
+				setIsNewUser(!!data.is_new_user); // Set the new user flag
+				setShowModal(!!data.is_new_user); // Show modal if new user
+			} catch (error) {
+				console.error("Error fetching session data:", error);
+				setError("Failed to load session data");
 			}
-			fetchSessionData();
-		}, []);
-
-
+		}
+		fetchSessionData();
+	}, []);
 
 	// Sort data based on selected key
 	useEffect(() => {

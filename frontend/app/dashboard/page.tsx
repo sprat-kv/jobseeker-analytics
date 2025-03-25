@@ -1,21 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
-import {
-	Button,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownSection,
-	DropdownTrigger,
-	DatePicker,
-	Modal,
-	ModalContent,
-	ModalHeader,
-	ModalBody,
-	ModalFooter
-} from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import { CalendarDate } from "@internationalized/date";
 import React from "react";
@@ -44,7 +29,7 @@ export default function Dashboard() {
 	const [selectedKeys, setSelectedKeys] = useState(new Set([storedSortKey]));
 	const [isNewUser, setIsNewUser] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"; 
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
