@@ -1,6 +1,6 @@
 import logging
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Request, HTTPExceptionc, BackgroundTasks
+from fastapi import APIRouter, Depends, Request, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select, desc
 from googleapiclient.discovery import build
@@ -139,7 +139,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         start_date_query = get_start_date_email_filter(start_date)
 
         messages = get_email_ids(
-            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
+            query=start_date_query, gmail_instance=service
         )
 
         if not messages:
