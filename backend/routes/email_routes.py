@@ -1,6 +1,6 @@
 import logging
-from typing import List
-from fastapi import APIRouter, Depends, Request, HTTPException, BackgroundTasks
+from typing import List, Optional
+from fastapi import APIRouter, Depends, Request, HTTPExceptionc, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select, desc
 from googleapiclient.discovery import build
@@ -69,21 +69,13 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
             statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
             user_emails = session.exec(statement).all()
 
-            # If no records are found, return a 404 error
-            if not user_emails:
-                logger.warning(f"No emails found for user_id: {user_id}")
-                return []
-
-            logger.info(
-                f"Successfully fetched {len(user_emails)} emails for user_id: {user_id}"
-            )
-            return user_emails
+            logger.info(f"Found {len(user_emails)} emails for user_id: {user_id}")
+            return user_emails  # Return empty list if no emails exist
 
         except Exception as e:
             logger.error(f"Error fetching emails for user_id {user_id}: {e}")
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
         
-
 @router.post("/fetch-emails")
 async def start_fetch_emails(
     request: Request, background_tasks: BackgroundTasks, user_id: str = Depends(validate_session)
@@ -116,13 +108,26 @@ async def start_fetch_emails(
         raise HTTPException(status_code=500, detail="Failed to authenticate user")
 
 
-def fetch_emails_to_db(user: AuthenticatedUser, request: Request) -> None:
+def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None) -> None:
     global api_call_finished, total_emails, processed_emails
 
     api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
     logger.info("user_id:%s fetch_emails_to_db", user.user_id)
 
     with Session(engine) as session:
+        query = QUERY_APPLIED_EMAIL_FILTER
+        # check for users last updated email
+        if last_updated:
+            # this converts our date time to number of seconds 
+            additional_time = int(last_updated.timestamp())
+            # we append it to query so we get only emails recieved after however many seconds
+            # for example, if the newest email you’ve stored was received at 2025‑03‑20 14:32 UTC, we convert that to 1710901920s 
+            # and tell Gmail to fetch only messages received after March 20, 2025 at 14:32 UTC.
+            query += f" after:{additional_time}"
+            logger.info(f"user_id:{user.user_id} Fetching emails after {last_updated.isoformat()}")
+        else:
+            logger.info(f"user_id:{user.user_id} Fetching all emails (no last_date)")
+
         service = build("gmail", "v1", credentials=user.creds)
 
         start_date = request.session.get("start_date")
@@ -134,7 +139,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request) -> None:
         start_date_query = get_start_date_email_filter(start_date)
 
         messages = get_email_ids(
-            query=(start_date_query), gmail_instance=service
+            query=QUERY_APPLIED_EMAIL_FILTER, gmail_instance=service
         )
 
         if not messages:

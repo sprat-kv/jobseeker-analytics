@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
@@ -21,23 +20,12 @@ import { addToast } from "@heroui/toast";
 import { CalendarDate } from "@internationalized/date";
 import React from "react";
 
-import { DownloadIcon, SortIcon } from "@/components/icons";
+import JobApplicationsDashboard, { Application } from "@/components/JobApplicationsDashboard";
 import { checkAuth } from "@/utils/auth";
-
-interface Application {
-	id?: string;
-	company_name: string;
-	application_status: string;
-	received_at: string;
-	job_title: string;
-	subject: string;
-	email_from: string;
-}
 
 interface SessionData {
 	start_date?: string;
 }
-
 // Load sort key from localStorage or use default "Sort By"
 const storedSortKey =
 	typeof window !== "undefined" ? localStorage.getItem("sortKey") || "Date (Newest)" : "Date (Newest)";
@@ -56,7 +44,7 @@ export default function Dashboard() {
 	const [selectedKeys, setSelectedKeys] = useState(new Set([storedSortKey]));
 	const [isNewUser, setIsNewUser] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"; 
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
@@ -91,11 +79,7 @@ export default function Dashboard() {
 
 				const result = await response.json();
 
-				if (result.length === 0) {
-					setError("No applications found");
-				} else {
-					setData(result);
-				}
+				setData(result);
 			} catch {
 				setError("Failed to load applications");
 			} finally {
@@ -104,7 +88,7 @@ export default function Dashboard() {
 		};
 
 		fetchData();
-	}, [router]);
+	}, [apiUrl, router]);
 
 	useEffect(() => {
 		async function fetchSessionData() {
@@ -272,6 +256,17 @@ export default function Dashboard() {
 		}
 	}
 
+	if (error) {
+		return (
+			<div className="p-6 flex flex-col items-center justify-center min-h-[50vh]">
+				<p className="text-red-600 mb-4">{error}</p>
+				<button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={() => window.location.reload()}>
+					Retry
+				</button>
+			</div>
+		);
+	}
+
 	async function downloadSankey() {
 		setDownloading(true);
 		try {
@@ -320,120 +315,12 @@ export default function Dashboard() {
 	}
 
 	return (
-		<div className="flex flex-col items-center justify-center text-center pt-64">
-			{/* Modal for New User */}
-			<Modal isOpen={showModal} onOpenChange={setShowModal}>
-				<ModalContent>
-					<ModalHeader>Select Your Job Search Start Date</ModalHeader>
-					<ModalBody>
-						<DatePicker value={selectedDate} onChange={setSelectedDate} />
-					</ModalBody>
-					<ModalFooter>
-						<Button color="primary" isLoading={isSaving} onPress={handleSave}>
-							Save and Continue
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
-
-			<div className="flex items-center justify-between mb-4">
-				<h1 className="text-2xl font-bold">Job Applications Dashboard</h1>
-				<div className="flex gap-x-4">
-					<Dropdown>
-						<DropdownTrigger>
-							<Button
-								className="pl-3"
-								color="primary"
-								isDisabled={!data || data.length === 0}
-								startContent={<SortIcon />}
-								variant="bordered"
-							>
-								{selectedValue}
-							</Button>
-						</DropdownTrigger>
-						<DropdownMenu
-							disallowEmptySelection
-							aria-label="Single selection example"
-							selectedKeys={selectedKeys}
-							selectionMode="single"
-							variant="flat"
-							onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
-						>
-							<DropdownSection title="Sort By">
-								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
-								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
-								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
-								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
-								<DropdownItem key="Status">Application Status</DropdownItem>
-							</DropdownSection>
-						</DropdownMenu>
-					</Dropdown>
-					<Button
-						color="primary"
-						isDisabled={!data || data.length === 0}
-						isLoading={downloading}
-						startContent={<DownloadIcon />}
-						onPress={downloadSankey}
-					>
-						Download Sankey Diagram
-					</Button>
-					<Button
-						color="success"
-						isDisabled={!data || data.length === 0}
-						isLoading={downloading}
-						startContent={<DownloadIcon />}
-						onPress={downloadCsv}
-					>
-						Download CSV
-					</Button>
-				</div>
-			</div>
-
-			{loading ? (
-				<p>Loading applications...</p>
-			) : error ? (
-				<div className="text-red-500">
-					<p>{error}</p>
-					<Button color="warning" onPress={() => window.location.reload()}>
-						Try again
-					</Button>
-				</div>
-			) : (
-				<div className="overflow-x-auto bg-white shadow-md rounded-lg">
-					<Table aria-label="Applications Table">
-						<TableHeader>
-							<TableColumn>Company</TableColumn>
-							<TableColumn>Status</TableColumn>
-							<TableColumn>Received</TableColumn>
-							<TableColumn>Job Title</TableColumn>
-							<TableColumn>Subject</TableColumn>
-							<TableColumn>Sender</TableColumn>
-						</TableHeader>
-						<TableBody>
-							{sortedData.map((item) => (
-								<TableRow key={item.id || item.received_at}>
-									<TableCell>{item.company_name || "--"}</TableCell>
-									<TableCell>
-										<span
-											className={`inline-flex items-center justify-center px-2 py-1 rounded ${
-												item.application_status.toLowerCase() === "rejected"
-													? "bg-red-100 text-red-800"
-													: "bg-green-100 text-green-800"
-											}`}
-										>
-											{item.application_status || "--"}
-										</span>
-									</TableCell>
-									<TableCell>{new Date(item.received_at).toLocaleDateString() || "--"}</TableCell>
-									<TableCell>{item.job_title || "--"}</TableCell>
-									<TableCell className="max-w-[300px] truncate">{item.subject || "--"}</TableCell>
-									<TableCell>{item.email_from || "--"}</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
-				</div>
-			)}
-		</div>
+		<JobApplicationsDashboard
+			data={data}
+			downloading={downloading}
+			loading={loading}
+			onDownloadCsv={downloadCsv}
+			onDownloadSankey={downloadSankey}
+		/>
 	);
 }

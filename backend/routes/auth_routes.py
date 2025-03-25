@@ -62,11 +62,15 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["creds"] = creds.to_json() 
         request.session["access_token"] = creds.token
 
-        if user_exists(user):
-            request.session["is_new_user"] = False
-            redirect_url = f"{APP_URL}/processing"
-            background_tasks.add_task(fetch_emails_to_db, user, request)
-            print("User exists")
+        # NOTE: change redirection once dashboard is completed
+        exists, last_fetched_date = user_exists(user)
+        if exists:
+            logger.info("User already exists in the database.")
+            response = RedirectResponse(
+                url=f"{settings.APP_URL}/processing", status_code=303
+            )
+            background_tasks.add_task(fetch_emails_to_db, user, request, last_fetched_date)
+            logger.info("Background task started for user_id: %s", user.user_id)
         else:
             request.session["is_new_user"] = True
             redirect_url = f"{APP_URL}/dashboard"  # Prompt for start date
@@ -77,10 +81,6 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         response = set_conditional_cookie(
             key="Authorization", value=session_id, response=response
         )
-
-        # Debugging
-        logger.info("User logged in with user_id: %s", user.user_id)
-        logger.info(f"Session after login: {request.session}") 
 
         return response
     except Exception as e:
