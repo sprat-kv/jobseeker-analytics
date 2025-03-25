@@ -118,19 +118,17 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     start_date_query = get_start_date_email_filter(start_date)
     is_new_user = request.session.get("is_new_user")
 
-    query = QUERY_APPLIED_EMAIL_FILTER
+    query = start_date_query
     with Session(engine) as session:
         # check for users last updated email
         if last_updated:
-            
             # this converts our date time to number of seconds 
             additional_time = int(last_updated.timestamp())
             # we append it to query so we get only emails recieved after however many seconds
             # for example, if the newest email you’ve stored was received at 2025‑03‑20 14:32 UTC, we convert that to 1710901920s 
             # and tell Gmail to fetch only messages received after March 20, 2025 at 14:32 UTC.
-            if start_date and is_new_user:
-                query = start_date_query
-            elif not is_new_user:
+            if not start_date or not is_new_user:
+                query = QUERY_APPLIED_EMAIL_FILTER
                 query += f" after:{additional_time}"
             
             logger.info(f"user_id:{user.user_id} Fetching emails after {last_updated.isoformat()}")
