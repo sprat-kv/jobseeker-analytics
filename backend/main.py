@@ -2,9 +2,8 @@ import datetime
 import logging
 import os
 
-from fastapi import FastAPI, HTTPException, Request, Depends, BackgroundTasks
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, JSONResponse
-from google.oauth2.credentials import Credentials
+from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse 
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware

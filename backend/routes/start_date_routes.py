@@ -1,7 +1,6 @@
 import logging
-from fastapi import APIRouter, Request, FastAPI, BackgroundTasks, Form
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import JSONResponse, HTMLResponse
-from contextlib import asynccontextmanager
 from db.utils.user_utils import add_user
 import json
 from utils.auth_utils import AuthenticatedUser

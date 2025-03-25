@@ -4,7 +4,6 @@ from db.user_emails import UserEmails
 from sqlmodel import Session, select, func
 from db.users import Users 
 from datetime import datetime, timedelta, timezone 
-from utils.auth_utils import AuthenticatedUser
 
 logger = logging.getLogger(__name__)
 

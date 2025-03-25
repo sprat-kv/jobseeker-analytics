@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, Request, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select, desc
 from googleapiclient.discovery import build
-from constants import QUERY_APPLIED_EMAIL_FILTER
 from db.user_emails import UserEmails
 from db.utils.user_email_utils import create_user_email
 from utils.auth_utils import AuthenticatedUser
@@ -133,8 +132,6 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         start_date = request.session.get("start_date")
         if not start_date:
             start_date = (datetime.now(timezone.utc) - timedelta(days=90)).strftime("%Y-%m-%d").isoformat()
-        
-        print(get_start_date_email_filter(start_date))
 
         start_date_query = get_start_date_email_filter(start_date)
 
