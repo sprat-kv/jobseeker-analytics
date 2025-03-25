@@ -1,12 +1,12 @@
 import datetime
 import logging
-from fastapi import APIRouter, Request, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Request, BackgroundTasks
 from fastapi.responses import RedirectResponse, HTMLResponse
 from google_auth_oauthlib.flow import Flow
 
 from db.utils.user_utils import user_exists, add_user
 from utils.auth_utils import AuthenticatedUser
-from session.session_layer import create_random_session_string
+from session.session_layer import create_random_session_string, validate_session
 from utils.config_utils import get_settings
 from utils.cookie_utils import set_conditional_cookie
 
@@ -79,7 +79,8 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         request.session["user_id"] = user.user_id
 
         # NOTE: change redirection once dashboard is completed
-        if user_exists(user):
+        exists, last_fetched_date = user_exists(user)
+        if exists:
             logger.info("User already exists in the database.")
             response = RedirectResponse(
                 url=f"{settings.APP_URL}/processing", status_code=303
@@ -96,7 +97,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
         )
 
         # Start email fetching in the background
-        background_tasks.add_task(fetch_emails_to_db, user)
+        background_tasks.add_task(fetch_emails_to_db, user, last_fetched_date)
         logger.info("Background task started for user_id: %s", user.user_id)
 
         return response
@@ -112,3 +113,12 @@ async def logout(request: Request, response: RedirectResponse):
     response.delete_cookie(key="__Secure-Authorization")
     response.delete_cookie(key="Authorization")
     return RedirectResponse(f"{APP_URL}", status_code=303)
+
+
+@router.get("/me")
+async def getUser(request: Request, user_id: str = Depends(validate_session)):
+    if not user_id:
+        raise HTTPException(
+            status_code=401, detail="No user id found in session"
+        )    
+    return {"user_id": user_id}
