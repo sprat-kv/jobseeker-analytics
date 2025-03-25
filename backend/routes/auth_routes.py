@@ -36,10 +36,24 @@ async def login(request: Request, background_tasks: BackgroundTasks):
     try:
         if not code:
             authorization_url, state = flow.authorization_url(prompt="consent")
-            return RedirectResponse(url=authorization_url)
-
-        flow.fetch_token(code=code)
-        creds = flow.credentials
+            return RedirectResponse(url=authorization_ur
+        logger.info("Authorization code received, exchanging for token...")
+        try:
+            flow.fetch_token(code=code)
+        except Exception as e:
+            logger.error("Failed to fetch token: %s", e)
+            return RedirectResponse(
+                url=f"{settings.APP_URL}/errors?message=permissions_error",
+                status_code=303
+            )   
+        try:
+            creds = flow.credentials
+        except Exception as e:
+            logger.error("Failed to fetch credentials: %s", e)
+            return RedirectResponse(
+                url=f"{settings.APP_URL}/errors?message=credentials_error",
+                status_code=303
+            )  
 
         if not creds.valid:
             creds.refresh(Request())
