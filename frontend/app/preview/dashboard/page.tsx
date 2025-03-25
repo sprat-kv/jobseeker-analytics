@@ -56,6 +56,20 @@ export default function PreviewDashboard() {
 		setDownloading(false);
 	}
 
+	// Handle Sankey download
+	async function downloadSankey() {
+		setDownloading(true);
+		// Mock Sankey generation (no api call)
+		// Download frontend/public/sankey_diagram.png
+		const link = document.createElement("a");
+		link.href = "/sankey_diagram.png";
+		link.download = `sankey_diagram_${new Date().toISOString().split("T")[0]}.png`;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		setDownloading(false);
+	}
+
 	const PromoModal = (
 		<Modal backdrop="blur" isOpen={isOpen} size="xl" onClose={onClose}>
 			<ModalContent>
@@ -92,6 +106,7 @@ export default function PreviewDashboard() {
 			loading={loading}
 			title="Preview Dashboard"
 			onDownloadCsv={downloadCsv}
+			onDownloadSankey={downloadSankey}
 		/>
 	);
 }
