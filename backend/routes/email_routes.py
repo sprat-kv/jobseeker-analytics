@@ -131,9 +131,9 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 query = QUERY_APPLIED_EMAIL_FILTER
                 query += f" after:{additional_time}"
             
-            logger.info(f"user_id:{user.user_id} Fetching emails after {last_updated.isoformat()}")
+                logger.info(f"user_id:{user.user_id} Fetching emails after {last_updated.isoformat()}")
         else:
-            logger.info(f"user_id:{user.user_id} Fetching all emails (no last_date)")
+            logger.info(f"user_id:{user.user_id} Fetching all emails (no last_date maybe with start date)")
 
         service = build("gmail", "v1", credentials=user.creds)
 
