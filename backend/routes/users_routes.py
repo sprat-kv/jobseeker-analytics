@@ -35,7 +35,7 @@ def calculate_response_rate(
 
         interview_requests = 0
         for email in user_emails:
-            # using request for avalability as an interview request as it should come before the offer and shecduled interview
+            # using request for avalability as an interview request as it should come before the offer and scheduled interview
             if (
                 email.application_status
                 and email.application_status.lower() == "request for availability"
@@ -43,4 +43,5 @@ def calculate_response_rate(
                 interview_requests += 1
 
         response_rate_percent = (interview_requests / total_apps) * 100
-        return round(response_rate_percent, 1)
+        return {"value": round(response_rate_percent, 1)}
+    
