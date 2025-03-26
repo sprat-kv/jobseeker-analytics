@@ -156,7 +156,7 @@ export default function JobApplicationsDashboard({
 	};
 
 	return (
-		<div className="flex flex-col items-center justify-center text-center pt-64">
+		<div className="p-6">
 			{/* Modal for New User */}
 			<Modal isOpen={showModal} onOpenChange={setShowModal}>
 				<ModalContent>
