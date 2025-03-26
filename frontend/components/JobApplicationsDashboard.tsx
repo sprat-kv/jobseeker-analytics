@@ -195,7 +195,10 @@ export default function JobApplicationsDashboard({
 						</TableHeader>
 						<TableBody>
 							{sortedData.map((item) => (
-								<TableRow key={item.id || item.received_at}>
+								<TableRow
+									key={item.id || item.received_at}
+									className="hover:bg-default-100 transition-colors"
+								>
 									<TableCell>{item.company_name || "--"}</TableCell>
 									<TableCell>
 										<span
