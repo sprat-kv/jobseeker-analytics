@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Clock } from "lucide-react";
 
 export default function ResponseRateCard() {
 	const [lastUpdated, setLastUpdated] = useState<string>("");
@@ -32,6 +33,13 @@ export default function ResponseRateCard() {
 				} else {
 					setValue(result.value);
 				}
+				// Set the last updated time (assuming the API provides a timestamp)
+				if (result.lastUpdated) {
+					setLastUpdated(formatDate(new Date(result.lastUpdated)));
+				} else {
+					// Fallback to the current time if no timestamp is provided
+					setLastUpdated(formatDate(new Date()));
+				}
 			} catch {
 				// Failed to load data
 			} finally {
@@ -42,11 +50,42 @@ export default function ResponseRateCard() {
 		fetchData();
 	}, [router]);
 
+	// Helper function to format the date
+	const formatDate = (date: Date): string => {
+		const now = new Date();
+		const yesterday = new Date();
+		yesterday.setDate(now.getDate() - 1);
+
+		const isToday = date.toDateString() === now.toDateString();
+		const isYesterday = date.toDateString() === yesterday.toDateString();
+
+		const timeFormatter = new Intl.DateTimeFormat("en-US", {
+			hour: "numeric",
+			minute: "numeric",
+			hour12: true
+		});
+
+		if (isToday) {
+			return `Today, ${timeFormatter.format(date)}`;
+		} else if (isYesterday) {
+			return `Yesterday, ${timeFormatter.format(date)}`;
+		} else {
+			const dateFormatter = new Intl.DateTimeFormat("en-US", {
+				month: "short",
+				day: "numeric"
+			});
+			return `${dateFormatter.format(date)}, ${timeFormatter.format(date)}`;
+		}
+	};
+
 	return (
-		<div className="mt-4 bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-4 w-64">
-			<h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Response Rate</h3>
-			<p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{value}%</p>
-			<p className="text-xs text-gray-500 dark:text-gray-400">Last updated: {lastUpdated}</p>
+		<div className="mt-4 bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-4 w-1/2 h-auto">
+			<p className="text-6xl font-bold text-blue-600 dark:text-blue-400 mb-1">{value}%</p>
+			<h3 className="text-base font-medium text-gray-700 dark:text-gray-300 mb-3">% Response Rate</h3>
+			<div className="flex gap-2 text-base text-gray-500 dark:text-gray-400">
+				<Clock className="self-center" size={16} />
+				<span>Last Updated: {lastUpdated}</span>
+			</div>
 		</div>
 	);
 }

@@ -5,6 +5,7 @@ import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from 
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
 
 import { DownloadIcon, SortIcon } from "@/components/icons";
+import ResponseRateCard from "@/components/response_rate_card";
 
 export interface Application {
 	id?: string;
@@ -91,65 +92,69 @@ export default function JobApplicationsDashboard({
 
 	return (
 		<div className="p-6">
+			<h1 className="text-2xl font-bold">{title}</h1>
 			{extraHeader}
-
-			<div className="flex items-center justify-between mb-4">
-				<h1 className="text-2xl font-bold">{title}</h1>
-				<div className="flex gap-x-4">
-					<Dropdown>
-						<DropdownTrigger>
-							<Button
-								className="pl-3"
-								color="primary"
-								isDisabled={!data || data.length === 0}
-								startContent={<SortIcon />}
-								variant="bordered"
-							>
-								{selectedValue}
-							</Button>
-						</DropdownTrigger>
-						<DropdownMenu
-							disallowEmptySelection
-							aria-label="Single selection example"
-							selectedKeys={selectedKeys}
-							selectionMode="single"
-							variant="flat"
-							onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
+			<div className="flex gap-x-4 mb-6">
+				<ResponseRateCard />
+				<div className="mt-4 bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-4 w-1/2 h-auto" />{" "}
+				{/* Empty card */}
+			</div>
+			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
+				<Dropdown>
+					<DropdownTrigger>
+						<Button
+							className="pl-3"
+							color="primary"
+							isDisabled={!data || data.length === 0}
+							startContent={<SortIcon />}
+							variant="bordered"
 						>
-							<DropdownSection title="Sort By">
-								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
-								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
-								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
-								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
-								<DropdownItem key="Status">Application Status</DropdownItem>
-							</DropdownSection>
-						</DropdownMenu>
-					</Dropdown>
-					<Button
-						color="primary"
-						isDisabled={!data || data.length === 0}
-						isLoading={downloading}
-						startContent={<DownloadIcon />}
-						onPress={onDownloadSankey}
+							{selectedValue}
+						</Button>
+					</DropdownTrigger>
+					<DropdownMenu
+						disallowEmptySelection
+						aria-label="Single selection example"
+						selectedKeys={selectedKeys}
+						selectionMode="single"
+						variant="flat"
+						onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
 					>
-						Download Sankey Diagram
-					</Button>
-					<Button
-						color="success"
-						isDisabled={!data || data.length === 0}
-						isLoading={downloading}
-						startContent={<DownloadIcon />}
-						onPress={onDownloadCsv}
-					>
-						Download CSV
-					</Button>
-				</div>
+						<DropdownSection title="Sort By">
+							<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
+							<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
+							<DropdownItem key="Company">Company (A-Z)</DropdownItem>
+							<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
+							<DropdownItem key="Status">Application Status</DropdownItem>
+						</DropdownSection>
+					</DropdownMenu>
+				</Dropdown>
+				<Button
+					className="w-full sm:w-auto"
+					color="primary"
+					isDisabled={!data || data.length === 0}
+					isLoading={downloading}
+					startContent={<DownloadIcon />}
+					onPress={onDownloadSankey}
+				>
+					Download Sankey Diagram
+				</Button>
+				<Button
+					className="w-full sm:w-auto"
+					color="success"
+					isDisabled={!data || data.length === 0}
+					isLoading={downloading}
+					startContent={<DownloadIcon />}
+					onPress={onDownloadCsv}
+				>
+					Download CSV
+				</Button>
 			</div>
 
 			{loading ? (
 				<p>Loading applications...</p>
 			) : (
-				<div className="overflow-x-auto bg-white shadow-md rounded-lg">
+				<div className="overflow-x-auto bg-white dark:bg-black shadow-md rounded-lg">
 					<Table aria-label="Applications Table">
 						<TableHeader>
 							<TableColumn>Company</TableColumn>
