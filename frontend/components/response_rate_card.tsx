@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Clock } from "lucide-react";
+
+import { ClockIcon } from "@/components/icons";
 
 export default function ResponseRateCard() {
 	const [lastUpdated, setLastUpdated] = useState<string>("");
@@ -83,7 +84,7 @@ export default function ResponseRateCard() {
 			<p className="text-6xl font-bold text-blue-600 dark:text-blue-400 mb-1">{value}%</p>
 			<h3 className="text-base font-medium text-gray-700 dark:text-gray-300 mb-3">% Response Rate</h3>
 			<div className="flex gap-2 text-base text-gray-500 dark:text-gray-400">
-				<Clock className="self-center" size={16} />
+				<ClockIcon className="self-center" />
 				<span>Last Updated: {lastUpdated}</span>
 			</div>
 		</div>
