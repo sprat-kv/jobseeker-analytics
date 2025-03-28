@@ -119,7 +119,7 @@ export default function JobApplicationsDashboard({
 									Cancel
 								</Button>
 								<Button color="danger" onPress={onClose}>
-									Delete
+									Yes, remove it
 								</Button>
 							</ModalFooter>
 						</>
