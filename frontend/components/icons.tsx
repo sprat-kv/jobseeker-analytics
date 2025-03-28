@@ -275,7 +275,7 @@ export const CheckCircleIcon: React.FC<IconSvgProps> = ({ size = 24, width, heig
 	</svg>
 );
 
-export const TrashIcon: React.FC<IconSvgProps> = ({ size = 36, width, height, ...props }) => (
+export const TrashIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...props }) => (
 	<svg
 		height={size || height}
 		viewBox="0 0 512 512"
