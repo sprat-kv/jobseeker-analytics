@@ -112,7 +112,7 @@ export default function JobApplicationsDashboard({
 						<>
 							<ModalHeader className="flex flex-col gap-1">Confirm Removal</ModalHeader>
 							<ModalBody>
-								<p>Are you sure you want to remove this job application?</p>
+								<p>Are you sure you want to remove this row? Every job application impacts your metrics, so it's important to keep all records unless we accidentally made a mistake and picked up a non-job-related record.</p>
 							</ModalBody>
 							<ModalFooter>
 								<Button color="default" variant="ghost" onPress={onClose}>
