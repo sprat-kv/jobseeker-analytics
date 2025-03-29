@@ -6,6 +6,7 @@ import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, Dropdown
 
 import { DownloadIcon, SortIcon } from "@/components/icons";
 import ResponseRateCard from "@/components/response_rate_card";
+import UniqueOpenRateChart from "@/components/response_rate_chart";
 
 export interface Application {
 	id?: string;
@@ -91,13 +92,16 @@ export default function JobApplicationsDashboard({
 	};
 
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-bold">{title}</h1>
+		<div className="p-6 pt-2">
+			<h1 className="text-2xl font-bold mt-0">{title}</h1>
 			{extraHeader}
-			<div className="flex gap-x-4 mb-6">
-				<ResponseRateCard />
-				<div className="mt-4 bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-4 w-1/2 h-auto" />{" "}
-				{/* Empty card */}
+			<div className="flex flex-col gap-4 mt-4 mb-6 md:flex-row">
+				<div className="w-full md:w-[30%]">
+					<ResponseRateCard />
+				</div>
+				<div className="md:w-[70%]">
+					<UniqueOpenRateChart />
+				</div>
 			</div>
 			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
 				<Dropdown>
@@ -130,7 +134,7 @@ export default function JobApplicationsDashboard({
 					</DropdownMenu>
 				</Dropdown>
 				<Button
-					className="w-full sm:w-auto"
+					className="w-full sm:w-auto text-white"
 					color="primary"
 					isDisabled={!data || data.length === 0}
 					isLoading={downloading}
@@ -140,7 +144,7 @@ export default function JobApplicationsDashboard({
 					Download Sankey Diagram
 				</Button>
 				<Button
-					className="w-full sm:w-auto"
+					className="w-full sm:w-auto text-white"
 					color="success"
 					isDisabled={!data || data.length === 0}
 					isLoading={downloading}
