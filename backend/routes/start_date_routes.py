@@ -25,7 +25,7 @@ async def set_start_date(request: Request, start_date: str = Form(...), user_id:
     # Retrieve stored credentials
     creds_json = request.session.get("creds")
     if not creds_json:
-        logger.error(f"Missing credentials for user_id: {user_id}")
+        logger.error(f"user_id:{user_id} missing credentials /set-start-date")
         return HTMLResponse(content="User not authenticated. Please log in again.", status_code=401)
 
     try:
