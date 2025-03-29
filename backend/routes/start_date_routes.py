@@ -17,7 +17,6 @@ router = APIRouter()
 @router.post("/set-start-date")
 async def set_start_date(request: Request, start_date: str = Form(...), user_id: str = Depends(validate_session)):
     """Updates the user's job search start date in the database."""
-    print(request.session)
     user_id = request.session.get("user_id")
 
     if not user_id:
