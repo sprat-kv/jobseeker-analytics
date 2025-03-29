@@ -2,9 +2,22 @@
 
 import React, { useState, useEffect } from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	Tooltip
+} from "@heroui/react";
 
-import { DownloadIcon, SortIcon } from "@/components/icons";
+import { DownloadIcon, SortIcon, TrashIcon } from "@/components/icons";
 import ResponseRateCard from "@/components/response_rate_card";
 import UniqueOpenRateChart from "@/components/response_rate_chart";
 
@@ -46,9 +59,9 @@ export default function JobApplicationsDashboard({
 }: JobApplicationsDashboardProps) {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
+	const [showDelete, setShowDelete] = useState(false);
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
-
 	// Sort data based on selected key
 	useEffect(() => {
 		const sortData = () => {
@@ -93,6 +106,30 @@ export default function JobApplicationsDashboard({
 
 	return (
 		<div className="p-6 pt-2">
+			<Modal isOpen={showDelete} onOpenChange={(isOpen) => setShowDelete(isOpen)}>
+				<ModalContent>
+					{(onClose) => (
+						<>
+							<ModalHeader className="flex flex-col gap-1">Confirm Removal</ModalHeader>
+							<ModalBody>
+								<p>
+									Are you sure you want to remove this row? Every job application impacts your
+									metrics, so it's important to keep all records unless we accidentally made a mistake
+									and picked up a non-job-related record.
+								</p>
+							</ModalBody>
+							<ModalFooter>
+								<Button color="default" variant="ghost" onPress={onClose}>
+									Cancel
+								</Button>
+								<Button color="danger" onPress={onClose}>
+									Yes, remove it
+								</Button>
+							</ModalFooter>
+						</>
+					)}
+				</ModalContent>
+			</Modal>
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
 			{extraHeader}
 			<div className="flex flex-col gap-4 mt-4 mb-6 md:flex-row">
@@ -167,10 +204,14 @@ export default function JobApplicationsDashboard({
 							<TableColumn>Job Title</TableColumn>
 							<TableColumn>Subject</TableColumn>
 							<TableColumn>Sender</TableColumn>
+							<TableColumn>Actions</TableColumn>
 						</TableHeader>
 						<TableBody>
 							{sortedData.map((item) => (
-								<TableRow key={item.id || item.received_at}>
+								<TableRow
+									key={item.id || item.received_at}
+									className="hover:bg-default-100 transition-colors"
+								>
 									<TableCell>{item.company_name || "--"}</TableCell>
 									<TableCell>
 										<span
@@ -187,6 +228,18 @@ export default function JobApplicationsDashboard({
 									<TableCell>{item.job_title || "--"}</TableCell>
 									<TableCell className="max-w-[300px] truncate">{item.subject || "--"}</TableCell>
 									<TableCell>{item.email_from || "--"}</TableCell>
+									<TableCell className="text-center">
+										<Tooltip content="Remove">
+											<Button
+												isIconOnly
+												size="sm"
+												variant="light"
+												onPress={() => setShowDelete(!showDelete)}
+											>
+												<TrashIcon className="text-gray-800 dark:text-gray-300" />
+											</Button>
+										</Tooltip>
+									</TableCell>
 								</TableRow>
 							))}
 						</TableBody>
