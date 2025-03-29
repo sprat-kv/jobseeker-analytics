@@ -40,7 +40,7 @@ async def set_start_date(request: Request, start_date: str = Form(...), user_id:
         # Update session to remove "new user" status
         request.session["is_new_user"] = False
 
-        print("Start date updated successfully")
+        logger.info(f"user_id:{user_id} added start date {start_date}")
 
         return JSONResponse(content={"message": "Start date updated successfully"}, status_code=200)
     except Exception as e:
