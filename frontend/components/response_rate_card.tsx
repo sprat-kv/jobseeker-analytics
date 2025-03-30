@@ -54,7 +54,7 @@ export default function ResponseRateCard() {
 				
 			} finally {
 				// Set loading to false
-				setLoading(false);
+				
 			}
 		};
 
