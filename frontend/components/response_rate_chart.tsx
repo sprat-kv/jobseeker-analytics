@@ -43,7 +43,7 @@ export default function JobTitleResponseChart() {
 					if (response.status === 404) {
 						
 						console.warn("No data found");
-						setData([]);
+						
 						return;
 					} else {
 						throw new Error(`HTTP error! status: ${response.status}`);
@@ -55,7 +55,7 @@ export default function JobTitleResponseChart() {
 				if (result.length === 0) {
 					
 					console.warn("Empty response");
-					setData([]);
+					
 				} else {
 					
 					setData(result);
