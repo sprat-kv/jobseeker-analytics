@@ -99,7 +99,7 @@ export default function JobApplicationsDashboard({
 
 	useEffect(() => {
 		async function fetchSessionData() {
-			const response = await fetch("http://localhost:8000/api/session-data", {
+			const response = await fetch(`${apiUrl}/api/session-data`, {
 				method: "GET",
 				credentials: "include"
 			});

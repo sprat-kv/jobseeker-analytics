@@ -87,10 +87,10 @@ async def login(request: Request, background_tasks: BackgroundTasks):
             logger.info("Background task started for user_id: %s", user.user_id)
         else:
             request.session["is_new_user"] = True
-            redirect_url = f"{APP_URL}/dashboard"  # Prompt for start date
+            response = RedirectResponse(
+                url=f"{settings.APP_URL}/dashboard", status_code=303
+            )
             print("User does not exist")
-
-        response = RedirectResponse(url=redirect_url, status_code=303)
 
         response = set_conditional_cookie(
             key="Authorization", value=session_id, response=response
