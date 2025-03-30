@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { DatePicker } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date";
 import { useRouter } from "next/navigation";
