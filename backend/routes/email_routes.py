@@ -84,7 +84,7 @@ async def start_fetch_emails(
     
     if not user_id:
         raise HTTPException(status_code=403, detail="Unauthorized")
-    print("this is fetching emails:")
+    logger.info(f"user_id:{user_id} start_fetch_emails")
     # Retrieve stored credentials
     creds_json = request.session.get("creds")
     if not creds_json:
