@@ -40,12 +40,12 @@ export default function JobTitleResponseChart() {
 				});
 
 				if (!response.ok) {
-					if (response.status === 404) {
-						console.warn("No data found");
-						return;
-					} else {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
+					addToast({
+						title: "An error occurred while loading the response rate",
+						description: "Please try again or contact help@jobba.help if the issue persists.",
+						color: "danger"
+					});
+					return;
 				}
 
 				const result = await response.json();
@@ -56,9 +56,11 @@ export default function JobTitleResponseChart() {
 					setData(result);
 				}
 			} catch {
-				console.error("Failed to load data");
-			} finally {
-				// Set loading to false
+				addToast({
+					title: "Connection Error",
+					description: "Failed to fetch response rate data",
+					color: "danger"
+				});
 			}
 		};
 
