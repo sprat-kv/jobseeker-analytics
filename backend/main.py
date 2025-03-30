@@ -110,31 +110,6 @@ async def add_user_endpoint(user_data: UserData, request: Request, user_id: str 
 async def root(request: Request, response_class=HTMLResponse):
     return templates.TemplateResponse("homepage.html", {"request": request})
 
-
-@app.get("/download-file")
-@limiter.limit("2/minute")
-async def download_file(request: Request, user_id: str = Depends(validate_session)):
-    if not user_id:
-        return RedirectResponse("/logout", status_code=303)
-    directory = get_user_filepath(user_id)
-    filename = "emails.csv"
-    filepath = f"{directory}/{filename}"
-    if os.path.exists(filepath):
-        logger.info("user_id:%s downloading from filepath %s", user_id, filepath)
-        return FileResponse(filepath)
-    return HTMLResponse(content="File not found :( ", status_code=404)
-
-
-@app.get("/success", response_class=HTMLResponse)
-@limiter.limit("5/minute")
-def success(request: Request, user_id: str = Depends(validate_session)):
-    if not user_id:
-        return RedirectResponse("/logout", status_code=303)
-    today = str(datetime.date.today())
-    return templates.TemplateResponse(
-        "success.html", {"request": request, "today": today}
-    )
-
 # Run the app using Uvicorn
 if __name__ == "__main__":
     import uvicorn
