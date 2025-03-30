@@ -50,7 +50,6 @@ export default function ResponseRateCard() {
 				console.error("Failed to load data");
 			} finally {
 				// Set loading to false
-				
 			}
 		};
 
