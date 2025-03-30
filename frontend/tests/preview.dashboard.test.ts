@@ -34,17 +34,15 @@ test.describe("Preview Dashboard Tests", () => {
 	});
 
 	test("Correct sorting by Company (A-Z)", async ({ page }) => {
-		// Test sorting by company name
 		await page.getByTestId("Sort By").click();
 		await page.getByRole("menuitemradio", { name: "Company (A-Z)" }).click();
 
-		// Verify first row is "Another Company" (A comes before T)
+		// Verify first row is BrightMinds
 		const firstRow = page.locator("tbody tr").first();
 		await expect(firstRow.getByRole("rowheader")).toHaveText("BrightMinds");
 	});
 
 	test("Correct sorting by Date Received (Newest First)", async ({ page }) => {
-		// Test sorting by date (newest first)
 		await page.getByTestId("Sort By").click();
 		await page.getByRole("menuitemradio", { name: "Date Received (Newest First)" }).click();
 
@@ -57,7 +55,6 @@ test.describe("Preview Dashboard Tests", () => {
 
 	test("Shows delete confirmation modal", async ({ page }) => {
 		await page.getByRole("row", { name: "FutureVision" }).getByRole("button").click();
-		// await expect(page.getByRole('heading', { name: 'Confirm Removal' })).toBeVisible();
 		await expect(page.getByText("Confirm Removal")).toBeVisible();
 		await expect(page.getByText("Are you sure you want to remove this row?")).toBeVisible();
 		await expect(page.getByRole("button", { name: "Cancel" })).toBeVisible();
