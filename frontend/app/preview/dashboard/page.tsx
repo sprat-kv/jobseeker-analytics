@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/toast";
 
-import JobApplicationsDashboard, { Application } from "@/components/JobApplicationsDashboard";
+import JobApplicationsDashboard, { Application } from "@/components/JobApplicationsDashboardPreview";
 import { mockData } from "@/utils/mockData";
 
 export default function PreviewDashboard() {
@@ -13,6 +14,8 @@ export default function PreviewDashboard() {
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
 	const router = useRouter();
+
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	useEffect(() => {
 		setLoading(true);
@@ -98,6 +101,35 @@ export default function PreviewDashboard() {
 		</Modal>
 	);
 
+	const handleRemoveItem = async (id: string) => {
+		try {
+			// Make a DELETE request to the backend
+			const response = await fetch(`${apiUrl}/delete-email/${id}`, {
+				method: "DELETE",
+				credentials: "include" // Include cookies for authentication
+			});
+
+			if (!response.ok) {
+				throw new Error("Failed to delete the item");
+			}
+
+			// If the deletion is successful, update the local state
+			setData((prevData) => prevData.filter((item) => item.id !== id));
+
+			addToast({
+				title: "Item removed successfully",
+				color: "success"
+			});
+		} catch (error) {
+			console.error("Error deleting item:", error);
+			addToast({
+				title: "Failed to remove item",
+				description: "Please try again or contact support.",
+				color: "danger"
+			});
+		}
+	};
+
 	return (
 		<JobApplicationsDashboard
 			data={data}
@@ -107,6 +139,7 @@ export default function PreviewDashboard() {
 			title="Preview Dashboard"
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
+			onRemoveItem={handleRemoveItem}
 		/>
 	);
 }

@@ -14,12 +14,14 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
-	Tooltip
+	Tooltip,
+	useDisclosure
 } from "@heroui/react";
 
 import { DownloadIcon, SortIcon, TrashIcon } from "@/components/icons";
-import ResponseRateCard from "@/components/response_rate_card";
-import UniqueOpenRateChart from "@/components/response_rate_chart";
+import ResponseRateCard from "@/components/response_rate_card_preview";
+import UniqueOpenRateChart from "@/components/response_rate_chart_preview";
+import { mockData } from "@/utils/mockData";
 
 export interface Application {
 	id?: string;
@@ -49,16 +51,18 @@ const getInitialSortKey = (key: string) => {
 };
 
 export default function JobApplicationsDashboard({
-	title = "Job Applications Dashboard",
-	data,
-	loading,
-	downloading,
+	title = "Dashboard Preview",
 	onDownloadCsv,
 	onDownloadSankey,
 	onRemoveItem, // Accept the callback
 	initialSortKey = "Date (Newest)",
 	extraHeader
 }: JobApplicationsDashboardProps) {
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [data, setData] = useState<Application[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [downloading, setDownloading] = useState(false);
+
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
 	const [showDelete, setShowDelete] = useState(false);
@@ -66,6 +70,24 @@ export default function JobApplicationsDashboard({
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 	// Sort data based on selected key
+
+	useEffect(() => {
+		setLoading(true);
+		const dataTimeout = setTimeout(() => {
+			setData(mockData);
+			setLoading(false);
+		}, 1500);
+
+		const openTimeout = setTimeout(() => {
+			onOpen();
+		}, 10000);
+
+		return () => {
+			clearTimeout(dataTimeout);
+			clearTimeout(openTimeout);
+		};
+	}, [onOpen]);
+
 	useEffect(() => {
 		const sortData = () => {
 			const sorted = [...data];
@@ -109,6 +131,7 @@ export default function JobApplicationsDashboard({
 
 	return (
 		<div className="p-6 pt-2">
+			{extraHeader}
 			<Modal isOpen={showDelete} onOpenChange={(isOpen) => setShowDelete(isOpen)}>
 				<ModalContent>
 					{(onClose) => (
@@ -143,7 +166,6 @@ export default function JobApplicationsDashboard({
 				</ModalContent>
 			</Modal>
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
-			{extraHeader}
 			<div className="flex flex-col gap-4 mt-4 mb-6 md:flex-row">
 				<div className="w-full md:w-[30%]">
 					<ResponseRateCard />
