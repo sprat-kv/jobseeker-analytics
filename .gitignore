@@ -1,12 +1,13 @@
 # General
 .DS_Store
 *.pem
-*.pyc
+*.py[cod]
 .vscode/
 *.csv
 *.txt
-*.json
+credentials.json
 .venv/
+venv/
 __pycache__/
 
 # Ignore all .env files
@@ -35,6 +36,12 @@ backend/*.csv
 backend/data/
 backend/.vscode/
 
+# Alembic-specific excludes
+# Nothing to exclude as database migration files should be committed
+
+# Local configuration overrides (if you have them)
+alembic.local.ini
+
 # Frontend (Next.js)
 frontend/node_modules/
 frontend/.pnp
@@ -51,6 +58,7 @@ frontend/build/
 frontend/.vercel
 frontend/next-env.d.ts
 frontend/*.tsbuildinfo
+frontend/playwright-report/
 
 # Dependencies
 node_modules/
