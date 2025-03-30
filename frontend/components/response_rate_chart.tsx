@@ -41,7 +41,10 @@ export default function JobTitleResponseChart() {
 
 				if (!response.ok) {
 					if (response.status === 404) {
-						// No data found
+						
+						console.warn("No data found");
+						setData([]);
+						return;
 					} else {
 						throw new Error(`HTTP error! status: ${response.status}`);
 					}
@@ -50,14 +53,19 @@ export default function JobTitleResponseChart() {
 				const result = await response.json();
 
 				if (result.length === 0) {
-					// No data found
+					
+					console.warn("Empty response");
+					setData([]);
 				} else {
+					
 					setData(result);
 				}
 			} catch {
-				// Failed to load data
+				console.error("Failed to load data:", error);
+				setError("Failed to load data. Please try again later.");
 			} finally {
 				// Set loading to false
+				setLoading(false);
 			}
 		};
 
