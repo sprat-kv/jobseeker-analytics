@@ -92,6 +92,7 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
 
 
 @app.post("/api/add-user")
+@limiter.limit("3/minute")
 async def add_user_endpoint(user_data: UserData, request: Request, user_id: str = Depends(validate_session)):
     """
     This endpoint adds a user to the database and session storage
@@ -111,6 +112,7 @@ async def root(request: Request, response_class=HTMLResponse):
 
 
 @app.get("/download-file")
+@limiter.limit("2/minute")
 async def download_file(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
@@ -124,6 +126,7 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
 
 
 @app.get("/success", response_class=HTMLResponse)
+@limiter.limit("5/minute")
 def success(request: Request, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)

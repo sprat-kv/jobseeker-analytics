@@ -6,6 +6,10 @@ import json
 from utils.auth_utils import AuthenticatedUser
 from google.oauth2.credentials import Credentials
 from session.session_layer import validate_session
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -16,6 +20,7 @@ api_call_finished = False
 router = APIRouter()
 
 @router.post("/set-start-date")
+@limiter.limit("1/minute")
 async def set_start_date(request: Request, start_date: str = Form(...), user_id: str = Depends(validate_session)):
     """Updates the user's job search start date in the database."""
     user_id = request.session.get("user_id")
@@ -56,6 +61,7 @@ def get_start_date(request: Request, user_id: str = Depends(validate_session)) -
 
 
 @router.get("/api/session-data")
+@limiter.limit("5/minute")
 async def get_session_data(request: Request, user_id: str = Depends(validate_session)):
     """Fetches session data for the user."""
     

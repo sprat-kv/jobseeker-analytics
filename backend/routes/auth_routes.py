@@ -10,7 +10,10 @@ from session.session_layer import create_random_session_string, validate_session
 from utils.config_utils import get_settings
 from utils.cookie_utils import set_conditional_cookie
 from routes.email_routes import fetch_emails_to_db
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
+limiter = Limiter(key_func=get_remote_address)
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -24,6 +27,7 @@ router = APIRouter()
 APP_URL = settings.APP_URL
 
 @router.get("/login")
+@limiter.limit("10/minute")
 async def login(request: Request, background_tasks: BackgroundTasks):
     """Handles Google OAuth2 login and authorization code exchange."""
     code = request.query_params.get("code")

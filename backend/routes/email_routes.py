@@ -17,6 +17,10 @@ import json
 from start_date.storage import get_start_date_email_filter
 from constants import QUERY_APPLIED_EMAIL_FILTER
 from datetime import datetime
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
 
 # Logger setup
 logger = logging.getLogger(__name__)
@@ -60,6 +64,7 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
     
 
 @router.get("/get-emails", response_model=List[UserEmails])
+@limiter.limit("5/minute")
 def query_emails(request: Request, user_id: str = Depends(validate_session)) -> None:
     with Session(engine) as session:
         try:
@@ -77,6 +82,7 @@ def query_emails(request: Request, user_id: str = Depends(validate_session)) -> 
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
         
 @router.post("/fetch-emails")
+@limiter.limit("5/minute")
 async def start_fetch_emails(
     request: Request, background_tasks: BackgroundTasks, user_id: str = Depends(validate_session)
 ):
