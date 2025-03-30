@@ -49,7 +49,10 @@ export default function ResponseRateCardPreview() {
 	};
 
 	return (
-		<div className="flex flex-col justify-center bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-7 md:h-[350px]">
+		<div
+			className="flex flex-col justify-center bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-7 md:h-[350px]"
+			data-testid="response-rate-card"
+		>
 			<p className="text-8xl font-bold text-blue-600 dark:text-blue-400 mb-1">{value}%</p>
 			<h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-4">% Response Rate</h3>
 			<div className="flex gap-2 text-base text-gray-500 dark:text-gray-400">

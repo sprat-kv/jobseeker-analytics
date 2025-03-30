@@ -180,6 +180,7 @@ export default function JobApplicationsDashboard({
 						<Button
 							className="pl-3"
 							color="primary"
+							data-testid="Sort By"
 							isDisabled={!data || data.length === 0}
 							startContent={<SortIcon />}
 							variant="bordered"

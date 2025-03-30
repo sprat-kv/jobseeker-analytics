@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Preview Progress Bar Tests", () => {
+test.describe("Preview Processing Tests", () => {
 	const PROCESSING_URL = "http://localhost:3000/preview/processing";
 
 	test.beforeEach(async ({ page }) => {

@@ -65,7 +65,7 @@ export default function JobTitleResponseChart() {
 	}, [router]);
 
 	return (
-		<div className="bg-gray-100 dark:bg-gray-800 p-6 shadow-md rounded-lg">
+		<div className="bg-gray-100 dark:bg-gray-800 p-6 shadow-md rounded-lg" data-testid="response-rate-chart">
 			<div className="flex justify-between items-center mb-6">
 				<h2 className="text-gray-700 dark:text-gray-300 text-base md:text-xl font-semibold">
 					Response Rate based on Job Titles
