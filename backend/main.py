@@ -92,7 +92,7 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
 
 
 @app.post("/api/add-user")
-async def add_user_endpoint(user_data: UserData, request: Request):
+async def add_user_endpoint(user_data: UserData, request: Request, user_id: str = Depends(validate_session)):
     """
     This endpoint adds a user to the database and session storage
     """

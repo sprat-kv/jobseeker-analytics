@@ -48,14 +48,15 @@ async def set_start_date(request: Request, start_date: str = Form(...), user_id:
         logger.error(f"Error reconstructing credentials: {e}")
         return HTMLResponse(content="Failed to save start date. Try again.", status_code=500)
     
-def get_start_date(request: Request) -> str:
+def get_start_date(request: Request, user_id: str = Depends(validate_session)) -> str:
     """Fetches the user's job search start date from the database."""
     # Query the database for the user's start date
+    logger.info(f"Getting start date for user_id: {user_id}")
     return request.session.get("start_date")
 
 
 @router.get("/api/session-data")
-async def get_session_data(request: Request):
+async def get_session_data(request: Request, user_id: str = Depends(validate_session)):
     """Fetches session data for the user."""
     
     user_id = request.session.get("user_id")

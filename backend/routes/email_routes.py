@@ -108,11 +108,11 @@ async def start_fetch_emails(
         raise HTTPException(status_code=500, detail="Failed to authenticate user")
 
 
-def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None) -> None:
+def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None, user_id: str = Depends(validate_session)) -> None:
     global api_call_finished, total_emails, processed_emails
+    logger.info(f"Fetching emails to db for user_id: {user_id}")
 
     api_call_finished = False  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
-    logger.info("user_id:%s fetch_emails_to_db", user.user_id)
 
     start_date = request.session.get("start_date")
     start_date_query = get_start_date_email_filter(start_date)
@@ -131,9 +131,9 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 query = QUERY_APPLIED_EMAIL_FILTER
                 query += f" after:{additional_time}"
             
-                logger.info(f"user_id:{user.user_id} Fetching emails after {last_updated.isoformat()}")
+                logger.info(f"user_id:{user_id} Fetching emails after {last_updated.isoformat()}")
         else:
-            logger.info(f"user_id:{user.user_id} Fetching all emails (no last_date maybe with start date)")
+            logger.info(f"user_id:{user_id} Fetching all emails (no last_date maybe with start date)")
 
         service = build("gmail", "v1", credentials=user.creds)
 
@@ -144,7 +144,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         request.session["is_new_user"] = False
 
         if not messages:
-            logger.info(f"user_id:{user.user_id} No job application emails found.")
+            logger.info(f"user_id:{user_id} No job application emails found.")
             api_call_finished = True
             return
 
@@ -158,7 +158,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             # (email_subject, email_from, email_domain, company_name, email_dt)
             msg_id = message["id"]
             logger.info(
-                f"user_id:{user.user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
+                f"user_id:{user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
             )
             processed_emails = idx + 1
 
@@ -173,16 +173,16 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                             result[key] = "unknown"
                 except Exception as e:
                     logger.error(
-                        f"user_id:{user.user_id} Error processing email {idx + 1} of {len(messages)} with id {msg_id}: {e}"
+                        f"user_id:{user_id} Error processing email {idx + 1} of {len(messages)} with id {msg_id}: {e}"
                     )
 
                 if not isinstance(result, str) and result:
                     logger.info(
-                        f"user_id:{user.user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
+                        f"user_id:{user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
                 else:
                     logger.warning(
-                        f"user_id:{user.user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
+                        f"user_id:{user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
                     result = {"company_name": "unknown", "application_status": "unknown", "job_title": "unknown"}
 
@@ -204,8 +204,8 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             session.add_all(email_records)
             session.commit()
             logger.info(
-                f"Added {len(email_records)} email records for user {user.user_id}"
+                f"Added {len(email_records)} email records for user {user_id}"
             )
 
         api_call_finished = True
-        logger.info(f"user_id:{user.user_id} Email fetching complete.")
+        logger.info(f"user_id:{user_id} Email fetching complete.")
