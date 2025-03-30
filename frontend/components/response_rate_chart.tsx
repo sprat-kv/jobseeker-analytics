@@ -64,7 +64,7 @@ export default function JobTitleResponseChart() {
 				console.error("Failed to load data");
 			} finally {
 				// Set loading to false
-				setLoading(false);
+				
 			}
 		};
 
