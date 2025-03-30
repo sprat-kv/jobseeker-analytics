@@ -1,15 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/react";
 
 import { ClockIcon } from "@/components/icons";
 
 export default function ResponseRateCard() {
 	const [lastUpdated, setLastUpdated] = useState<string>("");
+	const [value, setValue] = useState(0);
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/";
-	const [value, setValue] = useState(null);
-	const router = useRouter();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -20,41 +19,27 @@ export default function ResponseRateCard() {
 				});
 
 				if (!response.ok) {
-					if (response.status === 404) {
-						// No data found
-						console.warn("No data found");
-						return;
-					} else {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
+					addToast({
+						title: "An error occurred while loading the response rate",
+						description: "Please try again or contact help@jobba.help if the issue persists.",
+						color: "danger"
+					});
+					return;
 				}
 				const result = await response.json();
-				// eslint-disable-next-line no-console
-				console.log(result.value);
-
-				if (result.length === 0) {
-					// No data found
-					console.warn("Empty response");
-				} else {
-					setValue(result.value);
-				}
-				// Set the last updated time (assuming the API provides a timestamp)
-				if (result.lastUpdated) {
-					setLastUpdated(formatDate(new Date(result.lastUpdated)));
-				} else {
-					// Fallback to the current time if no timestamp is provided
-					setLastUpdated(formatDate(new Date()));
-				}
+				setValue(result?.value ?? 0);
+				setLastUpdated(formatDate(new Date()));
 			} catch {
-				// Failed to load data
-				console.error("Failed to load data");
-			} finally {
-				// Set loading to false
+				addToast({
+					title: "Connection Error",
+					description: "Failed to fetch response rate data",
+					color: "danger"
+				});
 			}
 		};
 
 		fetchData();
-	}, [router]);
+	}, []);
 
 	// Helper function to format the date
 	const formatDate = (date: Date): string => {
@@ -87,7 +72,7 @@ export default function ResponseRateCard() {
 	return (
 		<div className="flex flex-col justify-center bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg p-7 md:h-[350px]">
 			<p className="text-8xl font-bold text-blue-600 dark:text-blue-400 mb-1">{value}%</p>
-			<h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-4">% Response Rate</h3>
+			<h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-4">Response Rate</h3>
 			<div className="flex gap-2 text-base text-gray-500 dark:text-gray-400">
 				<ClockIcon className="self-center" />
 				<span>Last Updated: {lastUpdated}</span>
