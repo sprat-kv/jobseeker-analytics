@@ -23,7 +23,6 @@ export default function ResponseRateCard() {
 					if (response.status === 404) {
 						// No data found
 						console.warn("No data found");
-						
 						return;
 					} else {
 						throw new Error(`HTTP error! status: ${response.status}`);
@@ -36,8 +35,6 @@ export default function ResponseRateCard() {
 				if (result.length === 0) {
 					// No data found
 					console.warn("Empty response");
-					
-					
 				} else {
 					setValue(result.value);
 				}
@@ -51,7 +48,6 @@ export default function ResponseRateCard() {
 			} catch {
 				// Failed to load data
 				console.error("Failed to load data");
-				
 			} finally {
 				// Set loading to false
 				
