@@ -2,6 +2,7 @@
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/react";
 
 interface ResponseData {
 	title: string;
