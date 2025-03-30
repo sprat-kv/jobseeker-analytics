@@ -41,9 +41,7 @@ export default function JobTitleResponseChart() {
 
 				if (!response.ok) {
 					if (response.status === 404) {
-						
 						console.warn("No data found");
-						
 						return;
 					} else {
 						throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,18 +51,14 @@ export default function JobTitleResponseChart() {
 				const result = await response.json();
 
 				if (result.length === 0) {
-					
 					console.warn("Empty response");
-					
 				} else {
-					
 					setData(result);
 				}
 			} catch {
 				console.error("Failed to load data");
 			} finally {
 				// Set loading to false
-				
 			}
 		};
 
