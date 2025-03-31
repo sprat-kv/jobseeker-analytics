@@ -214,9 +214,9 @@ export default function Dashboard() {
 			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
-			onRemoveItem={handleRemoveItem}
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
+			onRemoveItem={handleRemoveItem}
 		/>
 	);
 }

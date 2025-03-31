@@ -13,14 +13,14 @@ export default function PreviewDashboard() {
 	const [data, setData] = useState<Application[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
-  
-  const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(1);
-	
-  const router = useRouter();
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-  useEffect(() => {
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
+
+	const router = useRouter();
+	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+	useEffect(() => {
 		setLoading(true);
 		const dataTimeout = setTimeout(() => {
 			setData(mockData);
@@ -157,9 +157,9 @@ export default function PreviewDashboard() {
 			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
-			onRemoveItem={handleRemoveItem}
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
+			onRemoveItem={handleRemoveItem}
 		/>
 	);
 }
