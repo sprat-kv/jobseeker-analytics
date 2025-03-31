@@ -178,15 +178,15 @@ export default function Dashboard() {
 
 	return (
 		<JobApplicationsDashboard
+			currentPage={currentPage}
 			data={data}
 			downloading={downloading}
 			loading={loading}
+			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
-			currentPage={currentPage}
-			totalPages={totalPages}
 		/>
 	);
 }

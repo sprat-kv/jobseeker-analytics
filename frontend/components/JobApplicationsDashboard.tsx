@@ -71,7 +71,7 @@ export default function JobApplicationsDashboard({
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 	const router = useRouter();
 	const [showDelete, setShowDelete] = useState(false);
-	
+
 	const [currentPage, setCurrentPage] = useState(1);
 	const pageSize = 10;
 
@@ -346,11 +346,11 @@ export default function JobApplicationsDashboard({
 				</div>
 			)}
 			<div className="flex justify-between items-center mt-4">
-				<Button onPress={handlePreviousPage} disabled={currentPage === 1}>
+				<Button disabled={currentPage === 1} onPress={handlePreviousPage}>
 					Previous
 				</Button>
 				<span>{`${currentPage} of ${totalPages}`}</span>
-				<Button onPress={handleNextPage} disabled={currentPage === totalPages}>
+				<Button disabled={currentPage === totalPages} onPress={handleNextPage}>
 					Next
 				</Button>
 			</div>
