@@ -24,7 +24,7 @@ If you choose option 2, do the following:
 
 - If you experience any errors or want to share feedback, join our Discord at [https://discord.gg/5tTT6WVQyw](https://discord.gg/5tTT6WVQyw).
 - Or submit feedback by [form](https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing)
--You can also always email us at [help@jobba.help](mailto:help@jobba.help).
+- You can also always email us at [help@jobba.help](mailto:help@jobba.help).
 
 ##  🏗 **Tech Stack**
 
