@@ -1,23 +1,35 @@
 "use client";
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { addToast } from "@heroui/react";
 
-interface ResponseData {
-	title: string;
-	rate: number;
-}
+import { mockData } from "../utils/mockData";
 
 const BLUE_COLOR = "#3b82f6";
 
-export default function JobTitleResponseChart() {
-	const router = useRouter();
-	const [activeIndex, setActiveIndex] = useState<number | null>(null);
-	const [data, setData] = useState<ResponseData[]>([]);
-	const [isDarkMode, setIsDarkMode] = useState(false);
+const responseRateData = mockData.reduce(
+	(acc, curr) => {
+		const existing = acc.find((item) => item.title === curr.job_title);
+		if (existing) {
+			existing.count += 1;
+		} else {
+			acc.push({
+				title: curr.job_title,
+				rate: Math.floor(Math.random() * 100),
+				count: 0
+			});
+		}
+		return acc;
+	},
+	[] as {
+		count: number;
+		title: string;
+		rate: number;
+	}[]
+);
 
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+export default function JobTitleResponseChartPreview() {
+	const [activeIndex, setActiveIndex] = useState<number | null>(null);
+	const [isDarkMode, setIsDarkMode] = useState(false);
 
 	useEffect(() => {
 		const checkDarkMode = () => {
@@ -32,42 +44,6 @@ export default function JobTitleResponseChart() {
 		return () => observer.disconnect();
 	}, []);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(`${apiUrl}/get-response-rate`, {
-					method: "GET",
-					credentials: "include" // Include cookies for session management
-				});
-
-				if (!response.ok) {
-					addToast({
-						title: "An error occurred while loading the response rate",
-						description: "Please try again or contact help@jobba.help if the issue persists.",
-						color: "danger"
-					});
-					return;
-				}
-
-				const result = await response.json();
-
-				if (result.length === 0) {
-					console.warn("Empty response");
-				} else {
-					setData(result);
-				}
-			} catch {
-				addToast({
-					title: "Connection Error",
-					description: "Failed to fetch response rate data",
-					color: "danger"
-				});
-			}
-		};
-
-		fetchData();
-	}, [router]);
-
 	return (
 		<div className="bg-gray-100 dark:bg-gray-800 p-6 shadow-md rounded-lg" data-testid="response-rate-chart">
 			<div className="flex justify-between items-center mb-6">
@@ -80,7 +56,7 @@ export default function JobTitleResponseChart() {
 				<div className="min-w-[600px] h-full">
 					<ResponsiveContainer height="100%" width="100%">
 						<BarChart
-							data={data}
+							data={responseRateData}
 							margin={{ top: 5, right: 20, left: 0, bottom: 70 }}
 							onMouseLeave={() => setActiveIndex(null)}
 						>
@@ -134,7 +110,7 @@ export default function JobTitleResponseChart() {
 								radius={[4, 4, 0, 0]}
 								onMouseEnter={(_, index) => setActiveIndex(index)}
 							>
-								{data.map((entry, index) => (
+								{responseRateData.map((entry, index) => (
 									<Cell
 										key={`cell-${index}`}
 										fill={index === activeIndex ? "url(#barGradient)" : BLUE_COLOR}

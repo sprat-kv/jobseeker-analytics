@@ -176,6 +176,35 @@ export default function Dashboard() {
 		}
 	}
 
+	const handleRemoveItem = async (id: string) => {
+		try {
+			// Make a DELETE request to the backend
+			const response = await fetch(`${apiUrl}/delete-email/${id}`, {
+				method: "DELETE",
+				credentials: "include" // Include cookies for authentication
+			});
+
+			if (!response.ok) {
+				throw new Error("Failed to delete the item");
+			}
+
+			// If the deletion is successful, update the local state
+			setData((prevData) => prevData.filter((item) => item.id !== id));
+
+			addToast({
+				title: "Item removed successfully",
+				color: "success"
+			});
+		} catch (error) {
+			console.error("Error deleting item:", error);
+			addToast({
+				title: "Failed to remove item",
+				description: "Please try again or contact support.",
+				color: "danger"
+			});
+		}
+	};
+
 	return (
 		<JobApplicationsDashboard
 			currentPage={currentPage}
@@ -187,6 +216,7 @@ export default function Dashboard() {
 			onDownloadSankey={downloadSankey}
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
+			onRemoveItem={handleRemoveItem}
 		/>
 	);
 }

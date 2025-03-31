@@ -1,44 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
-import { addToast } from "@heroui/react";
+
+import { mockData } from "../utils/mockData";
 
 import { ClockIcon } from "@/components/icons";
 
-export default function ResponseRateCard() {
+export default function ResponseRateCardPreview() {
 	const [lastUpdated, setLastUpdated] = useState<string>("");
-	const [value, setValue] = useState(0);
-
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/";
+	const [value, setValue] = useState<number | null>(null);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const response = await fetch(`${apiUrl}/user-response-rate`, {
-					method: "GET",
-					credentials: "include" // Include cookies for session management
-				});
+		const totalApplications = mockData.length;
+		const respondedApplications = mockData.filter((app) => app.application_status !== "No Response").length;
 
-				if (!response.ok) {
-					addToast({
-						title: "An error occurred while loading the response rate",
-						description: "Please try again or contact help@jobba.help if the issue persists.",
-						color: "danger"
-					});
-					return;
-				}
-				const result = await response.json();
-				setValue(result?.value ?? 0);
-				setLastUpdated(formatDate(new Date()));
-			} catch {
-				addToast({
-					title: "Connection Error",
-					description: "Failed to fetch response rate data",
-					color: "danger"
-				});
-			}
-		};
+		const responseRate = totalApplications > 0 ? Math.round((respondedApplications / totalApplications) * 100) : 0;
+		setValue(responseRate);
 
-		fetchData();
+		const lastUpdatedDate = new Date();
+		setLastUpdated(formatDate(lastUpdatedDate));
 	}, []);
 
 	// Helper function to format the date
@@ -75,7 +54,7 @@ export default function ResponseRateCard() {
 			data-testid="response-rate-card"
 		>
 			<p className="text-8xl font-bold text-blue-600 dark:text-blue-400 mb-1">{value}%</p>
-			<h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-4">Response Rate</h3>
+			<h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-4">% Response Rate</h3>
 			<div className="flex gap-2 text-base text-gray-500 dark:text-gray-400">
 				<ClockIcon className="self-center" />
 				<span>Last Updated: {lastUpdated}</span>
