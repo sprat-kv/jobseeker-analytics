@@ -65,7 +65,7 @@ export default function JobApplicationsDashboard({
 	const [showDelete, setShowDelete] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const pageSize = 50;
+	const pageSize = 10;
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
