@@ -43,6 +43,10 @@ interface JobApplicationsDashboardProps {
 	onRemoveItem: (id: string) => void;
 	initialSortKey?: string;
 	extraHeader?: React.ReactNode;
+	onNextPage: () => void;
+	onPrevPage: () => void;
+	currentPage: number;
+	totalPages: number;
 }
 
 // Load sort key from localStorage or use default
