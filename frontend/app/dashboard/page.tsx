@@ -13,6 +13,8 @@ export default function Dashboard() {
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	// Pagination states
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 
@@ -32,7 +34,7 @@ export default function Dashboard() {
 					return;
 				}
 
-				// Fetch applicaions (if user is logged in)
+				// Fetch applications (if user is logged in)
 				const response = await fetch(`${apiUrl}/get-emails?page=${currentPage}`, {
 					method: "GET",
 					credentials: "include" // Include cookies for session management
@@ -47,12 +49,12 @@ export default function Dashboard() {
 				}
 
 				const result = await response.json();
-				setTotalPages(result.totalPages);
+				setTotalPages(result.totalPages); // Set the total pages based on the response
 
-				if (result.length === 0) {
+				if (result.data.length === 0) {
 					setError("No applications found");
 				} else {
-					setData(result);
+					setData(result.data);
 				}
 			} catch {
 				setError("Failed to load applications");
@@ -62,14 +64,16 @@ export default function Dashboard() {
 		};
 
 		fetchData();
-	}, [apiUrl, router, currentPage]);
+	}, [apiUrl, router, currentPage]); // Dependency on currentPage to fetch the data for the correct page
 
+	// Function to go to the next page
 	const nextPage = () => {
 		if (currentPage < totalPages) {
 			setCurrentPage(currentPage + 1);
 		}
 	};
 
+	// Function to go to the previous page
 	const prevPage = () => {
 		if (currentPage > 1) {
 			setCurrentPage(currentPage - 1);
@@ -123,17 +127,6 @@ export default function Dashboard() {
 		}
 	}
 
-	if (error) {
-		return (
-			<div className="p-6 flex flex-col items-center justify-center min-h-[50vh]">
-				<p className="text-red-600 mb-4">{error}</p>
-				<button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={() => window.location.reload()}>
-					Retry
-				</button>
-			</div>
-		);
-	}
-
 	async function downloadSankey() {
 		setDownloading(true);
 		try {
@@ -179,6 +172,17 @@ export default function Dashboard() {
 		} finally {
 			setDownloading(false);
 		}
+	}
+
+	if (error) {
+		return (
+			<div className="p-6 flex flex-col items-center justify-center min-h-[50vh]">
+				<p className="text-red-600 mb-4">{error}</p>
+				<button className="px-4 py-2 bg-blue-600 text-white rounded" onClick={() => window.location.reload()}>
+					Retry
+				</button>
+			</div>
+		);
 	}
 
 	return (
