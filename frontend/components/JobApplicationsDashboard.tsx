@@ -38,7 +38,6 @@ interface JobApplicationsDashboardProps {
 	onDownloadSankey: () => void;
 	initialSortKey?: string;
 	extraHeader?: React.ReactNode;
-
 	onNextPage: () => void;
 	onPrevPage: () => void;
 	currentPage: number;
@@ -63,7 +62,7 @@ export default function JobApplicationsDashboard({
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
 	const [showDelete, setShowDelete] = useState(false);
-
+	
 	const [currentPage, setCurrentPage] = useState(1);
 	const pageSize = 10;
 
