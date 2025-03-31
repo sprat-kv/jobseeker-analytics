@@ -68,7 +68,7 @@ const ProcessingPage = () => {
 				/>
 				<div className="mb-3" />
 				<p className="text-lg mt-4">
-					Your job is being processed. You will be redirected to the download page once it&#39;s ready.
+					Eating rejections for dinner. You will be redirected to your dashboard soon.
 				</p>
 			</div>
 		</div>
