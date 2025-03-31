@@ -2,7 +2,7 @@ import fs from "fs";
 
 import { test, expect } from "@playwright/test";
 
-test.describe("Preview Dashboard Tests", () => {
+test.describe("Dashboard Tests", () => {
 	const DASHBOARD_URL = "http://localhost:3000/preview/dashboard";
 
 	test.beforeEach(async ({ page }) => {

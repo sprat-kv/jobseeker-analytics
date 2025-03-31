@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Processing Tests", () => {
-	const PROCESSING_URL = "http://localhost:3000/processing";
+	const PROCESSING_URL = "http://localhost:3000/preview/processing";
 
 	test.beforeEach(async ({ page }) => {
 		await page.goto(PROCESSING_URL);
