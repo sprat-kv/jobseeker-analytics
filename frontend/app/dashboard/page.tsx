@@ -13,6 +13,8 @@ export default function Dashboard() {
 	const [loading, setLoading] = useState(true);
 	const [downloading, setDownloading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -31,7 +33,7 @@ export default function Dashboard() {
 				}
 
 				// Fetch applicaions (if user is logged in)
-				const response = await fetch(`${apiUrl}/get-emails`, {
+				const response = await fetch(`${apiUrl}/get-emails?page=${currentPage}`, {
 					method: "GET",
 					credentials: "include" // Include cookies for session management
 				});
@@ -45,6 +47,7 @@ export default function Dashboard() {
 				}
 
 				const result = await response.json();
+				setTotalPages(result.totalPages);
 
 				if (result.length === 0) {
 					setError("No applications found");
@@ -59,7 +62,19 @@ export default function Dashboard() {
 		};
 
 		fetchData();
-	}, [apiUrl, router]);
+	}, [apiUrl, router, currentPage]);
+
+	const nextPage = () => {
+		if (currentPage < totalPages) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
+
+	const prevPage = () => {
+		if (currentPage > 1) {
+			setCurrentPage(currentPage - 1);
+		}
+	};
 
 	async function downloadCsv() {
 		setDownloading(true);
@@ -173,6 +188,10 @@ export default function Dashboard() {
 			loading={loading}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
+			onNextPage={nextPage}
+			onPrevPage={prevPage}
+			currentPage={currentPage}
+			totalPages={totalPages}
 		/>
 	);
 }
