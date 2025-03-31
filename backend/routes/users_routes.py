@@ -1,6 +1,6 @@
 import logging
 from fastapi import APIRouter, Depends, Request, HTTPException
-from sqlmodel import Session, select, desc
+from sqlmodel import Session, select
 from db.user_emails import UserEmails
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
