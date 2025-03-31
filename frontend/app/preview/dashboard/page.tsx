@@ -14,10 +14,13 @@ export default function PreviewDashboard() {
 	const [downloading, setDownloading] = useState(false);
 	const router = useRouter();
 
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
 	useEffect(() => {
 		setLoading(true);
 		const dataTimeout = setTimeout(() => {
 			setData(mockData);
+			setTotalPages(Math.ceil(mockData.length / 10));
 			setLoading(false);
 		}, 1500);
 
@@ -30,6 +33,18 @@ export default function PreviewDashboard() {
 			clearTimeout(openTimeout);
 		};
 	}, [onOpen]);
+
+	const nextPage = () => {
+		if (currentPage < totalPages) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
+
+	const prevPage = () => {
+		if (currentPage > 1) {
+			setCurrentPage(currentPage - 1);
+		}
+	};
 
 	// Handle CSV download
 	async function downloadCsv() {
@@ -100,13 +115,17 @@ export default function PreviewDashboard() {
 
 	return (
 		<JobApplicationsDashboard
+			currentPage={currentPage}
 			data={data}
 			downloading={downloading}
 			extraHeader={PromoModal}
 			loading={loading}
 			title="Preview Dashboard"
+			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
+			onNextPage={nextPage}
+			onPrevPage={prevPage}
 		/>
 	);
 }

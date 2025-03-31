@@ -43,6 +43,10 @@ interface JobApplicationsDashboardProps {
 	onDownloadSankey: () => void;
 	initialSortKey?: string;
 	extraHeader?: React.ReactNode;
+	onNextPage: () => void;
+	onPrevPage: () => void;
+	currentPage: number;
+	totalPages: number;
 }
 
 // Load sort key from localStorage or use default
@@ -69,6 +73,9 @@ export default function JobApplicationsDashboard({
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 	const router = useRouter();
 	const [showDelete, setShowDelete] = useState(false);
+
+	const [currentPage, setCurrentPage] = useState(1);
+	const pageSize = 10;
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
@@ -163,12 +170,33 @@ export default function JobApplicationsDashboard({
 		}
 	}, [selectedKeys, data]);
 
+	const paginatedData = sortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
 	// Handle sorting selection change and store it in localStorage
 	const handleSortChange = (keys: Set<string>) => {
 		const sortKey = Array.from(keys)[0];
 		localStorage.setItem("sortKey", sortKey);
 		setSelectedKeys(new Set([sortKey]));
 	};
+
+	// Pagination controls
+	const handleNextPage = () => {
+		if (currentPage < Math.ceil(sortedData.length / pageSize)) {
+			setCurrentPage(currentPage + 1);
+		}
+	};
+
+	const handlePreviousPage = () => {
+		if (currentPage > 1) {
+			setCurrentPage(currentPage - 1);
+		}
+	};
+
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
+	};
+
+	const totalPages = Math.ceil(sortedData.length / pageSize);
 
 	return (
 		<div className="p-6">
@@ -290,7 +318,7 @@ export default function JobApplicationsDashboard({
 							<TableColumn>Actions</TableColumn>
 						</TableHeader>
 						<TableBody>
-							{sortedData.map((item) => (
+							{paginatedData.map((item) => (
 								<TableRow
 									key={item.id || item.received_at}
 									className="hover:bg-default-100 transition-colors"
@@ -329,6 +357,15 @@ export default function JobApplicationsDashboard({
 					</Table>
 				</div>
 			)}
+			<div className="flex justify-between items-center mt-4">
+				<Button disabled={currentPage === 1} onPress={handlePreviousPage}>
+					Previous
+				</Button>
+				<span>{`${currentPage} of ${totalPages}`}</span>
+				<Button disabled={currentPage === totalPages} onPress={handleNextPage}>
+					Next
+				</Button>
+			</div>
 		</div>
 	);
 }
