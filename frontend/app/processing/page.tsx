@@ -56,7 +56,7 @@ const ProcessingPage = () => {
 	return (
 		<div className="flex flex-col items-center justify-center h-full">
 			<div className="flex flex-col items-center justify-center">
-				<h1 className="text-3xl font-semibold mb-4">We are processing your job!</h1>
+				<h1 className="text-3xl font-semibold mb-4">We are hard at work!</h1>
 				<Spinner />
 				<div className="mb-3" />
 				<Progress
