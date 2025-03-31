@@ -2,6 +2,7 @@
 import { BarChart, Bar, XAxis, YAxis, Cell, ResponsiveContainer, Tooltip, CartesianGrid } from "recharts";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { addToast } from "@heroui/react";
 
 interface ResponseData {
 	title: string;
@@ -40,24 +41,27 @@ export default function JobTitleResponseChart() {
 				});
 
 				if (!response.ok) {
-					if (response.status === 404) {
-						// No data found
-					} else {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
+					addToast({
+						title: "An error occurred while loading the response rate",
+						description: "Please try again or contact help@jobba.help if the issue persists.",
+						color: "danger"
+					});
+					return;
 				}
 
 				const result = await response.json();
 
 				if (result.length === 0) {
-					// No data found
+					console.warn("Empty response");
 				} else {
 					setData(result);
 				}
 			} catch {
-				// Failed to load data
-			} finally {
-				// Set loading to false
+				addToast({
+					title: "Connection Error",
+					description: "Failed to fetch response rate data",
+					color: "danger"
+				});
 			}
 		};
 
