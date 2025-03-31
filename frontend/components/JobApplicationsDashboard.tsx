@@ -65,7 +65,7 @@ export default function JobApplicationsDashboard({
 	const [showDelete, setShowDelete] = useState(false);
 
 	const [currentPage, setCurrentPage] = useState(1);
-	const pageSize = 50; // Number of items per page (updated to 20)
+	const pageSize = 50;
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
@@ -104,7 +104,6 @@ export default function JobApplicationsDashboard({
 		}
 	}, [selectedKeys, data]);
 
-	// Slice the sorted data for pagination
 	const paginatedData = sortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
 	// Handle sorting selection change and store it in localStorage
