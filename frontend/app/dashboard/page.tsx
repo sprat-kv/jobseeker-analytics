@@ -1,8 +1,8 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToast } from "@heroui/toast";
+import React from "react";
 
 import JobApplicationsDashboard, { Application } from "@/components/JobApplicationsDashboard";
 import { checkAuth } from "@/utils/auth";
@@ -15,7 +15,6 @@ export default function Dashboard() {
 	const [error, setError] = useState<string | null>(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
-
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	useEffect(() => {
@@ -49,11 +48,7 @@ export default function Dashboard() {
 				const result = await response.json();
 				setTotalPages(result.totalPages);
 
-				if (result.length === 0) {
-					setError("No applications found");
-				} else {
-					setData(result);
-				}
+				setData(result);
 			} catch {
 				setError("Failed to load applications");
 			} finally {
