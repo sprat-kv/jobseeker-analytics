@@ -148,7 +148,7 @@ export default function PreviewDashboard() {
 		}
 	};
 
-	const extraHeaderContent = (
+	const previewResponseRateContent = (
 		<>
 			{PromoModal}
 			<div className="flex flex-col gap-4 mt-4 mb-6 md:flex-row">
@@ -167,7 +167,7 @@ export default function PreviewDashboard() {
 			currentPage={currentPage}
 			data={data}
 			downloading={downloading}
-			extraHeader={extraHeaderContent}
+			extraHeader={previewResponseRateContent}
 			loading={loading}
 			title="Preview Dashboard"
 			totalPages={totalPages}

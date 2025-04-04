@@ -207,7 +207,7 @@ export default function Dashboard() {
 		}
 	};
 
-	const extraHeaderContent = (
+	const responseRateContent = (
 		<>
 			<div className="flex flex-col gap-4 mt-4 mb-6 md:flex-row">
 				<div className="w-full md:w-[30%]">
@@ -225,7 +225,7 @@ export default function Dashboard() {
 			currentPage={currentPage}
 			data={data}
 			downloading={downloading}
-			extraHeader={extraHeaderContent}
+			extraHeader={responseRateContent}
 			loading={loading}
 			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
