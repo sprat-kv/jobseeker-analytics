@@ -167,8 +167,8 @@ export default function PreviewDashboard() {
 			currentPage={currentPage}
 			data={data}
 			downloading={downloading}
-			extraHeader={previewResponseRateContent}
 			loading={loading}
+			responseRate={previewResponseRateContent}
 			title="Preview Dashboard"
 			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}

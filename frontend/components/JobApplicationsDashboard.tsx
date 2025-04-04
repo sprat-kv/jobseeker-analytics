@@ -41,7 +41,7 @@ interface JobApplicationsDashboardProps {
 	onDownloadSankey: () => void;
 	onRemoveItem: (id: string) => void;
 	initialSortKey?: string;
-	extraHeader?: React.ReactNode;
+	responseRate?: React.ReactNode;
 	onNextPage: () => void;
 	onPrevPage: () => void;
 	currentPage: number;
@@ -62,7 +62,7 @@ export default function JobApplicationsDashboard({
 	onDownloadSankey,
 	onRemoveItem, // Accept the callback
 	initialSortKey = "Date (Newest)",
-	extraHeader
+	responseRate
 }: JobApplicationsDashboardProps) {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
@@ -249,7 +249,7 @@ export default function JobApplicationsDashboard({
 				</ModalContent>
 			</Modal>
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
-			{extraHeader}
+			{responseRate}
 			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
 				<Dropdown>
 					<DropdownTrigger>

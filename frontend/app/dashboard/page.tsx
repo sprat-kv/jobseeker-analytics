@@ -225,8 +225,8 @@ export default function Dashboard() {
 			currentPage={currentPage}
 			data={data}
 			downloading={downloading}
-			extraHeader={responseRateContent}
 			loading={loading}
+			responseRate={responseRateContent}
 			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
