@@ -86,17 +86,17 @@ export const Navbar = () => {
 				<NavbarItem>
 					{pathname === "/" || pathname.startsWith("/preview") ? (
 						<Tooltip
-							content={loginTooltipContent}
-							placement="bottom"
-							color="foreground"
-							delay={200}
 							closeDelay={0}
+							color="foreground"
+							content={loginTooltipContent}
+							delay={200}
+							placement="bottom"
 						>
 							<Button
 								className="w-full text-sm font-normal text-default-600 bg-default-100"
 								data-testid="GoogleLogin"
+								endContent={<InfoIcon className="text-default-400" size={14} />}
 								startContent={<GoogleIcon className="text-danger" />}
-								endContent={<InfoIcon size={14} className="text-default-400" />}
 								variant="flat"
 								onPress={handleGoogleLogin}
 							>
@@ -121,17 +121,17 @@ export const Navbar = () => {
 			<NavbarContent className="md:hidden" justify="end">
 				{pathname === "/" ? (
 					<Tooltip
-						content={loginTooltipContent}
-						placement="bottom"
-						color="foreground"
-						delay={200}
 						closeDelay={0}
+						color="foreground"
+						content={loginTooltipContent}
+						delay={200}
+						placement="bottom"
 					>
 						<Button
 							className="w-auto text-sm font-normal text-default-600 bg-default-100"
 							data-testid="GoogleLoginSmallScreen"
+							endContent={<InfoIcon className="text-default-400" size={14} />}
 							startContent={<GoogleIcon className="text-danger" />}
-							endContent={<InfoIcon size={14} className="text-default-400" />}
 							variant="flat"
 							onPress={handleGoogleLogin}
 						>
