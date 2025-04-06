@@ -99,6 +99,7 @@ const DeveloperInfo = () => {
 								isDisabled={isSubmitting}
 								startContent={<CalendarIcon size={16} />}
 								onPress={handleSetupRequest}
+								id="request-setup-session-button"
 							>
 								{isSubmitting ? "Requesting..." : "Book Setup Session"}
 							</Button>

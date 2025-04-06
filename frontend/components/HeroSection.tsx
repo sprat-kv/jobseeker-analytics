@@ -45,7 +45,7 @@ const HeroSection = () => {
 							document
 								.getElementById("run_local")
 								?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-							document.getElementById("developerInfoCard")?.scrollIntoView({
+							document.getElementById("request-setup-session-button")?.scrollIntoView({
 								behavior: "smooth",
 								block: "start",
 								inline: "nearest"
