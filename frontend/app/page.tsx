@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button, Card, Tabs, Tab } from "@heroui/react";
 
 import { UsersIcon, LineChartIcon, CheckCircle2Icon, PlayIcon } from "@/components/icons";
-
 import { Navbar } from "@/components/navbar"; // Import the Navbar
 import Footer from "@/components/Footer";
 import WaitlistForm from "@/components/WaitlistForm";
@@ -32,7 +31,7 @@ const Index = () => {
 									<WaitlistForm />
 								</div>
 							</Tab>
-							<Tab id="run_local" key="developer" title="Run Locally">
+							<Tab key="developer" id="run_local" title="Run Locally">
 								<div className="space-y-4 mt-4">
 									<DeveloperInfo />
 								</div>
@@ -45,7 +44,7 @@ const Index = () => {
 						<div className="grid md:grid-cols-3 gap-8">
 							<Card>
 								<div className="p-6">
-									<LineChartIcon size={48} className="text-purple-500 mb-4" />
+									<LineChartIcon className="text-purple-500 mb-4" size={48} />
 									<h3 className="text-xl font-semibold mb-2">Data-driven Job Search</h3>
 									<p className="text-default-500">
 										Track application statistics like response rates and follow-ups to optimize your
@@ -56,7 +55,7 @@ const Index = () => {
 
 							<Card>
 								<div className="p-6">
-									<CheckCircle2Icon size={48} className="text-purple-500 mb-4" />
+									<CheckCircle2Icon className="text-purple-500 mb-4" size={48} />
 									<h3 className="text-xl font-semibold mb-2">Automated Tracking</h3>
 									<p className="text-default-500">
 										No more spreadsheets. We automatically track your applications and their
@@ -67,7 +66,7 @@ const Index = () => {
 
 							<Card>
 								<div className="p-6">
-									<UsersIcon size={48} className="text-purple-500 mb-4" />
+									<UsersIcon className="text-purple-500 mb-4" size={48} />
 									<h3 className="text-xl font-semibold mb-2">Community Support</h3>
 									<p className="text-default-500">
 										Join a community of job seekers sharing strategies and success stories.
@@ -81,10 +80,10 @@ const Index = () => {
 						<h2 className="text-2xl font-bold mb-4">Watch a Quick Demo</h2>
 						<p className="text-default-600 mb-6">See how jobba.help transforms your job search approach</p>
 						<Button
-							color="primary"
-							variant="solid"
 							className="bg-purple-600 hover:bg-purple-700"
+							color="primary"
 							startContent={<PlayIcon size={16} />}
+							variant="solid"
 							onPress={handleWatchDemo}
 						>
 							Watch Demo

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button, Card, Input } from "@heroui/react";
-import { CodeIcon, EmailIcon, ExternalLinkIcon, CalendarIcon } from "@/components/icons";
 import { addToast } from "@heroui/toast";
+
+import { CodeIcon, EmailIcon, ExternalLinkIcon, CalendarIcon } from "@/components/icons";
 
 const DeveloperInfo = () => {
 	const [email, setEmail] = useState("");
@@ -59,7 +60,7 @@ const DeveloperInfo = () => {
 	};
 
 	return (
-		<Card id="developerInfoCard" className="p-6 md:p-8">
+		<Card className="p-6 md:p-8" id="developerInfoCard">
 			<div className="space-y-4">
 				<div className="flex items-center gap-2 text-purple-600 font-semibold">
 					<span className="bg-purple-100 text-purple-800 p-1 rounded-full">
@@ -84,20 +85,20 @@ const DeveloperInfo = () => {
 						</p>
 						<div>
 							<Input
-								type="email"
-								placeholder="Your email address"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
 								fullWidth
 								className="mb-2"
 								id="request-setup-session-email-input"
+								placeholder="Your email address"
+								type="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 							/>
 							<Button
-								color="primary"
 								className="mt-2 w-full bg-purple-600 hover:bg-purple-700"
-								onPress={handleSetupRequest}
+								color="primary"
 								isDisabled={isSubmitting}
 								startContent={<CalendarIcon size={16} />}
+								onPress={handleSetupRequest}
 							>
 								{isSubmitting ? "Requesting..." : "Book Setup Session"}
 							</Button>
@@ -111,6 +112,7 @@ const DeveloperInfo = () => {
 							instructions.
 						</p>
 						<Button
+							startContent={<CodeIcon size={16} />}
 							variant="bordered"
 							onPress={() =>
 								window.open(
@@ -118,7 +120,6 @@ const DeveloperInfo = () => {
 									"_blank"
 								)
 							}
-							startContent={<CodeIcon size={16} />}
 						>
 							View on GitHub
 						</Button>
@@ -129,19 +130,19 @@ const DeveloperInfo = () => {
 					<h4 className="font-semibold mb-2">Support & Feedback</h4>
 					<div className="space-y-2">
 						<a
-							href="https://discord.gg/5tTT6WVQyw"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="flex items-center gap-2 text-sm text-primary hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
 							aria-label="Join our Discord server"
+							className="flex items-center gap-2 text-sm text-primary hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+							href="https://discord.gg/5tTT6WVQyw"
+							rel="noopener noreferrer"
+							target="_blank"
 						>
 							<ExternalLinkIcon size={16} />
 							Join our Discord
 						</a>
 						<a
-							href="mailto:help@jobba.help"
-							className="flex items-center gap-2 text-sm text-primary hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
 							aria-label="Email help@jobba.help for support"
+							className="flex items-center gap-2 text-sm text-primary hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+							href="mailto:help@jobba.help"
 						>
 							<EmailIcon size={16} />
 							Email help@jobba.help

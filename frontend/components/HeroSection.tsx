@@ -1,4 +1,5 @@
 import { Button } from "@heroui/react";
+
 import { ChevronRightIcon } from "@/components/icons";
 
 const HeroSection = () => {
@@ -14,8 +15,8 @@ const HeroSection = () => {
 
 			<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 				<Button
-					color="primary"
 					className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-6 text-lg h-auto"
+					color="primary"
 					endContent={<ChevronRightIcon size={20} />}
 					onPress={() => {
 						document
@@ -33,8 +34,8 @@ const HeroSection = () => {
 				</Button>
 
 				<Button
-					variant="bordered"
 					className="px-6 py-6 text-lg h-auto"
+					variant="bordered"
 					onPress={() => {
 						document
 							.querySelector('[key="developer"]')
@@ -63,17 +64,19 @@ const HeroSection = () => {
 			<div className="relative overflow-hidden rounded-xl border border-muted shadow-xl mx-auto max-w-5xl">
 				<div className="bg-muted/50 absolute top-0 left-0 right-0 h-12 flex items-center px-4">
 					<div className="flex space-x-2">
-						<div className="h-3 w-3 rounded-full bg-red-500"></div>
-						<div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-						<div className="h-3 w-3 rounded-full bg-green-500"></div>
+						<div className="h-3 w-3 rounded-full bg-red-500" />
+						<div className="h-3 w-3 rounded-full bg-yellow-500" />
+						<div className="h-3 w-3 rounded-full bg-green-500" />
 					</div>
 				</div>
 				<div className="pt-12 pb-2">
-					<img
-						src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80"
-						alt="jobba.help application screenshot"
-						className="w-full h-auto"
-					/>
+					<img alt="jobba.help application screenshot" className="w-full h-auto" src="/sankey_diagram.png" />
+					<div className="bg-background/80 backdrop-blur-sm py-2 px-4 text-center">
+						<p className="text-sm text-default-600 font-medium">
+							Application flow analysis — made with{" "}
+							<span className="text-purple-600 font-bold">jobba.help</span>
+						</p>
+					</div>
 				</div>
 			</div>
 		</section>

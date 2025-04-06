@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Card, Input } from "@heroui/react";
 import { addToast } from "@heroui/toast";
+
 import { EmailIcon } from "@/components/icons";
 
 const WaitlistForm = () => {
@@ -74,31 +75,31 @@ const WaitlistForm = () => {
 					Join our waitlist to receive updates about our launch. Be the first to know when we're live!
 				</p>
 
-				<form onSubmit={handleSubmit} className="space-y-4">
+				<form className="space-y-4" onSubmit={handleSubmit}>
 					<div>
 						<Input
-							type="text"
+							className="mb-2"
 							placeholder="Your name (optional)"
+							type="text"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							className="mb-2"
 						/>
 						<div className="relative">
 							<Input
+								required
+								className="mb-2"
 								id="email-input"
-								type="email"
 								placeholder="Your email address"
+								type="email"
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
-								className="mb-2"
-								required
 							/>
 							<Button
+								className="mt-2 bg-purple-600 hover:bg-purple-700 absolute right-0 bottom-0 h-full"
+								color="primary"
+								isDisabled={isSubmitting}
 								type="submit"
 								variant="solid"
-								color="primary"
-								className="mt-2 bg-purple-600 hover:bg-purple-700 absolute right-0 bottom-0 h-full"
-								isDisabled={isSubmitting}
 							>
 								{isSubmitting ? "Subscribing..." : "Subscribe"}
 							</Button>

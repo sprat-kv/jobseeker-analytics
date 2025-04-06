@@ -28,24 +28,24 @@ const Footer = () => {
 						<h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
 						<div className="space-y-4">
 							<a
-								href="https://discord.gg/5tTT6WVQyw"
-								target="_blank"
-								rel="noopener noreferrer"
 								className="flex items-center gap-2 text-sm text-default-500 hover:text-foreground transition-colors"
+								href="https://discord.gg/5tTT6WVQyw"
+								rel="noopener noreferrer"
+								target="_blank"
 							>
 								<ExternalLinkIcon size={16} />
 								Join our Discord
 							</a>
 							<a
-								href="mailto:help@jobba.help"
 								className="flex items-center gap-2 text-sm text-default-500 hover:text-foreground transition-colors"
+								href="mailto:help@jobba.help"
 							>
 								<EmailIcon size={16} />
 								help@jobba.help
 							</a>
 							<a
-								href="mailto:security@jobba.help"
 								className="flex items-center gap-2 text-sm text-default-500 hover:text-foreground transition-colors"
+								href="mailto:security@jobba.help"
 							>
 								<EmailIcon size={16} />
 								security@jobba.help
