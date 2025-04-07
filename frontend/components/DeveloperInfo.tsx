@@ -96,10 +96,10 @@ const DeveloperInfo = () => {
 							<Button
 								className="mt-2 w-full bg-purple-600 hover:bg-purple-700"
 								color="primary"
+								id="request-setup-session-button"
 								isDisabled={isSubmitting}
 								startContent={<CalendarIcon size={16} />}
 								onPress={handleSetupRequest}
-								id="request-setup-session-button"
 							>
 								{isSubmitting ? "Requesting..." : "Book Setup Session"}
 							</Button>
