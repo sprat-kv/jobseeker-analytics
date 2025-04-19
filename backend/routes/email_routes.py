@@ -12,7 +12,7 @@ from utils.email_utils import get_email_ids, get_email
 from utils.llm_utils import process_email
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
-from database import engine
+import database
 from google.oauth2.credentials import Credentials
 import json
 from start_date.storage import get_start_date_email_filter
@@ -44,7 +44,7 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
 
-    with Session(engine) as session:
+    with Session(database.engine) as session:
         process_task_run = session.get(task_models.TaskRuns, user_id)
         api_call_finished = process_task_run.status == task_models.FINISHED
 
@@ -71,7 +71,7 @@ async def processing(request: Request, user_id: str = Depends(validate_session))
 @router.get("/get-emails", response_model=List[UserEmails])
 @limiter.limit("5/minute")
 def query_emails(request: Request, user_id: str = Depends(validate_session)) -> None:
-    with Session(engine) as session:
+    with Session(database.engine) as session:
         try:
             logger.info(f"Fetching emails for user_id: {user_id}")
 
@@ -92,7 +92,7 @@ async def delete_email(email_id: str, user_id: str = Depends(validate_session)):
     """
     Delete an email record by its ID for the authenticated user.
     """
-    with Session(engine) as session:
+    with Session(database.engine) as session:
         try:
             # Query the email record to ensure it exists and belongs to the user
             email_record = session.exec(
@@ -158,12 +158,13 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     global total_emails, processed_emails
     logger.info(f"Fetching emails to db for user_id: {user_id}")
 
-    with Session(engine) as session:
+    with Session(database.engine) as session:
         process_task_run = (
             session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
         )
         if process_task_run is None:
             process_task_run = task_models.TaskRuns(user_id=user_id)
+            session.add(process_task_run)
         process_task_run.status = task_models.STARTED  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
         session.commit()
 
@@ -172,7 +173,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     is_new_user = request.session.get("is_new_user")
 
     query = start_date_query
-    with Session(engine) as session:
+    with Session(database.engine) as session:
         # check for users last updated email
         if last_updated:
             # this converts our date time to number of seconds 
@@ -201,7 +202,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
         if not messages:
             logger.info(f"user_id:{user_id} No job application emails found.")
-            with Session(engine) as session:
+            with Session(database.engine) as session:
                 process_task_run = session.get(task_models.TaskRuns, user_id)
                 process_task_run.status = task_models.FINISHED
                 session.commit()
@@ -266,7 +267,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 f"Added {len(email_records)} email records for user {user_id}"
             )
 
-        with Session(engine) as session:
+        with Session(database.engine) as session:
             process_task_run = session.get(task_models.TaskRuns, user_id)
             process_task_run.status = task_models.FINISHED
             session.commit()
