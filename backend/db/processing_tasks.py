@@ -1,6 +1,7 @@
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, Relationship
 from datetime import datetime, timezone
 import sqlalchemy as sa
+from db.users import Users
 
 FINISHED = "finished"
 STARTED = "started"
@@ -16,3 +17,5 @@ class TaskRuns(SQLModel, table=True):
         nullable=False,
     )
     status: str = Field(nullable=False)
+
+    user: Users = Relationship()

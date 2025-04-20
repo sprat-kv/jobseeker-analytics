@@ -17,7 +17,7 @@ from google.oauth2.credentials import Credentials
 import json
 from start_date.storage import get_start_date_email_filter
 from constants import QUERY_APPLIED_EMAIL_FILTER
-from datetime import datetime
+from datetime import datetime, timedelta
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
@@ -32,6 +32,7 @@ APP_URL = settings.APP_URL
 
 total_emails = 0
 processed_emails = 0
+SECONDS_BETWEEN_FETCHING_EMAILS = 1 * 60 * 60  # 1 hour
 
 # FastAPI router for email routes
 router = APIRouter()
@@ -165,6 +166,14 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         if process_task_run is None:
             process_task_run = task_models.TaskRuns(user_id=user_id)
             session.add(process_task_run)
+        elif datetime.now() - process_task_run.updated < timedelta(
+            seconds=SECONDS_BETWEEN_FETCHING_EMAILS
+        ):
+            logger.warning(
+                "Less than an hour since last fetch of emails for user",
+                extra={"user_id": user_id},
+            )
+            return
         process_task_run.status = task_models.STARTED  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
         session.commit()
 
