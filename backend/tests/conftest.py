@@ -5,6 +5,7 @@ import pytest
 from testcontainers.postgres import PostgresContainer
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
+from sqlmodel import SQLModel
 
 
 # Add the parent directory to sys.path
@@ -36,7 +37,14 @@ def engine(postgres_container: PostgresContainer, monkeypatch):
 
     database.create_db_and_tables()
 
-    return test_engine
+    yield test_engine
+
+    with test_engine.begin() as transaction:
+        transaction.execute(
+            sa.text("SET session_replication_role = :role"), {"role": "replica"}
+        )
+        for table in SQLModel.metadata.tables.values():
+            transaction.execute(table.delete())
 
 
 @pytest.fixture
