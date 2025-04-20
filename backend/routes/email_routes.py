@@ -164,28 +164,27 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         process_task_run = (
             session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
         )
-        if (
-            process_task_run is None
-        ):  # if this is the first time running the task for the user, create a record
+        if process_task_run is None:
+            # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
             session.add(process_task_run)
         elif datetime.now() - process_task_run.updated < timedelta(
             seconds=SECONDS_BETWEEN_FETCHING_EMAILS
-        ):  # limit how frequently emails can be fetched by a specific user
+        ):
+            # limit how frequently emails can be fetched by a specific user
             logger.warning(
                 "Less than an hour since last fetch of emails for user",
                 extra={"user_id": user_id},
             )
             return
         process_task_run.status = task_models.STARTED  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
-        session.commit()
+        session.commit()  # commit to the database so calls in the future reflect the task is already started
 
-    start_date = request.session.get("start_date")
-    start_date_query = get_start_date_email_filter(start_date)
-    is_new_user = request.session.get("is_new_user")
+        start_date = request.session.get("start_date")
+        start_date_query = get_start_date_email_filter(start_date)
+        is_new_user = request.session.get("is_new_user")
 
-    query = start_date_query
-    with Session(database.engine) as session:
+        query = start_date_query
         # check for users last updated email
         if last_updated:
             # this converts our date time to number of seconds 
@@ -214,10 +213,9 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
         if not messages:
             logger.info(f"user_id:{user_id} No job application emails found.")
-            with Session(database.engine) as session:
-                process_task_run = session.get(task_models.TaskRuns, user_id)
-                process_task_run.status = task_models.FINISHED
-                session.commit()
+            process_task_run = session.get(task_models.TaskRuns, user_id)
+            process_task_run.status = task_models.FINISHED
+            session.commit()
             return
 
         logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
@@ -279,8 +277,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 f"Added {len(email_records)} email records for user {user_id}"
             )
 
-        with Session(database.engine) as session:
-            process_task_run = session.get(task_models.TaskRuns, user_id)
-            process_task_run.status = task_models.FINISHED
-            session.commit()
+        process_task_run.status = task_models.FINISHED
+        session.commit()
+
         logger.info(f"user_id:{user_id} Email fetching complete.")
