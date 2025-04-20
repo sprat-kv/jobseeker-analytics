@@ -160,15 +160,18 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     logger.info(f"Fetching emails to db for user_id: {user_id}")
 
     with Session(database.engine) as session:
+        # we track starting and finishing fetching of emails for each user
         process_task_run = (
             session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
         )
-        if process_task_run is None:
+        if (
+            process_task_run is None
+        ):  # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
             session.add(process_task_run)
         elif datetime.now() - process_task_run.updated < timedelta(
             seconds=SECONDS_BETWEEN_FETCHING_EMAILS
-        ):
+        ):  # limit how frequently emails can be fetched by a specific user
             logger.warning(
                 "Less than an hour since last fetch of emails for user",
                 extra={"user_id": user_id},
