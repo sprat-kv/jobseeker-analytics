@@ -1,13 +1,31 @@
-from routes.email_routes import fetch_emails_to_db
 from utils import auth_utils
-from fastapi import Request
 from unittest import mock
 from datetime import datetime
+
+from fastapi import Request
+from sqlalchemy.orm import Session
+from google.oauth2.credentials import Credentials
+
 from db.users import Users
 from db.processing_tasks import TaskRuns, FINISHED, STARTED
-from sqlalchemy.orm import Session
+from routes.email_routes import fetch_emails_to_db
 
-from google.oauth2.credentials import Credentials
+
+def test_processing(session, client, logged_in_user):
+    session.add(TaskRuns(user=logged_in_user, status=STARTED))
+    session.flush()
+
+    # make request to check on processing status
+    resp = client.get("/processing", follow_redirects=False)
+
+    # assert response
+    assert resp.status_code == 200, resp.headers
+    assert resp.json()["processed_emails"] is None
+
+
+def test_processing_404(session, client, logged_in_user):
+    resp = client.get("/processing", follow_redirects=False)
+    assert resp.status_code == 404
 
 
 def test_fetch_emails_to_db(session: Session):

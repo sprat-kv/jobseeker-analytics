@@ -30,44 +30,44 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 APP_URL = settings.APP_URL
 
-total_emails = 0
-processed_emails = 0
 SECONDS_BETWEEN_FETCHING_EMAILS = 1 * 60 * 60  # 1 hour
 
 # FastAPI router for email routes
 router = APIRouter()
 
 @router.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, user_id: str = Depends(validate_session)):
+async def processing(request: Request, session: database.DBSession, user_id: str = Depends(validate_session)):
     logging.info("user_id:%s processing", user_id)
-    global total_emails, processed_emails
     if not user_id:
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
 
-    with Session(database.engine) as session:
-        process_task_run = session.get(task_models.TaskRuns, user_id)
-        api_call_finished = process_task_run.status == task_models.FINISHED
+    process_task_run: task_models.TaskRuns = session.get(task_models.TaskRuns, user_id)
 
-    if api_call_finished:
+    if process_task_run is None:
+        raise HTTPException(
+            status_code=404, detail="Processing has not started."
+        )
+
+    if process_task_run.status == task_models.FINISHED:
         logger.info("user_id: %s processing complete", user_id)
         return JSONResponse(
             content={
                 "message": "Processing complete",
-                "processed_emails": processed_emails,
-                "total_emails": total_emails,
+                "processed_emails": process_task_run.processed_emails,
+                "total_emails": process_task_run.total_emails,
             }
         )
     else:
         logger.info("user_id: %s processing not complete for file", user_id)
         return JSONResponse(
             content={
-                    "message": "Processing in progress",
-                    "processed_emails": processed_emails,
-                    "total_emails": total_emails
-                }
-            )
-    
+                "message": "Processing in progress",
+                "processed_emails": process_task_run.processed_emails,
+                "total_emails": process_task_run.total_emails,
+            }
+        )
+
 
 @router.get("/get-emails", response_model=List[UserEmails])
 @limiter.limit("5/minute")

@@ -7,11 +7,11 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session
 from sqlmodel import SQLModel
 
-
 # Add the parent directory to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+os.chdir("./backend")
 
-import database
+import database  # noqa: E402
 
 
 @pytest.fixture(scope="session")
@@ -48,6 +48,6 @@ def engine(postgres_container: PostgresContainer, monkeypatch):
 
 
 @pytest.fixture
-def session(engine):
+def session(engine, monkeypatch):
     with Session(database.engine) as session:
         yield session
