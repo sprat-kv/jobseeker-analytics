@@ -110,7 +110,7 @@ async def delete_email(email_id: str, user_id: str = Depends(validate_session)):
 
             # Delete the email record
             session.delete(email_record)
-            session.commit()
+            session.flush()
 
             logger.info(f"Email with id {email_id} deleted successfully for user_id {user_id}")
             return {"message": "Item deleted successfully"}
@@ -156,7 +156,6 @@ async def start_fetch_emails(
 
 
 def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None, user_id: str = Depends(validate_session)) -> None:
-    global total_emails, processed_emails
     logger.info(f"Fetching emails to db for user_id: {user_id}")
 
     with Session(database.engine) as session:
@@ -177,8 +176,13 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 extra={"user_id": user_id},
             )
             return
-        process_task_run.status = task_models.STARTED  # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
-        session.commit()  # commit to the database so calls in the future reflect the task is already started
+
+        # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
+        process_task_run.processed_emails = 0
+        process_task_run.total_emails = 0
+        process_task_run.status = task_models.STARTED
+
+        session.flush()  # sync with the database so calls in the future reflect the task is already started
 
         start_date = request.session.get("start_date")
         start_date_query = get_start_date_email_filter(start_date)
@@ -219,7 +223,8 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             return
 
         logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
-        total_emails = len(messages)
+        process_task_run.total_emails = len(messages)
+        session.flush()
 
         email_records = []  # list to collect email records
 
@@ -230,7 +235,8 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             logger.info(
                 f"user_id:{user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
             )
-            processed_emails = idx + 1
+            process_task_run.processed_emails = idx + 1
+            session.flush()
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
 
@@ -272,7 +278,6 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         # batch insert all records at once
         if email_records:
             session.add_all(email_records)
-            session.commit()
             logger.info(
                 f"Added {len(email_records)} email records for user {user_id}"
             )

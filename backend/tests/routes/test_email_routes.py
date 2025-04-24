@@ -20,7 +20,7 @@ def test_processing(session, client, logged_in_user):
 
     # assert response
     assert resp.status_code == 200, resp.headers
-    assert resp.json()["processed_emails"] is None
+    assert resp.json()["processed_emails"] == 0
 
 
 def test_processing_404(session, client, logged_in_user):
