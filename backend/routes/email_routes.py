@@ -182,7 +182,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         process_task_run.total_emails = 0
         process_task_run.status = task_models.STARTED
 
-        session.flush()  # sync with the database so calls in the future reflect the task is already started
+        session.commit()  # sync with the database so calls in the future reflect the task is already started
 
         start_date = request.session.get("start_date")
         start_date_query = get_start_date_email_filter(start_date)
@@ -224,7 +224,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
         logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
         process_task_run.total_emails = len(messages)
-        session.flush()
+        session.commit()
 
         email_records = []  # list to collect email records
 
@@ -236,7 +236,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 f"user_id:{user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
             )
             process_task_run.processed_emails = idx + 1
-            session.flush()
+            session.commit()
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
 
