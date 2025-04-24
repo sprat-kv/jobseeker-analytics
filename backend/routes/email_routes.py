@@ -155,7 +155,7 @@ async def start_fetch_emails(
         raise HTTPException(status_code=500, detail="Failed to authenticate user")
 
 
-def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None, user_id: str = Depends(validate_session)) -> None:
+def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None, *, user_id: str) -> None:
     logger.info(f"Fetching emails to db for user_id: {user_id}")
 
     with Session(database.engine) as session:
