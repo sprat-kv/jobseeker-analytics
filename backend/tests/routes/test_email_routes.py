@@ -51,7 +51,7 @@ def test_fetch_emails_to_db(db_session: Session):
     assert task_run.status == FINISHED
 
 
-def test_fetch_emails_to_db_in_progress_no_op(db_session: Session):
+def test_fetch_emails_to_db_in_progress_rate_limited_no_processing(db_session: Session):
     test_user_id = "123"
 
     user = Users(
