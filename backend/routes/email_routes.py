@@ -36,13 +36,13 @@ SECONDS_BETWEEN_FETCHING_EMAILS = 1 * 60 * 60  # 1 hour
 router = APIRouter()
 
 @router.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, session: database.DBSession, user_id: str = Depends(validate_session)):
+async def processing(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
     logging.info("user_id:%s processing", user_id)
     if not user_id:
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
 
-    process_task_run: task_models.TaskRuns = session.get(task_models.TaskRuns, user_id)
+    process_task_run: task_models.TaskRuns = db_session.get(task_models.TaskRuns, user_id)
 
     if process_task_run is None:
         raise HTTPException(
@@ -71,55 +71,53 @@ async def processing(request: Request, session: database.DBSession, user_id: str
 
 @router.get("/get-emails", response_model=List[UserEmails])
 @limiter.limit("5/minute")
-def query_emails(request: Request, user_id: str = Depends(validate_session)) -> None:
-    with Session(database.engine) as session:
-        try:
-            logger.info(f"Fetching emails for user_id: {user_id}")
+def query_emails(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)) -> None:
+    try:
+        logger.info(f"Fetching emails for user_id: {user_id}")
 
-            # Query emails sorted by date (newest first)
-            statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
-            user_emails = session.exec(statement).all()
+        # Query emails sorted by date (newest first)
+        statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
+        user_emails = db_session.exec(statement).all()
 
-            logger.info(f"Found {len(user_emails)} emails for user_id: {user_id}")
-            return user_emails  # Return empty list if no emails exist
+        logger.info(f"Found {len(user_emails)} emails for user_id: {user_id}")
+        return user_emails  # Return empty list if no emails exist
 
-        except Exception as e:
-            logger.error(f"Error fetching emails for user_id {user_id}: {e}")
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error fetching emails for user_id {user_id}: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
         
 
 @router.delete("/delete-email/{email_id}")
-async def delete_email(email_id: str, user_id: str = Depends(validate_session)):
+async def delete_email(request: Request, db_session: database.DBSession, email_id: str, user_id: str = Depends(validate_session)):
     """
     Delete an email record by its ID for the authenticated user.
     """
-    with Session(database.engine) as session:
-        try:
-            # Query the email record to ensure it exists and belongs to the user
-            email_record = session.exec(
-                select(UserEmails).where(
-                    (UserEmails.id == email_id) & (UserEmails.user_id == user_id)
-                )
-            ).first()
-
-            if not email_record:
-                logger.warning(f"Email with id {email_id} not found for user_id {user_id}")
-                raise HTTPException(
-                    status_code=404, detail=f"Email with id {email_id} not found"
-                )
-
-            # Delete the email record
-            session.delete(email_record)
-            session.flush()
-
-            logger.info(f"Email with id {email_id} deleted successfully for user_id {user_id}")
-            return {"message": "Item deleted successfully"}
-
-        except Exception as e:
-            logger.error(f"Error deleting email with id {email_id} for user_id {user_id}: {e}")
-            raise HTTPException(
-                status_code=500, detail=f"Failed to delete email: {str(e)}"
+    try:
+        # Query the email record to ensure it exists and belongs to the user
+        email_record = db_session.exec(
+            select(UserEmails).where(
+                (UserEmails.id == email_id) & (UserEmails.user_id == user_id)
             )
+        ).first()
+
+        if not email_record:
+            logger.warning(f"Email with id {email_id} not found for user_id {user_id}")
+            raise HTTPException(
+                status_code=404, detail=f"Email with id {email_id} not found"
+            )
+
+        # Delete the email record
+        db_session.delete(email_record)
+        db_session.flush()
+
+        logger.info(f"Email with id {email_id} deleted successfully for user_id {user_id}")
+        return {"message": "Item deleted successfully"}
+
+    except Exception as e:
+        logger.error(f"Error deleting email with id {email_id} for user_id {user_id}: {e}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to delete email: {str(e)}"
+        )
         
 
 @router.post("/fetch-emails")
@@ -158,15 +156,15 @@ async def start_fetch_emails(
 def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None, *, user_id: str) -> None:
     logger.info(f"Fetching emails to db for user_id: {user_id}")
 
-    with Session(database.engine) as session:
+    with Session(database.engine) as db_session:
         # we track starting and finishing fetching of emails for each user
         process_task_run = (
-            session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
+            db_session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
         )
         if process_task_run is None:
             # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
-            session.add(process_task_run)
+            db_session.add(process_task_run)
         elif datetime.now() - process_task_run.updated < timedelta(
             seconds=SECONDS_BETWEEN_FETCHING_EMAILS
         ):
@@ -182,7 +180,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         process_task_run.total_emails = 0
         process_task_run.status = task_models.STARTED
 
-        session.commit()  # sync with the database so calls in the future reflect the task is already started
+        db_session.commit()  # sync with the database so calls in the future reflect the task is already started
 
         start_date = request.session.get("start_date")
         start_date_query = get_start_date_email_filter(start_date)
@@ -217,14 +215,14 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
         if not messages:
             logger.info(f"user_id:{user_id} No job application emails found.")
-            process_task_run = session.get(task_models.TaskRuns, user_id)
+            process_task_run = db_session.get(task_models.TaskRuns, user_id)
             process_task_run.status = task_models.FINISHED
-            session.commit()
+            db_session.commit()
             return
 
         logger.info(f"user_id:{user.user_id} Found {len(messages)} emails.")
         process_task_run.total_emails = len(messages)
-        session.commit()
+        db_session.commit()
 
         email_records = []  # list to collect email records
 
@@ -236,7 +234,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 f"user_id:{user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
             )
             process_task_run.processed_emails = idx + 1
-            session.commit()
+            db_session.commit()
 
             msg = get_email(message_id=msg_id, gmail_instance=service)
 
@@ -277,12 +275,12 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
         # batch insert all records at once
         if email_records:
-            session.add_all(email_records)
+            db_session.add_all(email_records)
             logger.info(
                 f"Added {len(email_records)} email records for user {user_id}"
             )
 
         process_task_run.status = task_models.FINISHED
-        session.commit()
+        db_session.commit()
 
         logger.info(f"user_id:{user_id} Email fetching complete.")

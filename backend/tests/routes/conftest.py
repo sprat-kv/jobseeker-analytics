@@ -10,23 +10,23 @@ import main
 
 
 @pytest.fixture
-def client(session):
-    main.app.dependency_overrides[database.request_session] = lambda: session
+def client(db_session):
+    main.app.dependency_overrides[database.request_session] = lambda: db_session
     test_client = TestClient(main.app)
 
     return test_client
 
 
 @pytest.fixture
-def logged_in_user(session, client):
+def logged_in_user(db_session, client):
     # create user
     user = Users(
         user_id="123",
         user_email="user@example.com",
         start_date=datetime(2000, 1, 1),
     )
-    session.add(user)
-    session.flush()
+    db_session.add(user)
+    db_session.flush()
 
     # log in
     mock_credentials = mock.Mock(

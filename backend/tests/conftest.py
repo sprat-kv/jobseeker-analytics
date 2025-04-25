@@ -48,6 +48,6 @@ def engine(postgres_container: PostgresContainer, monkeypatch):
 
 
 @pytest.fixture
-def session(engine, monkeypatch):
+def db_session(engine, monkeypatch):
     with Session(database.engine) as session:
         yield session
