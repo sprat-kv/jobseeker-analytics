@@ -6,10 +6,10 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # For TypeScript dependencies
-    directory: "/frontend/package.json" # Location of package manifests (e.g., package.json)
+    directory: "/frontend" # Location of package manifests (e.g., package.json)
     schedule:
       interval: "weekly"
   - package-ecosystem: "pip" # For Python dependencies
-    directory: "/backend/requirements.txt" # Location of requirements files (e.g., requirements.txt)
+    directory: "/backend" # Location of requirements files (e.g., requirements.txt)
     schedule:
       interval: "weekly"
