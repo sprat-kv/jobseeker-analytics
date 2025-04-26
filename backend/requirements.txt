@@ -93,7 +93,7 @@ thinc==8.2.5
 tqdm==4.66.6
 typer==0.15.1
 types-requests==2.32.0.20241016
-types-tqdm==4.67.0.20241221
+types-tqdm==4.67.0.20250417
 typing_extensions==4.12.2
 tzdata==2024.2
 uritemplate==4.1.1
