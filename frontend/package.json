@@ -36,7 +36,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.22.0",
-		"@next/eslint-plugin-next": "15.0.4",
+		"@next/eslint-plugin-next": "15.3.1",
 		"@playwright/test": "^1.50.1",
 		"@react-types/shared": "3.25.0",
 		"@types/node": "20.5.7",
@@ -45,7 +45,7 @@
 		"@types/react-google-recaptcha": "^2.1.9",
 		"@typescript-eslint/eslint-plugin": "8.11.0",
 		"@typescript-eslint/parser": "8.11.0",
-		"autoprefixer": "10.4.19",
+		"autoprefixer": "10.4.21",
 		"eslint": "^8.57.1",
 		"eslint-config-next": "15.0.4",
 		"eslint-plugin-import": "^2.26.0",
