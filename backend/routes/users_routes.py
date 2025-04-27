@@ -1,11 +1,11 @@
 import logging
 from fastapi import APIRouter, Depends, Request, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import select
 from db.user_emails import UserEmails
 from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from routes.email_routes import query_emails
-from database import engine
+import database
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
@@ -25,11 +25,11 @@ limiter = Limiter(key_func=get_remote_address)
 
 @router.get("/get-response-rate")   
 @limiter.limit("2/minute")    
-def response_rate_by_job_title(request: Request, user_id: str = Depends(validate_session)):
+def response_rate_by_job_title(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
     
     try:
         # Get job related email data from DB
-        user_emails = query_emails(request, user_id)
+        user_emails = query_emails(request, db_session=db_session, user_id=user_id)
 
         index = 0
 
@@ -74,27 +74,26 @@ def response_rate_by_job_title(request: Request, user_id: str = Depends(validate
 
 @router.get("/user-response-rate")
 def calculate_response_rate(
-    request: Request, user_id: str = Depends(validate_session)
+    request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)
 ) -> None:
-    with Session(engine) as session:
-        user_emails = session.exec(
-            select(UserEmails).where(UserEmails.user_id == user_id)
-        ).all()
+    user_emails = db_session.exec(
+        select(UserEmails).where(UserEmails.user_id == user_id)
+    ).all()
 
-        # if user has no application just return 0.0
-        total_apps = len(user_emails)
-        if total_apps == 0:
-            return 0.0
+    # if user has no application just return 0.0
+    total_apps = len(user_emails)
+    if total_apps == 0:
+        return 0.0
 
-        interview_requests = 0
-        for email in user_emails:
-            # using request for avalability as an interview request as it should come before the offer and scheduled interview
-            if (
-                email.application_status
-                and email.application_status.lower() == "request for availability"
-            ):
-                interview_requests += 1
+    interview_requests = 0
+    for email in user_emails:
+        # using request for avalability as an interview request as it should come before the offer and scheduled interview
+        if (
+            email.application_status
+            and email.application_status.lower() == "request for availability"
+        ):
+            interview_requests += 1
 
-        response_rate_percent = (interview_requests / total_apps) * 100
-        return {"value": round(response_rate_percent, 1)}
+    response_rate_percent = (interview_requests / total_apps) * 100
+    return {"value": round(response_rate_percent, 1)}
     

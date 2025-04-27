@@ -145,7 +145,7 @@ async def start_fetch_emails(
         logger.info(f"Starting email fetching process for user_id: {user_id}")
 
         # Start email fetching in the background
-        background_tasks.add_task(fetch_emails_to_db, user, request)
+        background_tasks.add_task(fetch_emails_to_db, user, request, user_id=user_id)
 
         return JSONResponse(content={"message": "Email fetching started"}, status_code=200)
     except Exception as e:

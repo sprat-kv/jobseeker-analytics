@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import FileResponse, RedirectResponse
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+import database
 from utils.file_utils import get_user_filepath
 from session.session_layer import validate_session
 from routes.email_routes import query_emails
@@ -32,12 +33,12 @@ async def download_file(request: Request, user_id: str = Depends(validate_sessio
 
 
 @router.get("/write-to-csv")
-async def write_to_csv(request: Request, user_id: str = Depends(validate_session)):
+async def write_to_csv(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
 
     # Get job related email data from DB
-    emails = query_emails(request, user_id)
+    emails = query_emails(request, db_session=db_session, user_id=user_id)
     if not emails:
         raise HTTPException(status_code=400, detail="No data found to write")
 
@@ -78,7 +79,7 @@ async def write_to_csv(request: Request, user_id: str = Depends(validate_session
 # Write and download csv
 @router.get("/process-csv")
 @limiter.limit("2/minute")
-async def process_csv(request: Request, user_id: str = Depends(validate_session)):
+async def process_csv(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
 
@@ -87,7 +88,7 @@ async def process_csv(request: Request, user_id: str = Depends(validate_session)
     filepath = os.path.join(directory, filename)
     
     # Get job related email data from DB
-    emails = query_emails(request, user_id)
+    emails = query_emails(request, db_session=db_session, user_id=user_id)
     if not emails:
         raise HTTPException(status_code=400, detail="No data found to write")
     # Ensure the directory exists
@@ -132,7 +133,7 @@ async def process_csv(request: Request, user_id: str = Depends(validate_session)
 # Write and download sankey diagram
 @router.get("/process-sankey")
 @limiter.limit("2/minute")
-async def process_sankey(request: Request, user_id: str = Depends(validate_session)):
+async def process_sankey(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
     # Validate user session, redirect if invalid
     if not user_id:
         return RedirectResponse("/logout", status_code=303)
@@ -145,7 +146,7 @@ async def process_sankey(request: Request, user_id: str = Depends(validate_sessi
     num_no_response = 0
 
     # Get job related email data from DB
-    emails = query_emails(request, user_id)
+    emails = query_emails(request, db_session=db_session, user_id=user_id)
     if not emails:
         raise HTTPException(status_code=400, detail="No data found to write")
  
