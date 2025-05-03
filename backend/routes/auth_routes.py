@@ -87,7 +87,7 @@ async def login(request: Request, background_tasks: BackgroundTasks):
             response = RedirectResponse(
                 url=f"{settings.APP_URL}/processing", status_code=303
             )
-            background_tasks.add_task(fetch_emails_to_db, user, request, last_fetched_date)
+            background_tasks.add_task(fetch_emails_to_db, user, request, last_fetched_date, user_id=user.user_id)
             logger.info("Background task started for user_id: %s", user.user_id)
         else:
             request.session["is_new_user"] = True
