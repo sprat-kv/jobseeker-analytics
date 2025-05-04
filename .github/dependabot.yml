@@ -11,7 +11,11 @@ updates:
       - "/frontend" # Location of package manifests (e.g., package.json)
     schedule:
       interval: "weekly"
+    # Disable non-security version updates
+    open-pull-requests-limit: 0
   - package-ecosystem: "pip" # For Python dependencies
     directory: "/backend" # Location of requirements files (e.g., requirements.txt)
     schedule:
       interval: "weekly"
+    # Disable non-security version updates
+    open-pull-requests-limit: 0
