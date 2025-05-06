@@ -10,7 +10,7 @@ Treat job hunting like a sales funnel – Track response rates, follow-ups, and 
 
 **Option 1: Waitlist**
 
-Our beta is full :( **[Join the waitlist](https://get.jobba.help/)** to receive updates when we launch outside of beta.
+**[Join the waitlist](https://mail.justajobapp.com/waitlist)** to receive updates when we launch.
 
 **Option 2: Clone**
 
