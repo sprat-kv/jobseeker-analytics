@@ -28,6 +28,16 @@ If you choose option 2, do the following:
 - Or submit feedback by [form](https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing)
 - You can also always email us at [help@justajobapp.com](mailto:help@justajobapp.com).
 
+## Contributors Hall of Fame
+
+<a href="https://github.com/just-a-job-app/jobseeker-analytics/graphs/contributors">
+
+<img src="https://contrib.rocks/image?repo=just-a-job-app/jobseeker-analytics" />
+
+</a>
+
+<a id="contact-us"></a>
+
 ##  🏗 **Tech Stack**
 
 - **Frontend:** Next.js, TypeScript
