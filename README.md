@@ -1,6 +1,6 @@
 [![Run python unit tests](https://github.com/macro1/jobseeker-analytics/actions/workflows/pytest.yml/badge.svg)](https://github.com/macro1/jobseeker-analytics/actions/workflows/pytest.yml)
 
-## **About jobba.help**
+## **About Just a Job App (formerly jobba.help)**
 
 Treat job hunting like a sales funnel – Track response rates, follow-ups, and conversions, just like a business. Be data-driven.
 
