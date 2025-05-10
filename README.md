@@ -31,12 +31,10 @@ If you choose option 2, do the following:
 ## Contributors Hall of Fame
 
 <a href="https://github.com/just-a-job-app/jobseeker-analytics/graphs/contributors">
-
-<img src="https://contrib.rocks/image?repo=just-a-job-app/jobseeker-analytics" />
-
+  <img src="https://contrib.rocks/image?repo=just-a-job-app/jobseeker-analytics" />
 </a>
 
-<a id="contact-us"></a>
+Made with [contrib.rocks](https://contrib.rocks).
 
 ##  🏗 **Tech Stack**
 
