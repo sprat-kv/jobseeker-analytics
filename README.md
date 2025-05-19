@@ -35,6 +35,8 @@ Designers. Writers. Developers. Ops. You?
 
 🛠 [Become a contributor](https://app.formbricks.com/s/tq4y6lav6f3qdb4mkoiyslpn)
 
+Don't forget to subscribe to our events page: https://lu.ma/justajobapp
+
 ## Contributors Hall of Fame
 Want to join the hall of fame? [Volunteer](https://app.formbricks.com/s/tq4y6lav6f3qdb4mkoiyslpn). 
 
