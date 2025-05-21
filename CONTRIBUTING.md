@@ -37,9 +37,9 @@ If you're not an aspiring developer, that's totally ok.
 
 Keep reading to install the app. 
 
-You may run into issues - email help@jobba.help for help :)
+You may run into issues - email help@justajobapp.com for help :)
 
-## How can I install the app directly on my computer?
+## How can I install the app directly on my computer? [⬆️ Back to Table of Contents](#table-of-contents)
 
 ### Clone the repo
 1. On Windows: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). 
@@ -55,7 +55,7 @@ You may run into issues - email help@jobba.help for help :)
 
 ---
 
-### Create a Google OAuth App 
+### Create a Google OAuth App
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
 3. If this is your first time creating credentials with this project, you will have to configure the OAuth consent screen.
@@ -100,7 +100,7 @@ You may run into issues - email help@jobba.help for help :)
 ---
 
 
-### Run the App: Two options  
+### Run the App: Two options
 
 #### Option 1: Docker Compose (Preferred Option)
 
@@ -161,7 +161,7 @@ Once your `.env` file is set up, start the app by following the instructions bel
 ---
 
 
-### Inspect the Database with DBeaver
+### Inspect the Database with DBeaver [⬆️ Back to Table of Contents](#table-of-contents)
 
 To inspect your PostgreSQL database running in Docker, follow these steps:
 
@@ -204,7 +204,7 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    - Right-click on a table (e.g., `test_table`) and select `View Data` to see the data in the table.
 
 
-### Troubleshooting Tips
+### Troubleshooting Tips [⬆️ Back to Table of Contents](#table-of-contents)
 - **Not redirected after login?**  
   Double-check your `REDIRECT_URI` in both `.env` and Google Cloud settings.  
 - **Invalid API key errors?**  
@@ -216,7 +216,7 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
 - if you change `.env` variables, you'll need to `docker compose down` and `docker compose up --build`
 ---
 
-### Submit Changes  
+### Submit Changes [⬆️ Back to Table of Contents](#table-of-contents)  
 1. **Fork** this repository.  
 2. **Clone** your fork:
    ```sh
@@ -334,7 +334,7 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
 ---
 
 
-### Report a Bug
+### Report a Bug [⬆️ Back to Table of Contents](#table-of-contents)
 
 This section guides you through submitting a bug report for Job Analytics. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior and provide a proper solution.
 
@@ -350,7 +350,7 @@ Bugs are tracked as [GitHub issues](https://docs.github.com/en/issues/tracking-y
 - Include screenshots and/or animated GIFs when possible.
 - If the problem wasn't triggered by a specific action, describe what you were doing before the problem occurred.
 
-## Code of Conduct
+## Code of Conduct [⬆️ Back to Table of Contents](#table-of-contents)
 
 We aim to make participation in this project and in the community a harassment-free experience for everyone.
 
