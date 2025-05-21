@@ -45,7 +45,7 @@ You may run into issues - email help@justajobapp.com for help :)
 1. On Windows: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). 
 2. On Windows: start WSL 
 3. In Github, fork the repository
-4. Clone this fork  using ```git clone https://github.com/jobba-help/jobseeker-analytics.git```
+4. Clone this fork  using ```git clone https://github.com/just-a-job-app/jobseeker-analytics.git```
 5. ```cd jobseeker-analytics``` into the repo you just cloned
 
 ### Get a Google AI API key
