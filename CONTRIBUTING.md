@@ -1,3 +1,28 @@
+## Table of Contents
+
+1. [Welcome!](#welcome)
+2. [How can I install the app directly on my computer?](#how-can-i-install-the-app-directly-on-my-computer)
+    - [Clone the repo](#clone-the-repo)
+    - [Get a Google AI API key](#get-a-google-ai-api-key)
+    - [Create a Google OAuth App](#create-a-google-oauth-app)
+    - [Set Up Environment Variables](#set-up-environment-variables)
+    - [Run the App: Two options](#run-the-app-two-options)
+        - [Option 1: Docker Compose (Preferred Option)](#option-1-docker-compose-preferred-option)
+        - [Option 2: Virtual Environment](#option-2-virtual-environment)
+    - [Inspect the Database with DBeaver](#inspect-the-database-with-dbeaver)
+    - [Troubleshooting Tips](#troubleshooting-tips)
+3. [Submit Changes](#submit-changes)
+    - The "One Diff, One Thesis" Principle
+    - Keep Pull Requests Under 250 Lines of Code
+    - Make your code testable
+4. [Report a Bug](#report-a-bug)
+    - [How Do I Submit a (Good) Bug Report?](#how-do-i-submit-a-good-bug-report)
+5. [Code of Conduct](#code-of-conduct)
+    - [Examples of positive behavior](#examples-of-behavior-that-contributes-to-positive-environment)
+    - [Examples of unacceptable behavior](#examples-of-unacceptable-behavior)
+
+---
+
 # Welcome!
 
 Whether this is your first time downloading code or the gazillionth time cloning a repo, we are happy to see you. 
