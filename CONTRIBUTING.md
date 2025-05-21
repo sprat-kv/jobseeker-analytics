@@ -46,10 +46,14 @@ You may run into issues - email help@jobba.help for help :)
 9. At the top of the list, check 
    - .../auth/userinfo.email  
    - openid
-10. Click the filter field above those checkboxrs, and enter "gmail". It will probably autocomplete so you can click "Gmail API" or press enter.
-11. Check the box next to Gmail API | .../auth/gmail.readonly
-12. Click **Update**
-13. Click **Save**
+![CleanShot 2025-05-20 at 23 11 20](https://github.com/user-attachments/assets/dd9f339e-7111-4aa5-8b77-b8900c62b2c4)
+![CleanShot 2025-05-20 at 23 11 34](https://github.com/user-attachments/assets/82a60ab2-a4b1-412e-a5a5-75568900043e)
+10. Search for "Gmail API" at the top search bar, click **Enable**
+11. Click on **Data Access** again, **Add or remove scopes**
+12. Click the filter field above those checkboxes, and enter "gmail". It will probably autocomplete so you can click "Gmail API" or press enter.
+13. Check the box next to Gmail API | .../auth/gmail.readonly
+14. Click **Update**
+15. Click **Save**
 
 ---
 
