@@ -102,7 +102,7 @@ You may run into issues - email help@justajobapp.com for help :)
 
 ### Run the App: Two options
 
-#### Option 1: Docker Compose (Preferred Option)
+#### Option 1: Docker Compose (Preferred Option) [⬆️ Back to Table of Contents](#table-of-contents)
 
 1. If this is your first time using Docker, install as below:
    - Install Docker. On Windows/Mac install [Docker Desktop](https://docs.docker.com/get-started/get-docker/). On Linux install [Docker Engine](https://docs.docker.com/engine/install/). 
@@ -121,7 +121,7 @@ docker-compose up --build
 
 You can view logs from the app by finding your container in Docker Desktop/Docker Engine and clicking on it. The app will automatically refresh when you make changes. 
 
-#### Option 2: Virtual Environment
+#### Option 2: Virtual Environment [⬆️ Back to Table of Contents](#table-of-contents) 
 
 Once your `.env` file is set up, start the app by following the instructions below:
 1. Create and activate virtual environment:
