@@ -41,7 +41,15 @@ You may run into issues - email help@jobba.help for help :)
    - https://jobseeker-analytics.onrender.com/login
    - http://localhost:8000/login
 6. Copy the **Client ID** and **Client Secret** for later.  
-7. Download and save your credentials locally to the `backend` folder for this repo in a file named ```credentials.json```
+7. Next to Client Secret is a download button. Click it and save it to the `backend` folder with filename ```credentials.json```
+8. Click **Data Access** and then **Add or remove scopes**. 
+9. At the top of the list, check 
+   - .../auth/userinfo.email  
+   - openid
+10. Click the filter field above those checkboxrs, and enter "gmail". It will probably autocomplete so you can click "Gmail API" or press enter.
+11. Check the box next to Gmail API | .../auth/gmail.readonly
+12. Click **Update**
+13. Click **Save**
 
 ---
 
@@ -50,7 +58,11 @@ You may run into issues - email help@jobba.help for help :)
    ```sh
    cp backend/.env.example backend/.env
    ```
-2. Edit the `.env` file with your own credentials.
+2. Edit `backend/.env` to put in your own credentials, particularly 
+   - Client ID goes in `GOOGLE_CLIENT_ID`
+   - Client Secret goes in `GOOGLE_API_KEY`
+   - Type a random string in `COOKIE_SECRET`
+
    **🔒 Never share your `.env` file or commit it to Git!**  
 3. Copy `frontend\.env.sample` to `frontend\.env`:
    ```sh
@@ -72,7 +84,7 @@ You may run into issues - email help@jobba.help for help :)
 ```
 docker-compose up --build
 ```
-3. Then, visit [http://localhost:3000](http://localhost:3000) to begin testing the app locally.
+3. Go to [http://localhost:3000](http://localhost:3000) and click the **Login with Google** button. After you grant access it will go to work scanning your emails for relevant emails.
 4. Troubleshooting:
    - Attempted import error
       - `cd frontend`
@@ -115,10 +127,7 @@ Once your `.env` file is set up, start the app by following the instructions bel
    ```bash
    cd frontend && npm run dev
    ```
-5. Check it out @:
-   http://127.0.0.1:8000
-   
-Then, visit `http://localhost:8000/login` to test the authentication flow.  
+5. Go to [http://localhost:3000](http://localhost:3000) and click the **Login with Google** button. After you grant access it will go to work scanning your emails for relevant emails.
 
 ---
 
@@ -180,17 +189,17 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
 
 ### Submit Changes  
 1. **Fork** this repository.  
-2. **Clone** your fork:  
+2. **Clone** your fork:
    ```sh
-   git clone https://github.com/your-username/repo-name.git
-   cd repo-name
+   git clone https://github.com/your-username/jobseeker-analytics.git
+   cd jobseeker-analytics
    ```
 3. **Create a new branch** for your changes:
-- use branch convention <feature|bugfix|hotfix|docs>/<issueNumber>-<issueDescription>
+- use branch convention <feature|bugfix|hotfix|docs>/<issueNumber>-<issueDescription> e.g.
    ```sh
    git checkout -b docs/65-add-contribution-guidelines
    ```
-4. **Make your changes** and commit them:  
+4. **Make your changes** and commit them:
    ```sh
    git add .
    git commit -m "Add submission guidelines and env setup"
