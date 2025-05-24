@@ -37,6 +37,8 @@ Designers. Writers. Developers. Ops. You?
 
 Don't forget to subscribe to our events page: https://lu.ma/justajobapp
 
+Curious what kind of tasks are available for volunteers? Take a look [here](https://github.com/just-a-job-app/jobseeker-analytics/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22%20no%3Aassignee).
+
 ## Contributors Hall of Fame
 Want to join the hall of fame? [Volunteer](https://app.formbricks.com/s/tq4y6lav6f3qdb4mkoiyslpn). 
 
