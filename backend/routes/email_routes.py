@@ -255,7 +255,12 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                     logger.info(
                         f"user_id:{user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
-                else:
+                    if result.get("job_application_status").lower() == "false positive, not related to job search":
+                        logger.info(
+                            f"user_id:{user_id} email {idx + 1} of {len(messages)} with id {msg_id} is a false positive, not related to job search"
+                        )
+                        continue  # skip this email if it's a false positive
+                else:  # processing returned unknown which is also likely false positive
                     logger.warning(
                         f"user_id:{user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
@@ -264,7 +269,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 message_data = {
                     "id": msg_id,
                     "company_name": result.get("company_name", "unknown"),
-                    "application_status": result.get("application_status", "unknown"),
+                    "application_status": result.get("job_application_status", "unknown"),
                     "received_at": msg.get("date", "unknown"),
                     "subject": msg.get("subject", "unknown"),
                     "job_title": result.get("job_title", "unknown"),

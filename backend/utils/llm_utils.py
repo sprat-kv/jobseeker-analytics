@@ -23,15 +23,79 @@ logging.basicConfig(
 def process_email(email_text):
     prompt = f"""
         Extract the company name, job application status, and job title (role) from the following email. 
-        Job application status can be a value from the following list:
-        ["rejected", "no response", "request for availability", "interview scheduled", "offer"]
-        Note that "no response" means that there is only a neutral, automated or human confirmation of the application being received.
-        Note that "interview scheduled" implies a calendar invite with a meeting date and time has been sent.
-        Note that "request for availability" implies waiting on the candidate to provide their availability.
-        Note that job_title is the role that the user is applying for Ex: "Software Engineer", "Product Engineer", "Data Analyst"
-        Provide the output in JSON format, for example:  "company_name": "company_name", "application_status": "status", "job_title": "job_title"
+        
+        Given the content of an email related to job applications or recruitment, assign one of the following labels to job application status based on the main purpose or outcome of the message:
+        
+        Application confirmation
+        Rejection
+        Availability request
+        Information request
+        Assessment sent
+        Interview invitation
+        Did not apply - inbound request
+        Action required from company
+        Hiring freeze notification
+        Withdrew application
+        Offer made
+        False positive, not related to job search
+        Informational outreach
+
+        Labeling Rules and Explanations for Job Application Status:
+
+        Application confirmation
+        Assign this label if the email confirms receipt of a job application.
+        Examples: "We have received your application", "Thank you for applying", "Your application has been submitted".
+
+        Rejection
+        Use this label for emails explicitly stating that the candidate is not moving forward in the process.
+        Examples: "We regret to inform you...", "We will not be proceeding with your application", "You have not been selected".
+
+        Availability request
+        Assign this label if the company asks for your availability for a call, interview, or meeting.
+        Examples: "Please let us know your availability", "When are you free for a call?", "Can you share your available times?"
+
+        Information request
+        Use this label if the company requests additional information, documents, or clarification.
+        Examples: "Please send your portfolio", "Can you provide references?", "We need more information about..."
+
+        Assessment sent
+        Assign this label if the company sends a test, assignment, or assessment for you to complete as part of the hiring process.
+        Examples: "Please complete the attached assessment", "Here is your coding challenge", "Take-home assignment enclosed".
+
+        Interview invitation
+        Use this label if the company invites you to an interview (phone, video, or onsite).
+        Examples: "We would like to invite you to interview", "Interview scheduled", "Please join us for an interview".
+
+        Did not apply - inbound request
+        Assign this label if the company or recruiter reaches out to you first, and you did not apply for the position.
+        Examples: "We found your profile and would like to connect", "Are you interested in this opportunity?", "We came across your resume".
+
+        Action required from company
+        Use this label if the next step is pending from the company, and you are waiting for their response or action.
+        Examples: "We will get back to you", "Awaiting feedback from the team", "We will contact you with next steps".
+
+        Hiring freeze notification
+        Assign this label if the company notifies you that the position is on hold or canceled due to a hiring freeze.
+        Examples: "Position is on hold", "Hiring freeze in effect", "We are pausing recruitment".
+
+        Withdrew application
+        Use this label if you (the candidate) have withdrawn your application, or the email confirms your withdrawal.
+        Examples: "You have withdrawn your application", "Thank you for letting us know you are no longer interested".
+
+        Offer made
+        Assign this label if the company extends a job offer to you.
+        Examples: "We are pleased to offer you the position", "Offer letter attached", "Congratulations, you have been selected".
+
+        False positive, not related to job search
+        Use this label if the email is not related to job applications, recruitment, or hiring.
+        Examples: Newsletters, spam, unrelated notifications, or personal emails.
+
+        Informational outreach
+        Assign this label if the company or recruiter is reaching out to share information, updates, or opportunities, but not in direct response to an application or as an explicit invitation to apply.
+        Examples: "We wanted to let you know about upcoming roles", "Here’s information about our company", "General outreach about our hiring process".
+
+        Provide the output in JSON format, for example:  "company_name": "company_name", "job_application_status": "status", "job_title": "job_title"
         Remove backticks. Only use double quotes. Enclose key and value pairs in a single pair of curly braces.
-        If the email is obviously not related to a job application, return an empty pair of curly braces like this {{}}
         Email: {email_text}
     """
 
