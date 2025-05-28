@@ -59,26 +59,26 @@ You may run into issues - email help@justajobapp.com for help :)
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
 3. If this is your first time creating credentials with this project, you will have to configure the OAuth consent screen.
-4. On the OAuth Consent Screen page, scroll to "Test Users" and add your gmail address.
-3. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
-4. Set the application type to **Web Application**.  
-5. Under "Authorized redirect URIs," add:  
+4. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
+5. Set the application type to **Web Application**.  
+6. Under "Authorized redirect URIs," add:  
    - https://jobseeker-analytics.onrender.com/login
    - http://localhost:8000/login
-6. Copy the **Client ID** and **Client Secret** for later.  
-7. Next to Client Secret is a download button. Click it and save it to the `backend` folder with filename ```credentials.json```
-8. Click **Data Access** and then **Add or remove scopes**. 
-9. At the top of the list, check 
+7. Copy the **Client ID** for later.  
+8. Next to Client Secret is a download button. Click it and save it to the `backend` folder with filename ```credentials.json```
+9. On the OAuth Consent Screen page, scroll to "Test Users" and add your gmail address.
+10. Click **Data Access** and then **Add or remove scopes**. 
+11. At the top of the list, check 
    - .../auth/userinfo.email  
    - openid
 ![CleanShot 2025-05-20 at 23 11 20](https://github.com/user-attachments/assets/dd9f339e-7111-4aa5-8b77-b8900c62b2c4)
 ![CleanShot 2025-05-20 at 23 11 34](https://github.com/user-attachments/assets/82a60ab2-a4b1-412e-a5a5-75568900043e)
-10. Search for "Gmail API" at the top search bar, click **Enable**
-11. Click on **Data Access** again, **Add or remove scopes**
-12. Click the filter field above those checkboxes, and enter "gmail". It will probably autocomplete so you can click "Gmail API" or press enter.
-13. Check the box next to Gmail API | .../auth/gmail.readonly
-14. Click **Update**
-15. Click **Save**
+12. Search for "Gmail API" at the top search bar, click **Enable**
+13. Click on **Data Access** again, **Add or remove scopes**
+14. Click the filter field above those checkboxes, and enter "gmail". It will probably autocomplete so you can click "Gmail API" or press enter.
+15. Check the box next to Gmail API | .../auth/gmail.readonly
+16. Click **Update**
+17. Click **Save**
 
 ---
 
@@ -88,8 +88,8 @@ You may run into issues - email help@justajobapp.com for help :)
    cp backend/.env.example backend/.env
    ```
 2. Edit `backend/.env` to put in your own credentials, particularly 
-   - Client ID goes in `GOOGLE_CLIENT_ID`
-   - Client Secret goes in `GOOGLE_API_KEY`
+   - Google OAuth Client ID goes in `GOOGLE_CLIENT_ID`
+   - Google AI API key goes in `GOOGLE_API_KEY`
    - Type a random string in `COOKIE_SECRET`
 
    **🔒 Never share your `.env` file or commit it to Git!**  
@@ -109,6 +109,7 @@ You may run into issues - email help@justajobapp.com for help :)
    - Start Docker Desktop or Docker Engine
       - On Windows: make sure to select "Use the WSL 2 based engine" under Settings/general.
       - On Linux: you may need to take additional post-installation steps, see (here)[https://docs.docker.com/engine/install/linux-postinstall/]. 
+   - Make sure to verify your email address in the Account Settings.
 2. Start the app using Docker compose-up. The first time you run this locally it may take a few minutes to set up.
 ```
 docker-compose up --build
