@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-	name: "jobba.help",
+	name: "Just a Job App",
 	description: "Your job hunt made easy!",
 	navItems: [
 		{

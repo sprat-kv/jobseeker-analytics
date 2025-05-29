@@ -141,12 +141,12 @@ const DeveloperInfo = () => {
 							Join our Discord
 						</a>
 						<a
-							aria-label="Email help@jobba.help for support"
+							aria-label="Email help@justajobapp.com for support"
 							className="flex items-center gap-2 text-sm text-primary hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-							href="mailto:help@jobba.help"
+							href="mailto:help@justajobapp.com"
 						>
 							<EmailIcon size={16} />
-							Email help@jobba.help
+							Email help@justajobapp.com
 						</a>
 					</div>
 				</div>
