@@ -62,7 +62,11 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 					</div>
 				</div>
 				<div className="pt-12 pb-2">
-					<img alt="Just a Job App application screenshot" className="w-full h-auto" src="/sankey_diagram.png" />
+					<img
+						alt="Just a Job App application screenshot"
+						className="w-full h-auto"
+						src="/sankey_diagram.png"
+					/>
 					<div className="bg-background/80 backdrop-blur-sm py-2 px-4 text-center">
 						<p className="text-sm text-default-600 font-medium">
 							No more abandoned spreadsheets. No more forgotten Notion tables.{" "}

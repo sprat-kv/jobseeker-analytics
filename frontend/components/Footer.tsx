@@ -8,7 +8,8 @@ const Footer = () => {
 					<div>
 						<h3 className="text-lg font-semibold mb-4">About Just a Job App</h3>
 						<p className="text-default-500 mb-4">
-						Built by jobseekers, for jobseekers. Track your applications automatically, straight from your inbox.
+							Built by jobseekers, for jobseekers. Track your applications automatically, straight from
+							your inbox.
 						</p>
 						<p className="text-sm text-default-500">Currently in beta (100 user testing limit)</p>
 					</div>

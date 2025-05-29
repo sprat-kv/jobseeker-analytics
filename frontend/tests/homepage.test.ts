@@ -18,7 +18,9 @@ test.describe("Homepage Tests", () => {
 	});
 
 	test("Opt-in checkbox is visible", async ({ page }) => {
-		const optInCheckbox = page.locator('input[aria-label="Opt in to receive updates by email about Just a Job App"]');
+		const optInCheckbox = page.locator(
+			'input[aria-label="Opt in to receive updates by email about Just a Job App"]'
+		);
 		await expect(optInCheckbox).toBeVisible();
 	});
 

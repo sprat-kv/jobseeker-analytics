@@ -53,6 +53,7 @@ const Index = () => {
 									<h3 className="text-xl font-semibold mb-2">Built in Public</h3>
 									<p className="text-default-500">
 										Join our community of contributors and help fix the job search.
+									</p>
 								</div>
 							</Card>
 						</div>
@@ -60,11 +61,11 @@ const Index = () => {
 
 					<section className="max-w-4xl mx-auto bg-secondary/50 rounded-lg p-8">
 						<h2 className="text-2xl font-bold text-center mb-6">Ready to ditch your spreadsheet?</h2>
-						<Tabs 
-							aria-label="User Options" 
-							selectedKey={tab} 
-							onSelectionChange={(key) => setTab(key as string)}
+						<Tabs
+							aria-label="User Options"
 							className="w-full"
+							selectedKey={tab}
+							onSelectionChange={(key) => setTab(key as string)}
 						>
 							<Tab key="waitlist" title="Join the Beta">
 								<div className="space-y-4 mt-4">
@@ -77,7 +78,8 @@ const Index = () => {
 							<Tab key="developer" title="Do-It-Yourself Install">
 								<div className="space-y-4 mt-4">
 									<p className="text-center text-default-600 mb-6">
-										Not technical? We'll help you get set up! Email us to book time with a friendly developer.
+										Not technical? We'll help you get set up! Email us to book time with a friendly
+										developer.
 									</p>
 									<DeveloperInfo />
 								</div>
