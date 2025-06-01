@@ -255,7 +255,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                     logger.info(
                         f"user_id:{user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
-                    if result.get("job_application_status").lower() == "false positive, not related to job search":
+                    if result.get("job_application_status").lower().strip() == "false positive":
                         logger.info(
                             f"user_id:{user_id} email {idx + 1} of {len(messages)} with id {msg_id} is a false positive, not related to job search"
                         )
