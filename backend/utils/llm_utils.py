@@ -22,9 +22,9 @@ logging.basicConfig(
 
 def process_email(email_text):
     prompt = f"""
-        Extract the company name, job application status, and job title (role) from the following email. 
+        Extract the company name and job title (role) from the following email. 
         
-        Given the content of an email related to job applications or recruitment, assign one of the following labels to job application status based on the main purpose or outcome of the message:
+        Lastly, assign one of the following labels to job application status based on the main purpose or outcome of the message:
         
         Application confirmation
         Rejection
@@ -37,8 +37,7 @@ def process_email(email_text):
         Hiring freeze notification
         Withdrew application
         Offer made
-        False positive, not related to job search
-        Informational outreach
+        False positive
 
         Labeling Rules and Explanations for Job Application Status:
 
@@ -86,13 +85,9 @@ def process_email(email_text):
         Assign this label if the company extends a job offer to you.
         Examples: "We are pleased to offer you the position", "Offer letter attached", "Congratulations, you have been selected".
 
-        False positive, not related to job search
+        False positive
         Use this label if the email is not related to job applications, recruitment, or hiring.
         Examples: Newsletters, spam, unrelated notifications, or personal emails.
-
-        Informational outreach
-        Assign this label if the company or recruiter is reaching out to share information, updates, or opportunities, but not in direct response to an application or as an explicit invitation to apply.
-        Examples: "We wanted to let you know about upcoming roles", "Here’s information about our company", "General outreach about our hiring process".
 
         Provide the output in JSON format, for example:  "company_name": "company_name", "job_application_status": "status", "job_title": "job_title"
         Remove backticks. Only use double quotes. Enclose key and value pairs in a single pair of curly braces.
