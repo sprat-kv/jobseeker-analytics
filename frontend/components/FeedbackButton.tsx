@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Button } from "@heroui/react";
+import Image from 'next/image';
 
-import { MessageSquareIcon } from "@/components/icons";
 import FeedbackSidebar from "@/components/FeedbackSidebar";
 
 export default function FeedbackButton() {
@@ -14,10 +14,10 @@ export default function FeedbackButton() {
 			<Button
 				isIconOnly
 				aria-label="Feedback"
-				className="fixed bottom-4 right-4 z-50 bg-purple-600 hover:bg-purple-700 text-white shadow-lg"
-				onClick={() => setIsOpen(!isOpen)}
+				className="fixed bottom-4 right-4 z-50"
+				onPress={() => setIsOpen(!isOpen)}
 			>
-				<MessageSquareIcon size={24} />
+				<Image src="/feedback-icon.png" alt="Feedback" width={100} height={100} />
 			</Button>
 			{isOpen && (
 				<div className="fixed bottom-20 right-4 z-50">

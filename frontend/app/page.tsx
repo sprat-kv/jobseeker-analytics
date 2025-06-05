@@ -106,10 +106,6 @@ const Index = () => {
 
 			<Footer />
 
-			{/* Add FeedbackSidebar */}
-			<div className="fixed bottom-4 right-4 z-50">
-				<FeedbackSidebar className="w-80" />
-			</div>
 		</div>
 	);
 };
