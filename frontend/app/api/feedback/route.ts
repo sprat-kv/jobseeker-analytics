@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 			repo: "jobseeker-analytics",
 			title: `Feedback: ${message.slice(0, 50)}...`,
 			body: `User Feedback:\n\n${message}`,
-			labels: ["📣%20user%20feedback"]
+			labels: ["📣 user feedback"]
 		});
 
 		return NextResponse.json({ success: true, issueNumber: response.data.number }, { status: 201 });
