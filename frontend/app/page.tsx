@@ -9,7 +9,6 @@ import Footer from "@/components/Footer";
 import WaitlistForm from "@/components/WaitlistForm";
 import DeveloperInfo from "@/components/DeveloperInfo";
 import HeroSection from "@/components/HeroSection";
-import FeedbackSidebar from "@/components/FeedbackSidebar";
 
 const Index = () => {
 	const [tab, setTab] = useState("waitlist");
@@ -105,7 +104,6 @@ const Index = () => {
 			</main>
 
 			<Footer />
-
 		</div>
 	);
 };
