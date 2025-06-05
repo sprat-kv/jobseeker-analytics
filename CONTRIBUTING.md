@@ -11,13 +11,13 @@
         - [Option 2: Virtual Environment](#option-2-virtual-environment-%EF%B8%8F-back-to-table-of-contents)
     - [Inspect the Database with DBeaver](#inspect-the-database-with-dbeaver-%EF%B8%8F-back-to-table-of-contents)
     - [Troubleshooting Tips](#troubleshooting-tips-%EF%B8%8F-back-to-table-of-contents)
-3. [Submit Changes](#submit-changes)
+3. [Submit Changes](#submit-changes-%EF%B8%8F-back-to-table-of-contents)
     - The "One Diff, One Thesis" Principle
     - Keep Pull Requests Under 250 Lines of Code
     - Make your code testable
-4. [Report a Bug](#report-a-bug)
+4. [Report a Bug](#report-a-bug-%EF%B8%8F-back-to-table-of-contents)
     - [How Do I Submit a (Good) Bug Report?](#how-do-i-submit-a-good-bug-report)
-5. [Code of Conduct](#code-of-conduct)
+5. [Code of Conduct](#code-of-conduct-%EF%B8%8F-back-to-table-of-contents)
     - [Examples of positive behavior](#examples-of-behavior-that-contributes-to-positive-environment)
     - [Examples of unacceptable behavior](#examples-of-unacceptable-behavior)
 
