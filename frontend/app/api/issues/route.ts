@@ -23,9 +23,9 @@ export async function POST(request: Request) {
 		const response = await appOctokit.issues.create({
 			owner: "just-a-job-app",
 			repo: "jobseeker-analytics",
-			title,
+			title: `[BUG]: ${title}`,
 			body: description,
-			labels: ["bug"]
+			labels: ["📣%20user%20feedback"]
 		});
 
 		return NextResponse.json({ success: true, issueNumber: response.data.number }, { status: 201 });
