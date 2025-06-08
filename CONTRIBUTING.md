@@ -54,7 +54,9 @@ You may run into issues - email help@justajobapp.com for help :)
 _Estimated time: 2-5 minutes_
 
 Note for **Windows** users: We recommend that you use WSL2. [Install here](https://learn.microsoft.com/en-us/windows/wsl/). Open the application when installed.
-1. In Github, fork the repository.
+1. In [Github](https://github.com/just-a-job-app/jobseeker-analytics), fork the repository.
+   
+![CleanShot 2025-06-07 at 21 40 35](https://github.com/user-attachments/assets/9312b5ba-d491-49a1-9f04-218eefffceb6)
 2. In Visual Studio Code, go to the Terminal > New Terminal.
 3. Paste the command below into the terminal. Press Enter to download the app to your computer. 
 ```sh
