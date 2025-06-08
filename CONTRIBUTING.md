@@ -40,8 +40,10 @@ Keep reading to install the app.
 You may run into issues - email help@justajobapp.com for help :)
 
 ## How can I install the app directly on my computer? [⬆️ Back to Table of Contents](#table-of-contents)
-
+**Estimated time to complete installation:** 25-50 minutes.
+*This is an estimate and can vary depending on your internet speed and familiarity with the tools. The first-time setup with Docker will take the longest.*
 ### Clone the repo
+_Estimated time: 2-5 minutes_
 1. On Windows: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). 
 2. On Windows: start WSL 
 3. In Github, fork the repository
@@ -49,6 +51,7 @@ You may run into issues - email help@justajobapp.com for help :)
 5. ```cd jobseeker-analytics``` into the repo you just cloned
 
 ### Get a Google AI API key
+_Estimated time: 2-3 minutes_
 1. Go to [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)
 2. Click **Create and API Key**
 3. Copy your API key and save it for later
@@ -56,6 +59,7 @@ You may run into issues - email help@justajobapp.com for help :)
 ---
 
 ### Create a Google OAuth App
+_Estimated time: 10-20 minutes_
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and create a new project (or use an existing one).  
 2. Navigate to **APIs & Services** → **Credentials**.  
 3. If this is your first time creating credentials with this project, you will have to configure the OAuth consent screen.
@@ -83,6 +87,7 @@ You may run into issues - email help@justajobapp.com for help :)
 ---
 
 ### Set Up Environment Variables
+_Estimated time: 3-5 minutes_
 1. Copy `backend\.env.example` to `backend\.env`:
    ```sh
    cp backend/.env.example backend/.env
@@ -101,7 +106,7 @@ You may run into issues - email help@justajobapp.com for help :)
 
 
 ### Run the App: Two options
-
+_Estimated time: 10-25 minutes_
 #### Option 1: Docker Compose (Preferred Option) [⬆️ Back to Table of Contents](#table-of-contents)
 
 1. If this is your first time using Docker, install as below:
