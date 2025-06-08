@@ -52,11 +52,17 @@ You may run into issues - email help@justajobapp.com for help :)
   
 ### Clone the repo
 _Estimated time: 2-5 minutes_
-1. On Windows: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). 
-2. On Windows: start WSL 
-3. In Github, fork the repository
-4. Clone this fork  using ```git clone https://github.com/just-a-job-app/jobseeker-analytics.git```
-5. ```cd jobseeker-analytics``` into the repo you just cloned
+Note for Windows users: We recommend that you use WSL2. [Installation instructions here](https://learn.microsoft.com/en-us/windows/wsl/). Once installed, start WSL.
+1. In Github, fork the repository.
+2. In Visual Studio Code, go to the Terminal > New Terminal.
+3. Paste the command below into the terminal. Press Enter to download the app to your computer. 
+```sh
+git clone https://github.com/your-username/jobseeker-analytics.git
+```
+4. Paste the command below into the terminal. Press Enter to navigate to the app directory.
+```sh
+cd jobseeker-analytics
+```
 
 ### Get a Google AI API key
 _Estimated time: 2-3 minutes_
