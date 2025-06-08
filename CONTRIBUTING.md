@@ -2,7 +2,7 @@
 
 1. [Welcome!](#welcome)
 2. [How can I install the app directly on my computer?](#how-can-i-install-the-app-directly-on-my-computer-%EF%B8%8F-back-to-table-of-contents)
-    - [Prerequisites](#prerequisites)
+    - [Install the Prerequisites](#install-the-prerequisites)
     - [Clone the repo](#clone-the-repo)
     - [Get a Google AI API key](#get-a-google-ai-api-key)
     - [Create a Google OAuth App](#create-a-google-oauth-app)
@@ -43,7 +43,7 @@ You may run into issues - email help@justajobapp.com for help :)
 ## How can I install the app directly on my computer? [⬆️ Back to Table of Contents](#table-of-contents)
 **Estimated time to complete installation:** 25-50 minutes.
 *This is an estimate and can vary depending on your internet speed and familiarity with the tools. The first-time setup with Docker will take the longest.*
-### Prerequisites
+### Install the Prerequisites
 (everything is free to install)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 - [Visual Studio Code](https://code.visualstudio.com/)
