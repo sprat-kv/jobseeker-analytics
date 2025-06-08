@@ -84,8 +84,7 @@ _Estimated time: 10-20 minutes_
 3. If this is your first time creating credentials with this project, you will have to configure the OAuth consent screen.
 4. Click **Create Credentials** → **OAuth 2.0 Client IDs**.  
 5. Set the application type to **Web Application**.  
-6. Under "Authorized redirect URIs," add:  
-   - https://jobseeker-analytics.onrender.com/login
+6. Under "Authorized redirect URIs," add the following and save to update:  
    - http://localhost:8000/login
 7. Copy the **Client ID** for later.  
 8. Next to Client Secret is a download button. Click it and save it to the `backend` folder with filename ```credentials.json```
@@ -94,8 +93,11 @@ _Estimated time: 10-20 minutes_
 11. At the top of the list, check 
    - .../auth/userinfo.email  
    - openid
+     
 ![CleanShot 2025-05-20 at 23 11 20](https://github.com/user-attachments/assets/dd9f339e-7111-4aa5-8b77-b8900c62b2c4)
 ![CleanShot 2025-05-20 at 23 11 34](https://github.com/user-attachments/assets/82a60ab2-a4b1-412e-a5a5-75568900043e)
+
+Don't forget to press save. Twice.
 12. Search for "Gmail API" at the top search bar, click **Enable**
 13. Click on **Data Access** again, **Add or remove scopes**
 14. Click the filter field above those checkboxes, and enter "gmail". It will probably autocomplete so you can click "Gmail API" or press enter.
