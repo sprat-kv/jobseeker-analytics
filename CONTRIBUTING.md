@@ -57,7 +57,9 @@ Note for **Windows** users: We recommend that you use WSL2. [Install here](https
 1. In [Github](https://github.com/just-a-job-app/jobseeker-analytics), fork the repository.
    
 ![CleanShot 2025-06-07 at 21 40 35](https://github.com/user-attachments/assets/9312b5ba-d491-49a1-9f04-218eefffceb6)
+
 2. In Visual Studio Code, go to the Terminal > New Terminal.
+
 3. Paste the command below into the terminal. Press Enter to download the app to your computer. 
 ```sh
 git clone https://github.com/your-username/jobseeker-analytics.git
