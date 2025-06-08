@@ -59,8 +59,10 @@ Note for **Windows** users: We recommend that you use WSL2. [Install here](https
 ![CleanShot 2025-06-07 at 21 40 35](https://github.com/user-attachments/assets/9312b5ba-d491-49a1-9f04-218eefffceb6)
 
 2. In Visual Studio Code, go to the Terminal > New Terminal.
+3. Edit the clone command below with your actual username instead of `your-username`
 
-3. Paste the command below into the terminal. Press Enter to download the app to your computer. 
+   e.g. my username is `lnovitz`, so my clone command is: `git clone https://github.com/lnovitz/jobseeker-analytics.git`
+5. Paste the command from Step 3 below into the terminal. Press Enter to download the app to your computer. 
 ```sh
 git clone https://github.com/your-username/jobseeker-analytics.git
 ```
