@@ -53,7 +53,7 @@ const getInitialSortKey = (key: string) => {
 	return typeof window !== "undefined" ? localStorage.getItem("sortKey") || key : key;
 };
 
-// Add this helper function above your component
+//Function to get the CSS class based on application status
 function getStatusClass(status: string) {
 	const normalized = status?.toLowerCase();
 	switch (normalized) {
