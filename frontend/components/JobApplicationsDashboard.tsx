@@ -199,6 +199,8 @@ export default function JobApplicationsDashboard({
 
 	const totalPages = Math.ceil(sortedData.length / pageSize);
 
+
+	
 	return (
 		<div className="p-6">
 			{/* Modal for New User */}
@@ -323,16 +325,15 @@ export default function JobApplicationsDashboard({
 									key={item.id || item.received_at}
 									className="hover:bg-default-100 transition-colors"
 								>
+
 									<TableCell>{item.company_name || "--"}</TableCell>
 									<TableCell>
 										<span
-											className={`inline-flex items-center justify-center px-2 py-1 rounded 
-												${
-												item.application_status.toLowerCase() === "Rejection"
+											className={`inline-flex items-center justify-center px-2 py-1 rounded text-sm font-medium ${
+												item.application_status.toLowerCase() === "rejection"
 													? "bg-red-100 text-red-800"
-													: "bg-yellow-100 text-green-800"
-											}`
-										}
+													: "bg-green-100 text-green-800"
+											}`}
 										>
 											{item.application_status || "--"}
 										</span>
@@ -374,3 +375,4 @@ export default function JobApplicationsDashboard({
 		</div>
 	);
 }
+
