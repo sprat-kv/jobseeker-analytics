@@ -1,38 +1,37 @@
 services:
   backend:
-    build: ./backend  # Point to the backend folder where the Dockerfile is located
+    build: ./backend # Point to the backend folder where the Dockerfile is located
     ports:
-      - "8000:8000"  # Map host port 8000 to container port 8000
+      - "8000:8000" # Map host port 8000 to container port 8000
     volumes:
       - ./backend:/app # Mount backend directory for live code updates
-    env_file: "./backend/.env"  # Use the .env file inside backend
+    env_file: "./backend/.env" # Use the .env file inside backend
     environment:
       - IS_DOCKER_CONTAINER=1
     depends_on:
-      - db  # Ensure the database service is started before the backend
-    restart: always  # Restart container if it crashes
+      - db # Ensure the database service is started before the backend
+    restart: always # Restart container if it crashes
 
   frontend:
-    build: ./frontend  # Point to the frontend folder where the Dockerfile is located
+    build: ./frontend # Point to the frontend folder where the Dockerfile is located
     ports:
-      - "3000:3000"  # Map host port 3000 to container port 3000
+      - "3000:3000" # Map host port 3000 to container port 3000
     env_file: "./frontend/.env"
     environment:
       - NODE_ENV=production
     restart: always
 
   db:
-    image: postgres:13  # Use the official PostgreSQL image
+    image: postgres:13 # Use the official PostgreSQL image
     ports:
-      - "5433:5432"  # Map host port 5433 to container port 5432
+      - "5433:5432" # Map host port 5433 to container port 5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: jobseeker_analytics
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persist database data
+      - postgres_data:/var/lib/postgresql/data # Persist database data
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-
 
 volumes:
   postgres_data:

@@ -1,44 +1,43 @@
 services:
   backend:
-    build: ./backend  # Point to the backend folder where the Dockerfile is located
+    build: ./backend # Point to the backend folder where the Dockerfile is located
     ports:
-      - "8000:8000"  # Map host port 8000 to container port 8000
+      - "8000:8000" # Map host port 8000 to container port 8000
     volumes:
       - ./backend:/app # Mount backend directory for live code updates
-    env_file: "./backend/.env"  # Use the .env file inside backend
+    env_file: "./backend/.env" # Use the .env file inside backend
     environment:
       - IS_DOCKER_CONTAINER=1
     depends_on:
-      - db  # Ensure the database service is started before the backend
-    restart: always  # Restart container if it crashes
+      - db # Ensure the database service is started before the backend
+    restart: always # Restart container if it crashes
 
   frontend:
-    build: 
-      context: ./frontend  # Point to the frontend folder where the Dockerfile is located
-      dockerfile: Dockerfile.dev  # Use a specific Dockerfile for development (e.g., Dockerfile.dev)
+    build:
+      context: ./frontend # Point to the frontend folder where the Dockerfile is located
+      dockerfile: Dockerfile.dev # Use a specific Dockerfile for development (e.g., Dockerfile.dev)
     ports:
-      - "3000:3000"  # Map host port 3000 to container port 3000
+      - "3000:3000" # Map host port 3000 to container port 3000
     volumes:
-      - ./frontend:/app  # Mount the entire frontend directory for live code updates (including components, etc.)
-      - /app/node_modules  # Prevent overwriting of node_modules in the container
+      - ./frontend:/app # Mount the entire frontend directory for live code updates (including components, etc.)
+      - /app/node_modules # Prevent overwriting of node_modules in the container
     env_file: "./frontend/.env"
     environment:
       - NODE_ENV=development
-    command: npm run dev  # Start the Next.js dev server with hot-reloading
+    command: npm run dev # Start the Next.js dev server with hot-reloading
     restart: always
 
   db:
-    image: postgres:13  # Use the official PostgreSQL image
+    image: postgres:13 # Use the official PostgreSQL image
     ports:
-      - "5433:5432"  # Map host port 5433 to container port 5432
+      - "5433:5432" # Map host port 5433 to container port 5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: jobseeker_analytics
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Persist database data
+      - postgres_data:/var/lib/postgresql/data # Persist database data
       - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
-
 
 volumes:
   postgres_data:
