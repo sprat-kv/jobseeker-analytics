@@ -6,7 +6,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm" # For TypeScript dependencies
-    directories:
+    directories: 
       - "/"
       - "/frontend" # Location of package manifests (e.g., package.json)
     schedule:

@@ -39,7 +39,7 @@
     - thank you for your referral application
     - recruiting screen
     - recruitment screen
-
+    
 ## include any of the following from addresses
 - logic: any
   field: from
@@ -59,13 +59,13 @@
   how: exclude
   terms:
     - do you want to finish your application
-    - watering
+    - watering    
     - you have new application updates this week
     - farewell
     - Verify your candidate account
     - account created
     - welcome to the
-    - "% off"
+    - '% off'
     - sign in link
     - job search council
 
@@ -80,7 +80,7 @@
     - notifications@github.com
     - messaging-digest-noreply@linkedin.com
     - newsletter@
-    - "@interviewing.io"
+    - '@interviewing.io'
     - mail.jointaro.com
     - calendar.luma-mail.com
     - huntr.co

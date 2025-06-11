@@ -30,7 +30,6 @@ No manual tracking. No extra tabs. Just a simpler job search.
 - Or email [help@justajobapp.com](mailto:help@justajobapp.com)
 
 ## Want to Get Involved?
-
 We’re building the job search app we wish we had, together, in public.
 Designers. Writers. Developers. Ops. You?
 
@@ -41,14 +40,13 @@ Don't forget to subscribe to our events page: https://lu.ma/justajobapp
 Curious what kind of tasks are available for volunteers? Take a look [here](https://github.com/just-a-job-app/jobseeker-analytics/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22%20no%3Aassignee).
 
 ## Contributors Hall of Fame
-
-Want to join the hall of fame? [Volunteer](https://app.formbricks.com/s/tq4y6lav6f3qdb4mkoiyslpn).
+Want to join the hall of fame? [Volunteer](https://app.formbricks.com/s/tq4y6lav6f3qdb4mkoiyslpn). 
 
 <a href="https://github.com/just-a-job-app/jobseeker-analytics/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=just-a-job-app/jobseeker-analytics" />
 </a>
 
-## 🏗 **Tech Stack**
+##  🏗 **Tech Stack**
 
 - **Frontend:** Next.js, TypeScript
 - **Backend:** FastAPI, Python
@@ -67,3 +65,4 @@ Want to join the hall of fame? [Volunteer](https://app.formbricks.com/s/tq4y6lav
 - Just a Job App is open source. Fork it, remix it, or carry it on if I ever disappear to open a cat café. 🐾
 - FYI, our sustainability model is still evolving. The goal is to keep it free for jobseekers, forever.
 - Later on, we may introduce an enterprise offering to support that mission.
+
