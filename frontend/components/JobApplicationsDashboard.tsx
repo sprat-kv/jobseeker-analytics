@@ -232,8 +232,6 @@ export default function JobApplicationsDashboard({
 
 	const totalPages = Math.ceil(sortedData.length / pageSize);
 
-
-	
 	return (
 		<div className="p-6">
 			{/* Modal for New User */}
@@ -358,7 +356,6 @@ export default function JobApplicationsDashboard({
 									key={item.id || item.received_at}
 									className="hover:bg-default-100 transition-colors"
 								>
-
 									<TableCell>{item.company_name || "--"}</TableCell>
 									<TableCell>
 										<span
@@ -404,4 +401,3 @@ export default function JobApplicationsDashboard({
 		</div>
 	);
 }
-
