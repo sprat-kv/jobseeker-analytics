@@ -361,7 +361,7 @@ export default function JobApplicationsDashboard({
 									</TableCell>
 									<TableCell className="max-w-[120px] break-words whitespace-normal text-center">
 										<span
-											className={`inline-flex items-center justify-center px-1.5 py-1 rounded text-s font-medium ${getStatusClass(item.application_status)}`}
+											className={`inline-flex items-center justify-center px-1.5 py-1 rounded text-sm font-medium ${getStatusClass(item.application_status)}`}
 										>
 											{item.application_status || "--"}
 										</span>
