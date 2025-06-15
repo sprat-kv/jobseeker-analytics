@@ -356,7 +356,9 @@ export default function JobApplicationsDashboard({
 									key={item.id || item.received_at}
 									className="hover:bg-default-100 transition-colors"
 								>
-									<TableCell className="max-w-[100px] text-center">{item.company_name || "--"}</TableCell>
+									<TableCell className="max-w-[100px] text-center">
+										{item.company_name || "--"}
+									</TableCell>
 									<TableCell className="max-w-[120px] break-words whitespace-normal text-center">
 										<span
 											className={`inline-flex items-center justify-center px-1.5 py-1 rounded text-s font-medium ${getStatusClass(item.application_status)}`}
@@ -364,10 +366,18 @@ export default function JobApplicationsDashboard({
 											{item.application_status || "--"}
 										</span>
 									</TableCell>
-									<TableCell className="text-center">{new Date(item.received_at).toLocaleDateString() || "--"}</TableCell>
-									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">{item.job_title || "--"}</TableCell>
-									<TableCell className="max-w-[200px] break-words text-center">{item.subject || "--"}</TableCell>
-									<TableCell className="max-w-[220px] break-words whitespace-normal text-center">{item.email_from || "--"}</TableCell>
+									<TableCell className="text-center">
+										{new Date(item.received_at).toLocaleDateString() || "--"}
+									</TableCell>
+									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">
+										{item.job_title || "--"}
+									</TableCell>
+									<TableCell className="max-w-[200px] break-words text-center">
+										{item.subject || "--"}
+									</TableCell>
+									<TableCell className="max-w-[220px] break-words whitespace-normal text-center">
+										{item.email_from || "--"}
+									</TableCell>
 									<TableCell className="text-center">
 										<Tooltip content="Remove">
 											<Button
