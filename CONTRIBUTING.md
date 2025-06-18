@@ -288,6 +288,18 @@ To inspect your PostgreSQL database running in Docker, follow these steps:
    ```
 7. **Open a Pull Request** on GitHub. See tips below. Credit to Taro ([warning: you will make me money if you sign up through this link](https://www.jointaro.com/r/liannan073/))
 
+**Keeping Your Local Copy Up to Date**
+
+After your feature has been accepted and merged, it's important to ensure your local copy is up to date before starting any new work. Especially if you're about to begin work on a different feature, follow these steps:
+```sh
+git checkout main             # Switch back to the main branch
+git pull                      # Update your local copy with the latest changes
+git checkout -b new_branch_name  # Create a new branch for your next feature
+```
+This ensures you're always working on the latest version of the codebase.
+
+
+
    #### 1. The "One Diff, One Thesis" Principle
    
        - Each code change should focus on a single purpose or goal.
