@@ -237,7 +237,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             process_task_run.processed_emails = idx + 1
             db_session.commit()
 
-            msg = get_email(message_id=msg_id, gmail_instance=service)
+            msg = get_email(message_id=msg_id, gmail_instance=service, user_email=user.user_email)
 
             if msg:
                 try:
