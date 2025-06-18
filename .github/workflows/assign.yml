@@ -5,6 +5,8 @@ on:
     # Runs daily at midnight UTC to check for inactive assigned issues.
     # Adjust cron schedule as needed (e.g., "0 0 * * *" for daily at midnight UTC).
     - cron: '0 0 * * *'
+  issue_comment:
+    types: [created]
   # Allows manual triggering for testing or immediate cleanup.
   workflow_dispatch:
 
