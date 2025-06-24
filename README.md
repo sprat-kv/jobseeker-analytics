@@ -21,12 +21,12 @@ No manual tracking. No extra tabs. Just a simpler job search.
 **Option 2: Do-It-Yourself (DIY) Install**
 -  📹 Video tutorial: https://youtu.be/6LXlCdcsXPE 
 - Already familiar with GitHub? Start with [CONTRIBUTING.md](https://github.com/lnovitz/jobseeker-analytics/blob/main/CONTRIBUTING.md).
-- If you run into issues, hop into [Discord](https://discord.gg/5tTT6WVQyw).
+- If you run into issues, hop into [Discord](https://discord.gg/gsdpMchCam).
 - Not familiar with GitHub? We’ll help you get set up! [Email us](mailto:help@justajobapp.com?subject=Help%20Running%20App%20On%20Personal%20Computer) to book time with a friendly developer
 
 ## **Support & Feedback**
 
-- Join our [Discord community](https://discord.gg/5tTT6WVQyw)
+- Join our [Discord community](https://discord.gg/gsdpMchCam)
 - [Send us feedback](https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing)
 - Or email [help@justajobapp.com](mailto:help@justajobapp.com)
 
