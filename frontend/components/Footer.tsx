@@ -29,7 +29,7 @@ const Footer = () => {
 						<div className="space-y-4">
 							<a
 								className="flex items-center gap-2 text-sm text-default-500 hover:text-foreground transition-colors"
-								href="https://discord.gg/5tTT6WVQyw"
+								href="https://discord.gg/gsdpMchCam"
 								rel="noopener noreferrer"
 								target="_blank"
 							>
