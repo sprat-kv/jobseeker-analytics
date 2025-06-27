@@ -10,6 +10,8 @@ Just a Job App tracks your job applications — automatically, straight from you
 
 No manual tracking. No extra tabs. Just a simpler job search.
 
+![sneakpeek](https://github.com/user-attachments/assets/ccfac1bd-ce57-4f62-894c-c55682ff2fb4)
+
 🎥 [Watch a demo](https://youtube.com/shorts/YT7qzTh2Q7A?feature=share)
 
 ## **Try the App**
