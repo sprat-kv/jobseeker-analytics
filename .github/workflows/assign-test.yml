@@ -22,6 +22,7 @@ jobs:
           enable_reminder: true
           # TEST MODE: Send reminder after just 1 hour of inactivity
           reminder_days: 0.00069444  # 1 hour (1/24 days)
+          assigned_label: ""  # No label required for assignment
           # Customize the ping message to the assignee
           reminder_comment: >
             🧪 **TEST MODE** - This is a test reminder for issue "{{issue_title}}"
