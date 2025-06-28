@@ -21,7 +21,7 @@ jobs:
           # Enable the assignee ping
           enable_reminder: true
           # TEST MODE: Send reminder after just 1 hour of inactivity
-          reminder_days: 0.04  # 1 hour (1/24 days)
+          reminder_days: 0.00069444  # 1 hour (1/24 days)
           # Customize the ping message to the assignee
           reminder_comment: >
             🧪 **TEST MODE** - This is a test reminder for issue "{{issue_title}}"
