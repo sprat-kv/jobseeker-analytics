@@ -1,0 +1,33 @@
+name: Test Stale Assigned Issues (Short Timeframes)
+
+on:
+  # Only manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  unassign_stale_issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # Required to unassign issues and post comments.
+
+    steps:
+      - name: Unassign stale issues and send reminders (TEST MODE)
+        uses: takanome-dev/assign-issue-action@v2.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          maintainers: 'lnovitz' # A list of maintainers authorized to use /assign and /unassign commands.
+          # TEST MODE: Very short timeframes for testing
+          days_until_unassign: 1
+          # Enable the assignee ping
+          enable_reminder: true
+          # TEST MODE: Send reminder after just 1 hour of inactivity
+          reminder_days: 0.04  # 1 hour (1/24 days)
+          # Customize the ping message to the assignee
+          reminder_comment: >
+            🧪 **TEST MODE** - This is a test reminder for issue "{{issue_title}}"
+            
+            Hi @{{assignee}}! This is a test of the stale issue management workflow.
+            
+            If I don't see any activity on this issue in the next {{days_remaining}} days, I'll unassign you from the issue.
+            
+            This is just a test - please ignore if you're actively working on this! 
