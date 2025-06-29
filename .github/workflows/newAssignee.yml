@@ -4,6 +4,9 @@ on:
   issues:
     types: [assigned]
 
+permissions:
+  issues: write
+
 jobs:
   add-assigned-label:
     runs-on: ubuntu-latest

@@ -26,6 +26,7 @@ jobs:
           days_until_unassign: 30
           # Enable the assignee ping
           enable_reminder: true
+          max_assignments: 1
           # Define 'X' days: Send reminder after 7 days of inactivity (halfway point of 14 days)
           # Set to 'auto' for (days_until_unassign / 2) or a specific number like '7'
           reminder_days: 14
