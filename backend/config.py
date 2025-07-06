@@ -33,6 +33,7 @@ class Settings(BaseSettings):
 
     @property
     def is_publicly_deployed(self) -> bool:
+        return False
         return self.ENV in ["prod", "staging"]
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
