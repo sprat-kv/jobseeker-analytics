@@ -22,9 +22,11 @@ logging.basicConfig(
 
 def process_email(email_text):
     prompt = f"""
-        Extract the company name and job title (role) from the following email. 
+        First, extract the job application status from the following email using the labels below. 
+        If the status is 'False positive', only return the status as 'False positive' and do not extract company name or job title. 
+        If the status is not 'False positive', then extract the company name and job title as well.
         
-        Lastly, assign one of the following labels to job application status based on the main purpose or outcome of the message:
+        Assign one of the following labels to job application status based on the main purpose or outcome of the message:
         
         Application confirmation
         Rejection
@@ -66,8 +68,9 @@ def process_email(email_text):
         Examples: "We would like to invite you to interview", "Interview scheduled", "Please join us for an interview".
 
         Did not apply - inbound request
-        Assign this label if the company or recruiter reaches out to you first, and you did not apply for the position.
-        Examples: "We found your profile and would like to connect", "Are you interested in this opportunity?", "We came across your resume".
+        Assign this label if the company or recruiter reaches out to you first about a job or recruiting opportunity, and you did not apply for the position.
+        Examples: "We found your profile and would like to connect about a job", "Are you interested in this job opportunity?", "We came across your resume for a position".
+        Do NOT use this label for event invitations, newsletters, or marketing emails.
 
         Action required from company
         Use this label if the next step is pending from the company, and you are waiting for their response or action.
@@ -87,9 +90,12 @@ def process_email(email_text):
 
         False positive
         Use this label if the email is not related to job applications, recruitment, or hiring.
-        Examples: Newsletters, spam, unrelated notifications, or personal emails.
+        Examples: Newsletters, event invitations, conference invites, marketing emails, spam, unrelated notifications, or personal emails.
+        Example: "Join us for our annual conference" → False positive
+        Example: "Sign up for our upcoming event" → False positive
 
-        Provide the output in JSON format, for example:  "company_name": "company_name", "job_application_status": "status", "job_title": "job_title"
+        If the status is 'False positive', only return: {{"job_application_status": "False positive"}}
+        If the status is not 'False positive', return: {{"company_name": "company_name", "job_application_status": "status", "job_title": "job_title"}}
         Remove backticks. Only use double quotes. Enclose key and value pairs in a single pair of curly braces.
         Email: {email_text}
     """

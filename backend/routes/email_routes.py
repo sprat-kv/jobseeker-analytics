@@ -79,8 +79,14 @@ def query_emails(request: Request, db_session: database.DBSession, user_id: str 
         statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
         user_emails = db_session.exec(statement).all()
 
-        logger.info(f"Found {len(user_emails)} emails for user_id: {user_id}")
-        return user_emails  # Return empty list if no emails exist
+        # Filter out records with "unknown" application status
+        filtered_emails = [
+            email for email in user_emails 
+            if email.application_status and email.application_status.lower() != "unknown"
+        ]
+
+        logger.info(f"Found {len(user_emails)} total emails, returning {len(filtered_emails)} after filtering out 'unknown' status")
+        return filtered_emails  # Return filtered list
 
     except Exception as e:
         logger.error(f"Error fetching emails for user_id {user_id}: {e}")
@@ -237,7 +243,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             process_task_run.processed_emails = idx + 1
             db_session.commit()
 
-            msg = get_email(message_id=msg_id, gmail_instance=service)
+            msg = get_email(message_id=msg_id, gmail_instance=service, user_email=user.user_email)
 
             if msg:
                 try:

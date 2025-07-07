@@ -133,7 +133,7 @@ const DeveloperInfo = () => {
 						<a
 							aria-label="Join our Discord server"
 							className="flex items-center gap-2 text-sm text-primary hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-							href="https://discord.gg/5tTT6WVQyw"
+							href="https://discord.gg/gsdpMchCam"
 							rel="noopener noreferrer"
 							target="_blank"
 						>
