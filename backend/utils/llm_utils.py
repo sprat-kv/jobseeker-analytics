@@ -135,7 +135,7 @@ def process_email(email_text: str, user_id: str):
                 )
                 time.sleep(delay)
             elif "429" in str(e) and daily_batch_exceeded:
-                logger.error(f"Daily rate limit exceeded. Not retrying.")
+                logger.error("Daily rate limit exceeded. Not retrying.")
                 return None
             else:
                 logger.error(f"process_email exception: {e}")
