@@ -1,8 +1,6 @@
 from unittest import mock
-from google.ai.generativelanguage_v1beta2 import GenerateTextResponse
 import logging
 from utils.llm_utils import process_email
-from utils.task_utils import processed_emails_exceeds_rate_limit
 
 @mock.patch("utils.llm_utils.processed_emails_exceeds_rate_limit", return_value=True)
 @mock.patch("utils.llm_utils.model.generate_content")
