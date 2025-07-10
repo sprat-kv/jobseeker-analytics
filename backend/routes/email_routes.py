@@ -164,9 +164,9 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
     with Session(database.engine) as db_session:
         # we track starting and finishing fetching of emails for each user
-        process_task_run = (
-            db_session.exec(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
-        )
+        process_task_run = db_session.exec(
+            select(task_models.TaskRuns).filter_by(user_id=user_id)
+        ).one_or_none()
         if process_task_run is None:
             # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
