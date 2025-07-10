@@ -171,7 +171,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
             db_session.add(process_task_run)
-        elif process_task_run.emails_fetched == settings.batch_size_by_env:
+        elif process_task_run.processed_emails >= settings.batch_size_by_env:
             # limit how frequently emails can be fetched by a specific user
             logger.warning(
                 "Already fetched the maximum number (%s) of emails for this user for today", settings.batch_size_by_env,
