@@ -8,9 +8,11 @@ from bs4 import BeautifulSoup
 from email_validator import validate_email, EmailNotValidError
 
 from constants import GENERIC_ATS_DOMAINS
+from utils.config_utils import get_settings
 
 logger = logging.getLogger(__name__)
 
+settings = get_settings()
 
 def clean_whitespace(text: str) -> str:
     """
@@ -175,6 +177,7 @@ def get_email_ids(query: tuple = None, gmail_instance=None):
                 q=query,
                 includeSpamTrash=True,
                 pageToken=page_token,
+                maxResults=settings.batch_size_by_env,
             )
             .execute()
         )

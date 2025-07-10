@@ -127,7 +127,7 @@ async def delete_email(request: Request, db_session: database.DBSession, email_i
         
 
 @router.post("/fetch-emails")
-@limiter.limit("5/minute")
+@limiter.limit("1/day")
 async def start_fetch_emails(
     request: Request, background_tasks: BackgroundTasks, user_id: str = Depends(validate_session)
 ):
@@ -165,18 +165,16 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
     with Session(database.engine) as db_session:
         # we track starting and finishing fetching of emails for each user
         process_task_run = (
-            db_session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
+            db_session.exec(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
         )
         if process_task_run is None:
             # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
             db_session.add(process_task_run)
-        elif datetime.now() - process_task_run.updated < timedelta(
-            seconds=SECONDS_BETWEEN_FETCHING_EMAILS
-        ):
+        elif process_task_run.emails_fetched == settings.batch_size_by_env:
             # limit how frequently emails can be fetched by a specific user
             logger.warning(
-                "Less than an hour since last fetch of emails for user",
+                "Already fetched the maximum number (%s) of emails for this user for today", settings.batch_size_by_env,
                 extra={"user_id": user_id},
             )
             return
