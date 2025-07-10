@@ -16,7 +16,7 @@ from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from contextlib import asynccontextmanager
 from database import create_db_and_tables
-from db.utils.dev_utils import clear_local_database
+from db.utils.dev_utils import clear_local_database  # noqa: F401
 
 # Import routes
 from routes import email_routes, auth_routes, file_routes, users_routes, start_date_routes
@@ -25,7 +25,7 @@ from routes import email_routes, auth_routes, file_routes, users_routes, start_d
 async def lifespan(app: FastAPI):
     create_db_and_tables()
     # Clear database in local development
-    clear_local_database()
+    # clear_local_database()  # uncomment to clear database in local development
     yield
 
 app = FastAPI(lifespan=lifespan)

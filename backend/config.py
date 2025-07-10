@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     DATABASE_URL_DOCKER: str = (
         "postgresql://postgres:postgres@db:5432/jobseeker_analytics"
     )
+    BATCH_SIZE: int = 40
 
     @field_validator("GOOGLE_SCOPES", mode="before")
     @classmethod
@@ -36,6 +37,10 @@ class Settings(BaseSettings):
     @property
     def is_publicly_deployed(self) -> bool:
         return self.ENV in ["prod", "staging"]
+    
+    @property
+    def batch_size_by_env(self) -> int:
+        return self.BATCH_SIZE if self.is_publicly_deployed else 200  # corresponds to Gemini API rate limit per day (200) / number of Daily Active Users (DAU) ~5
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="allow")
 

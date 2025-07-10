@@ -60,7 +60,7 @@ def test_fetch_emails_to_db_in_progress_rate_limited_no_processing(db_session: S
         start_date=datetime(2000, 1, 1),
     )
     db_session.add(user)
-    db_session.add(TaskRuns(user=user, status=STARTED))
+    db_session.add(TaskRuns(user=user, status=STARTED, processed_emails=300))
     db_session.commit()
 
     with mock.patch("routes.email_routes.get_email_ids") as mock_get_email_ids:
