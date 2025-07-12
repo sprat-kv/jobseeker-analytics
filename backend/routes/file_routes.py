@@ -94,7 +94,7 @@ async def process_csv(request: Request, db_session: database.DBSession, user_id:
 
 # Write and download sankey diagram
 @router.get("/process-sankey")
-@limiter.limit("20/minute")
+@limiter.limit("2/minute")
 async def process_sankey(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
     # Validate user session, redirect if invalid
     if not user_id:
@@ -111,15 +111,10 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
     emails = query_emails(request, db_session=db_session, user_id=user_id)
     if not emails:
         raise HTTPException(status_code=400, detail="No data found to write")
- 
-    # Track unique statuses for debugging
-    unique_statuses = set()
-    unmatched_statuses = set()
     
     for email in emails:
         # normalize the output
         status = email.application_status.strip().lower()
-        unique_statuses.add(status)
         num_applications += 1
         
         # Use more flexible matching to handle variations in LLM output
@@ -131,25 +126,13 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
             num_request_for_availability += 1
         elif any(keyword in status for keyword in ["interview", "call", "meeting", "invite"]):
             num_interview_scheduled += 1
-        elif any(keyword in status for keyword in ["no response", "no reply", "unresponsive"]):
+        elif any(keyword in status for keyword in ["no response", "no reply", "unresponsive", "freeze", "hold", "paused", "canceled"]):
             num_no_response += 1
         elif any(keyword in status for keyword in ["assessment", "test", "challenge", "assignment"]):
             num_interview_scheduled += 1
-        elif any(keyword in status for keyword in ["freeze", "hold", "paused", "canceled"]):
-            # Hiring freezes - not rejection but not positive either
-            num_no_response += 1
         else:
-            # Track unmatched statuses for debugging
-            unmatched_statuses.add(status)
             # Fallback: treat unknown statuses as no response
             num_no_response += 1
-    
-    # Log debugging information
-    logger.info("user_id:%s - Total emails: %d", user_id, num_applications)
-    logger.info("user_id:%s - Unique statuses found: %s", user_id, list(unique_statuses))
-    logger.info("user_id:%s - Unmatched statuses: %s", user_id, list(unmatched_statuses))
-    logger.info("user_id:%s - Status counts: offers=%d, rejected=%d, availability=%d, interview=%d, no_response=%d", 
-                user_id, num_offers, num_rejected, num_request_for_availability, num_interview_scheduled, num_no_response)
     
     # Check if we have any categorized data
     total_categorized = num_offers + num_rejected + num_request_for_availability + num_interview_scheduled + num_no_response
