@@ -126,7 +126,7 @@ async def delete_email(request: Request, db_session: database.DBSession, email_i
         
 
 @router.post("/fetch-emails")
-@limiter.limit("1/day")
+@limiter.limit("5/minute")
 async def start_fetch_emails(
     request: Request, background_tasks: BackgroundTasks, user_id: str = Depends(validate_session)
 ):
