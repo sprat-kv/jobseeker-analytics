@@ -43,7 +43,7 @@ async def processing(request: Request, db_session: database.DBSession, user_id: 
 
     process_task_run: task_models.TaskRuns = db_session.get(task_models.TaskRuns, user_id)
 
-    if process_task_run is None:
+    if not process_task_run:
         raise HTTPException(
             status_code=404, detail="Processing has not started."
         )
@@ -126,7 +126,7 @@ async def delete_email(request: Request, db_session: database.DBSession, email_i
         
 
 @router.post("/fetch-emails")
-@limiter.limit("1/day")
+@limiter.limit("5/minute")
 async def start_fetch_emails(
     request: Request, background_tasks: BackgroundTasks, user_id: str = Depends(validate_session)
 ):
