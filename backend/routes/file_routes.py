@@ -238,7 +238,7 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
             import matplotlib.pyplot as plt
             
             fig_fallback, ax = plt.subplots(figsize=(12, 8))
-            ax.text(0.5, 0.7, f"Sankey Diagram Generation Failed", 
+            ax.text(0.5, 0.7, "Sankey Diagram Generation Failed", 
                    ha='center', va='center', fontsize=20, color='red')
             ax.text(0.5, 0.5, f"Total Applications: {num_applications}", 
                    ha='center', va='center', fontsize=16)
@@ -267,4 +267,3 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
             logger.error("Fallback diagram creation also failed: %s", str(fallback_error))
             raise HTTPException(status_code=500, detail=f"Error generating Sankey diagram: {str(e)}")
 
-   
