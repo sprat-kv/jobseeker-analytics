@@ -130,7 +130,6 @@ def populate_sankey_test_database():
             print(f"✅ Created {len(test_emails)} test emails")
             
             # Validate the data
-            from tests.debug_sankey_matching import run_comprehensive_test
             print("\n🧪 Validating test data...")
             
             # Extract status data for validation
@@ -142,7 +141,7 @@ def populate_sankey_test_database():
                     "job_title": email.job_title
                 })
             
-            print(f"\n📊 Test Email Status Distribution:")
+            print("\n📊 Test Email Status Distribution:")
             status_counts = {}
             for email in email_data:
                 status = email["application_status"]
@@ -151,15 +150,15 @@ def populate_sankey_test_database():
             for status, count in sorted(status_counts.items()):
                 print(f"  - {status}: {count}")
             
-            print(f"\n🎯 Ready for testing!")
-            print(f"  User ID: {user_id}")
-            print(f"  Login email: sankeytest@example.com")
-            print(f"  Total test emails: {len(test_emails)}")
-            print(f"\n📋 To test the Sankey diagram:")
-            print(f"  1. Start your application")
-            print(f"  2. Login with sankeytest@example.com")
-            print(f"  3. Go to dashboard and download Sankey diagram")
-            print(f"  4. Verify the diagram shows proper categorization")
+            print("\n🎯 Ready for testing!")
+            print("  User ID: {user_id}")
+            print("  Login email: sankeytest@example.com")
+            print("  Total test emails: {len(test_emails)}")
+            print("\n📋 To test the Sankey diagram:")
+            print("  1. Start your application")
+            print("  2. Login with sankeytest@example.com")
+            print("  3. Go to dashboard and download Sankey diagram")
+            print("  4. Verify the diagram shows proper categorization")
             
             return True
             
