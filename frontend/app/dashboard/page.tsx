@@ -10,10 +10,10 @@ import UniqueOpenRateChart from "@/components/response_rate_chart";
 import { checkAuth } from "@/utils/auth";
 import { Sankey, ResponsiveContainer, Tooltip } from "recharts";
 
-type SankeyData = {
+interface SankeyData {
   nodes: { name: string }[];
   links: { source: number; target: number; value: number }[];
-};
+}
 
 export default function Dashboard() {
 	const router = useRouter();
