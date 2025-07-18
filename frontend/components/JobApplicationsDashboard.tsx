@@ -286,9 +286,7 @@ export default function JobApplicationsDashboard({
 			</Modal>
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
 			{responseRate}
-			{sankeyChart && (
-				<div className="mb-6">{sankeyChart}</div>
-			)}
+			{sankeyChart && <div className="mb-6">{sankeyChart}</div>}
 			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
 				<Dropdown>
 					<DropdownTrigger>
