@@ -204,7 +204,7 @@ def get_sankey_data_dict(emails):
         if v > 0
     ]
     node_counts = [
-        sum(l["value"] for l in links if l["target"] == i)
+        sum(link["value"] for link in links if link["target"] == i)
         for i in range(len(node_labels))
     ]
     node_counts[0] = sum(link_values)  # Applications node is the sum of all outgoing
