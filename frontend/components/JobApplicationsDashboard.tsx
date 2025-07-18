@@ -42,6 +42,7 @@ interface JobApplicationsDashboardProps {
 	onRemoveItem: (id: string) => void;
 	initialSortKey?: string;
 	responseRate?: React.ReactNode;
+	sankeyChart?: React.ReactNode; // Add this line
 	onNextPage: () => void;
 	onPrevPage: () => void;
 	currentPage: number;
@@ -95,7 +96,9 @@ export default function JobApplicationsDashboard({
 	onDownloadSankey,
 	onRemoveItem, // Accept the callback
 	initialSortKey = "Date (Newest)",
-	responseRate
+	responseRate,
+	sankeyChart, // Add this line
+	...props
 }: JobApplicationsDashboardProps) {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
@@ -283,6 +286,7 @@ export default function JobApplicationsDashboard({
 			</Modal>
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
 			{responseRate}
+			{sankeyChart && <div className="mb-6">{sankeyChart}</div>}
 			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
 				<Dropdown>
 					<DropdownTrigger>
@@ -314,16 +318,7 @@ export default function JobApplicationsDashboard({
 						</DropdownSection>
 					</DropdownMenu>
 				</Dropdown>
-				<Button
-					className="w-full sm:w-auto text-white"
-					color="primary"
-					isDisabled={!data || data.length === 0}
-					isLoading={downloading}
-					startContent={<DownloadIcon />}
-					onPress={onDownloadSankey}
-				>
-					Download Sankey Diagram
-				</Button>
+
 				<Button
 					className="w-full sm:w-auto text-white"
 					color="success"
