@@ -268,7 +268,7 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
     # Add comprehensive layout configuration
     fig.update_layout(
         title={
-            'text': f"Job Application Flow Analysis - Status Breakdown<br><sub>Total Applications: {num_applications} | Showing 11 LLM Categories + Other (False Positives Excluded)</sub>",
+            'text': f"Job Application Flow Analysis - Status Breakdown<br><sub>Total Applications: {num_applications})</sub>",
             'x': 0.5,
             'xanchor': 'center',
             'font': {'size': 20, 'color': '#2E86AB'}
