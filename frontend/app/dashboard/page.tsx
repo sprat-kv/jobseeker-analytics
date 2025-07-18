@@ -8,6 +8,12 @@ import JobApplicationsDashboard, { Application } from "@/components/JobApplicati
 import ResponseRateCard from "@/components/response_rate_card";
 import UniqueOpenRateChart from "@/components/response_rate_chart";
 import { checkAuth } from "@/utils/auth";
+import { Sankey, ResponsiveContainer, Tooltip } from "recharts";
+
+type SankeyData = {
+  nodes: { name: string }[];
+  links: { source: number; target: number; value: number }[];
+};
 
 export default function Dashboard() {
 	const router = useRouter();
@@ -17,6 +23,7 @@ export default function Dashboard() {
 	const [error, setError] = useState<string | null>(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
+	const [sankeyData, setSankeyData] = useState<SankeyData | null>(null);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	useEffect(() => {
@@ -59,6 +66,25 @@ export default function Dashboard() {
 		};
 
 		fetchData();
+	}, [apiUrl, router, currentPage]);
+
+	useEffect(() => {
+		// Fetch Sankey data
+		const fetchSankey = async () => {
+			try {
+				const response = await fetch(`${apiUrl}/get-sankey-data`, {
+					method: "GET",
+					credentials: "include"
+				});
+				if (response.ok) {
+					const result = await response.json();
+					setSankeyData(result);
+				}
+			} catch {
+				// ignore for now
+			}
+		};
+		fetchSankey();
 	}, [apiUrl, router, currentPage]);
 
 	const nextPage = () => {
@@ -219,6 +245,148 @@ export default function Dashboard() {
 			</div>
 		</>
 	);
+	
+
+	const sankeyChartContent = sankeyData && sankeyData.nodes && sankeyData.nodes.length > 0 ? (
+		<div className="bg-gray-100 dark:bg-gray-800 p-6 shadow-md rounded-lg">
+			<div className="flex items-center justify-between mb-4">
+				<h2 className="text-gray-700 dark:text-gray-300 text-base md:text-xl font-semibold">My Job Search</h2>
+				<button
+					onClick={downloadSankey}
+					disabled={downloading}
+					className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+				>
+					{downloading ? "Downloading..." : "Download PNG"}
+				</button>
+			</div>
+			<div className="h-[450px] w-full relative">
+				<ResponsiveContainer width="100%" height="100%">
+					<Sankey
+						data={sankeyData}
+						nodePadding={24}
+						margin={{ top: 10, bottom: 30, left: 10, right: 10 }} // Smaller margins
+						link={{ stroke: "#cbd5e1", strokeOpacity: 0.4 }}
+						node={(props) => {
+							const isSource = props.x < 50;
+							const nodeName = props.payload.name;
+							const status = nodeName.split(' (')[0];
+							
+							const getStatusColor = (status: string) => {
+								const normalized = status.toLowerCase();
+								switch (normalized) {
+									case "applications":
+										return "#3b82f6"; // Blue for source
+									case "offer made":
+										return "#10b981";
+									case "rejection":
+										return "#ef4444";
+									case "interview invitation":
+										return "#06b6d4";
+									case "assessment sent":
+										return "#8b5cf6";
+									case "availability request":
+										return "#f59e0b";
+									case "application confirmation":
+										return "#3b82f6";
+									case "information request":
+										return "#6b7280";
+									case "inbound request":
+										return "#10b981";
+									case "action required":
+										return "#84cc16";
+									case "hiring freeze":
+										return "#8b5cf6";
+									case "withdrew application":
+										return "#ec4899";
+									default:
+										return "#8884d8";
+								}
+							};
+							
+							return (
+								<g>
+									<rect
+										x={props.x}
+										y={props.y}
+										width={props.width}
+										height={props.height}
+										fill={getStatusColor(status)}
+										fillOpacity={0.8}
+										stroke={getStatusColor(status)}
+									/>
+									<text
+										x={isSource ? props.x + props.width + 8 : props.x - 8}
+										y={props.y + props.height / 2}
+										textAnchor={isSource ? "start" : "end"}
+										dominantBaseline="middle"
+										fill="#333"
+										fontSize={12}
+									>
+										{props.payload.name}
+									</text>
+								</g>
+							);
+						}}
+					>
+						<Tooltip
+							content={({ active, payload }) => {
+								console.log("test ", payload);
+								if (active && payload && payload.length) {
+									
+									const { sourceNode, targetNode, value } = payload[0].payload;
+									return (
+										<div className="bg-white p-2 rounded shadow">
+											<div>
+												<strong>
+													{sourceNode?.name} → {targetNode?.name}
+												</strong>
+											</div>
+											<div>Count: {value}</div>
+										</div>
+									);
+								}
+								return null;
+							}}
+						/>
+					</Sankey>
+				</ResponsiveContainer>
+				<div className="absolute bottom-2 left-2 text-xs text-gray-500 opacity-70">
+					{(() => {
+						// Calculate date range from the data
+						if (data && data.length > 0) {
+							const dates = data
+								.map(item => item.received_at ? new Date(item.received_at) : null)
+								.filter(date => date !== null);
+							
+							if (dates.length > 0) {
+								const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+								const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+								
+								const formatDate = (date: Date) => {
+									const month = date.toLocaleDateString('en-US', { month: 'long' });
+									const year = date.getFullYear();
+									return { month, year };
+								};
+								
+								const minFormatted = formatDate(minDate);
+								const maxFormatted = formatDate(maxDate);
+								
+								let dateRange;
+								if (minFormatted.year === maxFormatted.year) {
+									dateRange = `${minFormatted.month} - ${maxFormatted.month} ${maxFormatted.year}`;
+								} else {
+									dateRange = `${minFormatted.month} ${minFormatted.year} - ${maxFormatted.month} ${maxFormatted.year}`;
+								}
+								
+								return `JustAJobApp.com • ${dateRange}`;
+							}
+						}
+						return "JustAJobApp.com";
+					})()}
+				</div>
+			</div>
+		</div>
+	) : null;
 
 	return (
 		<JobApplicationsDashboard
@@ -227,6 +395,7 @@ export default function Dashboard() {
 			downloading={downloading}
 			loading={loading}
 			responseRate={responseRateContent}
+			sankeyChart={sankeyChartContent}
 			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
