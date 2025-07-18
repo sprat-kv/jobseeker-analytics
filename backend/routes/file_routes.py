@@ -101,10 +101,6 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
         return RedirectResponse("/logout", status_code=303)
     
     num_applications = 0
-    num_offers = 0
-    num_rejected = 0
-    num_request_for_availability = 0
-    num_interview_scheduled = 0
     num_no_response = 0
     
     # Individual counters for all 12 LLM statuses
@@ -134,19 +130,14 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
         # Used exact matching for the official LLM status labels
         # Reference: backend/utils/llm_utils.py for the 12 official statuses
         if status == "offer made":
-            num_offers += 1
             num_offer_made += 1
         elif status == "rejection":
-            num_rejected += 1
             num_rejection += 1
         elif status == "availability request":
-            num_request_for_availability += 1
             num_availability_request += 1
         elif status == "interview invitation":
-            num_interview_scheduled += 1
             num_interview_invitation += 1
         elif status == "assessment sent":
-            num_interview_scheduled += 1
             num_assessment_sent += 1
         elif status == "application confirmation":
             num_no_response += 1
@@ -181,7 +172,8 @@ async def process_sankey(request: Request, db_session: database.DBSession, user_
                                           num_hiring_freeze + num_withdrew_application)
     
     # Check if we have any categorized data
-    total_categorized = num_offers + num_rejected + num_request_for_availability + num_interview_scheduled + num_no_response
+    total_categorized = (num_offer_made + num_rejection + num_availability_request + 
+                        num_interview_invitation + num_assessment_sent + num_no_response)
     if total_categorized == 0:
         logger.warning("user_id:%s - No emails matched any status categories, creating fallback diagram", user_id)
         # Create a simple fallback diagram
