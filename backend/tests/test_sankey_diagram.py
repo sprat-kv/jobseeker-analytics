@@ -4,8 +4,7 @@ Test suite for Sankey diagram generation and status matching
 """
 
 import pytest
-from datetime import datetime, timedelta
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 import os
 import sys
 
@@ -15,26 +14,28 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 class TestSankeyStatusMatching:
     """Test the status matching logic used in Sankey diagram generation"""
     
-    def test_flexible_status_matching(self):
-        """Test that the flexible keyword matching works correctly"""
+    def test_exact_status_matching(self):
+        """Test that the exact status matching works correctly with official LLM statuses"""
         
-        # Sample email statuses that might come from the LLM
+        # Sample email statuses based on actual LLM output labels from llm_utils.py
         test_statuses = [
-            "Application confirmation",
+            "Offer made",
+            "Offer made",  # 2 offers
             "Rejection", 
-            "rejected",
-            "offer made",
-            "offer",
+            "Rejection",  # 2 rejections
+            "Availability request",
+            "Availability request",  # 2 availability
             "Interview invitation",
-            "interview scheduled", 
-            "availability request",
-            "request for availability",
-            "Assessment sent",
-            "Information request",
+            "Interview invitation",  # 2 interviews
+            "Assessment sent",  # 1 assessment (goes to interview category)
+            "Application confirmation",
+            "Information request", 
+            "Did not apply - inbound request",
+            "Action required from company",
             "Hiring freeze notification",
-            "False positive",
-            "unknown",
-            "no response"
+            "Withdrew application",  # 5 that go to no_response
+            "False positive",  # Should be skipped
+            "Unknown status"  # Should go to no_response fallback
         ]
         
         # Counters
@@ -52,33 +53,47 @@ class TestSankeyStatusMatching:
             unique_statuses.add(status_normalized)
             num_applications += 1
             
-            # Use flexible matching (same logic as in file_routes.py)
-            if any(keyword in status_normalized for keyword in ["offer", "offer made", "congratulations", "pleased to offer"]):
+            # Use exact matching (same logic as in file_routes.py)
+            if status_normalized == "offer made":
                 num_offers += 1
-            elif any(keyword in status_normalized for keyword in ["reject", "rejected", "rejection", "regret", "unfortunately"]):
+            elif status_normalized == "rejection":
                 num_rejected += 1
-            elif any(keyword in status_normalized for keyword in ["availability", "request for availability", "schedule", "when are you available"]):
+            elif status_normalized == "availability request":
                 num_request_for_availability += 1
-            elif any(keyword in status_normalized for keyword in ["interview", "call", "meeting", "invite"]):
+            elif status_normalized == "interview invitation":
                 num_interview_scheduled += 1
-            elif any(keyword in status_normalized for keyword in ["no response", "no reply", "unresponsive", "freeze", "hold", "paused", "canceled"]):
-                num_no_response += 1
-            elif any(keyword in status_normalized for keyword in ["assessment", "test", "challenge", "assignment"]):
-                num_interview_scheduled += 1
+            elif status_normalized == "assessment sent":
+                num_interview_scheduled += 1  # Group assessments with interviews
+            elif status_normalized == "application confirmation":
+                num_no_response += 1  # Group with no response for now
+            elif status_normalized == "information request":
+                num_no_response += 1  # Group with no response for now
+            elif status_normalized == "did not apply - inbound request":
+                num_no_response += 1  # Group with no response for now
+            elif status_normalized == "action required from company":
+                num_no_response += 1  # Group with no response for now
+            elif status_normalized == "hiring freeze notification":
+                num_no_response += 1  # Group with no response for now
+            elif status_normalized == "withdrew application":
+                num_no_response += 1  # Group with no response for now
+            elif status_normalized == "false positive":
+                # Skip false positives - don't count them in any category
+                num_applications -= 1  # Decrement since we already incremented above
+                continue
             else:
                 # Fallback: treat unknown statuses as no response
                 num_no_response += 1
         
         # Assertions - based on actual implementation logic in file_routes.py
-        assert num_applications == len(test_statuses)
-        assert num_offers == 2  # "offer made", "offer"
-        assert num_rejected == 2  # "Rejection", "rejected"
-        assert num_request_for_availability == 3  # "availability request", "request for availability", "interview scheduled" (matches "schedule")  
-        assert num_interview_scheduled == 2  # "Interview invitation", "Assessment sent" (interview scheduled goes to availability due to "schedule" match)
-        assert num_no_response == 6  # "Application confirmation", "Information request", "Hiring freeze notification", "False positive", "unknown", "no response"
+        assert num_applications == 16  # 17 total - 1 false positive = 16
+        assert num_offers == 2  # "Offer made", "Offer made"
+        assert num_rejected == 2  # "Rejection", "Rejection"
+        assert num_request_for_availability == 2  # "Availability request", "Availability request"
+        assert num_interview_scheduled == 3  # "Interview invitation", "Interview invitation", "Assessment sent"
+        assert num_no_response == 7  # Application confirmation, Information request, Did not apply, Action required, Hiring freeze, Withdrew application, Unknown status
         
         total_categorized = num_offers + num_rejected + num_request_for_availability + num_interview_scheduled + num_no_response
-        assert total_categorized == len(test_statuses), f"Should categorize all {len(test_statuses)} statuses, got {total_categorized}"
+        assert total_categorized == 16, f"Should categorize all 16 statuses (excluding false positive), got {total_categorized}"
         
     def test_old_vs_new_matching_comparison(self):
         """Test that new flexible matching performs better than old exact matching"""
@@ -205,16 +220,6 @@ class TestSankeyDiagramGeneration:
         # Verify the data adds up
         total = num_offers + num_rejected + num_request_for_availability + num_interview_scheduled + num_no_response
         assert total == num_applications, "Sum of categories should equal total applications"
-        
-        # Test node labels
-        expected_labels = [
-            f"Applications ({num_applications})", 
-            f"Offers ({num_offers})", 
-            f"Rejected ({num_rejected})", 
-            f"Request for Availability ({num_request_for_availability})", 
-            f"Interview Scheduled ({num_interview_scheduled})", 
-            f"No Response ({num_no_response})"
-        ]
         
         # Test link structure
         expected_sources = [0, 0, 0, 0, 0]  # All from "Applications"

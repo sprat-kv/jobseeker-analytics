@@ -47,19 +47,32 @@ def test_status_matching_logic():
         status_normalized = status.strip().lower()
         unique_statuses.add(status_normalized)
         
-        # Apply the same flexible matching logic as in file_routes.py
-        if any(keyword in status_normalized for keyword in ["offer", "offer made", "congratulations", "pleased to offer"]):
+        # Apply the same exact matching logic as in file_routes.py
+        if status_normalized == "offer made":
             categorized_counts["offers"] += 1
-        elif any(keyword in status_normalized for keyword in ["reject", "rejected", "rejection", "regret", "unfortunately"]):
+        elif status_normalized == "rejection":
             categorized_counts["rejected"] += 1
-        elif any(keyword in status_normalized for keyword in ["availability", "request for availability", "schedule", "when are you available"]):
+        elif status_normalized == "availability request":
             categorized_counts["availability"] += 1
-        elif any(keyword in status_normalized for keyword in ["interview", "call", "meeting", "invite"]):
+        elif status_normalized == "interview invitation":
             categorized_counts["interview"] += 1
-        elif any(keyword in status_normalized for keyword in ["no response", "no reply", "unresponsive", "freeze", "hold", "paused", "canceled"]):
-            categorized_counts["no_response"] += 1
-        elif any(keyword in status_normalized for keyword in ["assessment", "test", "challenge", "assignment"]):
-            categorized_counts["interview"] += 1
+        elif status_normalized == "assessment sent":
+            categorized_counts["interview"] += 1  # Group assessments with interviews
+        elif status_normalized == "application confirmation":
+            categorized_counts["no_response"] += 1  # Group with no response for now
+        elif status_normalized == "information request":
+            categorized_counts["no_response"] += 1  # Group with no response for now
+        elif status_normalized == "did not apply - inbound request":
+            categorized_counts["no_response"] += 1  # Group with no response for now
+        elif status_normalized == "action required from company":
+            categorized_counts["no_response"] += 1  # Group with no response for now
+        elif status_normalized == "hiring freeze notification":
+            categorized_counts["no_response"] += 1  # Group with no response for now
+        elif status_normalized == "withdrew application":
+            categorized_counts["no_response"] += 1  # Group with no response for now
+        elif status_normalized == "false positive":
+            # Skip false positives - don't count them in any category
+            continue
         else:
             # Fallback: treat unknown statuses as no response (matches file_routes.py)
             categorized_counts["no_response"] += 1
@@ -143,17 +156,17 @@ def run_comprehensive_test():
     
     # Test 1: Status matching logic
     matching_results = test_status_matching_logic()
-    print(f"\n📊 Status Matching Test:")
+    print("\n📊 Status Matching Test:")
     print(f"  Total test statuses: {matching_results['total_statuses']}")
     print(f"  Successfully categorized: {matching_results['total_statuses']}")
-    print(f"  Success rate: 100.0%")
-    print(f"  Category breakdown:")
+    print("  Success rate: 100.0%")
+    print("  Category breakdown:")
     for category, count in matching_results['categorized_counts'].items():
         print(f"    - {category.title()}: {count}")
     
     # Test 2: Old vs New comparison
     comparison_results = compare_old_vs_new_matching()
-    print(f"\n🔄 Old vs New Matching Comparison:")
+    print("\n🔄 Old vs New Matching Comparison:")
     print(f"  Test statuses: {len(comparison_results['test_statuses'])}")
     print(f"  Old exact matching: {comparison_results['old_matching']['count']}/{len(comparison_results['test_statuses'])} ({comparison_results['old_matching']['success_rate']:.1%})")
     print(f"  New flexible matching: {comparison_results['new_matching']['count']}/{len(comparison_results['test_statuses'])} ({comparison_results['new_matching']['success_rate']:.1%})")
@@ -161,11 +174,11 @@ def run_comprehensive_test():
     
     # Test 3: Sankey diagram viability
     sankey_viable = validate_sankey_data_structure(matching_results['categorized_counts'])
-    print(f"\n📈 Sankey Diagram Viability:")
+    print("\n📈 Sankey Diagram Viability:")
     print(f"  Can create meaningful diagram: {'✅ Yes' if sankey_viable else '❌ No'}")
     
     # Overall assessment
-    print(f"\n🎯 Overall Assessment:")
+    print("\n🎯 Overall Assessment:")
     all_tests_passed = (
         matching_results['success_rate'] > 0.6 and  # At least 60% success rate
         comparison_results['improvement'] > 0 and    # New matching is better

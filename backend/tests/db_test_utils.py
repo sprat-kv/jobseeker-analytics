@@ -55,36 +55,38 @@ def create_sankey_test_emails(session, user_id: str) -> list:
     for email in existing_emails:
         session.delete(email)
     
-    # Test emails with specific status patterns that were problematic
+    # Test emails using the actual LLM status labels from llm_utils.py
     test_email_data = [
-        # Offer variations (should be caught by new flexible matching)
-        ("TechCorp", "offer made", "Senior Developer", "Job offer - Senior Developer"),
+        # Offer variations
+        ("TechCorp", "Offer made", "Senior Developer", "Job offer - Senior Developer"),
         ("StartupXYZ", "Offer made", "Full Stack Engineer", "Congratulations! Offer letter attached"),
-        ("InnoLab", "pleased to offer you", "Tech Lead", "We are pleased to offer you the position"),
         
         # Rejection variations
-        ("MegaCorp", "rejected", "Data Scientist", "Application status update"),
+        ("MegaCorp", "Rejection", "Data Scientist", "Application status update"),
         ("CloudSoft", "Rejection", "Product Manager", "Thank you for your interest"),
-        ("AI Corp", "regret to inform", "ML Engineer", "Unfortunately, we must inform you"),
         
         # Availability variations
         ("DevTools", "Availability request", "DevOps Engineer", "Please share your availability"),
-        ("ScaleUp", "request for availability", "Frontend Dev", "When are you available for interview?"),
-        ("DataFlow", "when are you available", "Backend Dev", "Can you let us know your availability?"),
+        ("ScaleUp", "Availability request", "Frontend Dev", "When are you available for interview?"),
         
         # Interview variations
         ("TechGiant", "Interview invitation", "Software Architect", "Interview invitation - Software Architect"),
-        ("NextGen", "interview scheduled", "QA Engineer", "Your interview has been scheduled"),
-        ("CodeCraft", "invite you to interview", "Designer", "We would like to invite you to interview"),
+        ("NextGen", "Interview invitation", "QA Engineer", "Your interview has been scheduled"),
         
-        # Other statuses that should also be handled
-        ("StartupHub", "Application confirmation", "Engineer", "We have received your application"),
+        # Assessment
         ("TestCorp", "Assessment sent", "Developer", "Please complete this assessment"),
+        
+        # Other official statuses
+        ("StartupHub", "Application confirmation", "Engineer", "We have received your application"),
         ("ExampleInc", "Information request", "Analyst", "We need additional portfolio samples"),
+        ("InboundCorp", "Did not apply - inbound request", "Recruiter Role", "We found your profile"),
+        ("WaitingCorp", "Action required from company", "Pending Role", "We will get back to you"),
+        ("FrozenCorp", "Hiring freeze notification", "Frozen Role", "Position is on hold"),
+        ("WithdrewCorp", "Withdrew application", "Withdrew Role", "You have withdrawn your application"),
         
         # Edge cases
-        ("EdgeCase1", "no response", "Mystery Role", "No response received"),
-        ("EdgeCase2", "Unknown status", "Test Position", "This should be unmatched"),
+        ("EdgeCase1", "False positive", "Not a job", "Conference invitation email"),
+        ("EdgeCase2", "Unknown status", "Test Position", "This should go to fallback"),
     ]
     
     emails = []
