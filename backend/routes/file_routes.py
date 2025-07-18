@@ -238,8 +238,8 @@ def get_sankey_data_dict(emails):
 
     return {"nodes": nodes, "links": filtered_links}
 
-
 @router.get("/get-sankey-data")
+@limiter.limit("2/minute")
 async def get_sankey_data(
     request: Request,
     db_session: database.DBSession,
