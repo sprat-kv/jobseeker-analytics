@@ -94,9 +94,7 @@ export default function Dashboard() {
 		if (searchTerm.trim() === "") {
 			setFilteredData(data);
 		} else {
-			const filtered = data.filter((item) =>
-				item.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-			);
+			const filtered = data.filter((item) => item.company_name.toLowerCase().includes(searchTerm.toLowerCase()));
 			setFilteredData(filtered);
 		}
 	}, [data, searchTerm]);
@@ -411,14 +409,14 @@ export default function Dashboard() {
 			loading={loading}
 			responseRate={responseRateContent}
 			sankeyChart={sankeyChartContent}
-			totalPages={totalPages}
 			searchTerm={searchTerm}
-			onSearchChange={setSearchTerm}
+			totalPages={totalPages}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
 			onRemoveItem={handleRemoveItem}
+			onSearchChange={setSearchTerm}
 		/>
 	);
 }
