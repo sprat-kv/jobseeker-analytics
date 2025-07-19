@@ -8,7 +8,7 @@ Tired of abandoned spreadsheets and forgotten Notion tables?
 
 Track your job applications — automatically, straight from your inbox.
 
-<img width="1080" height="1080" alt="star" src="https://github.com/user-attachments/assets/5493fdd9-63aa-4951-86c7-95195cef1431" />
+<img width="2800" height="1800" alt="sankey_diagram_2025-07-18" src="https://github.com/user-attachments/assets/085ced99-2913-4c85-9422-2d5f49363d70" />
 
 
 🎥 [Watch a demo](https://youtube.com/shorts/YT7qzTh2Q7A?feature=share)
