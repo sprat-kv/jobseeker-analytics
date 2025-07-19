@@ -42,7 +42,9 @@ interface JobApplicationsDashboardProps {
 	onRemoveItem: (id: string) => void;
 	initialSortKey?: string;
 	responseRate?: React.ReactNode;
-	sankeyChart?: React.ReactNode; // Add this line
+	sankeyChart?: React.ReactNode;
+	searchTerm?: string;
+	onSearchChange?: (term: string) => void;
 	onNextPage: () => void;
 	onPrevPage: () => void;
 	currentPage: number;
@@ -94,10 +96,12 @@ export default function JobApplicationsDashboard({
 	downloading,
 	onDownloadCsv,
 	onDownloadSankey,
-	onRemoveItem, // Accept the callback
+	onRemoveItem,
 	initialSortKey = "Date (Newest)",
 	responseRate,
-	sankeyChart, // Add this line
+	sankeyChart,
+	searchTerm = "",
+	onSearchChange,
 	...props
 }: JobApplicationsDashboardProps) {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
@@ -287,20 +291,33 @@ export default function JobApplicationsDashboard({
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
 			{responseRate}
 			{sankeyChart && <div className="mb-6">{sankeyChart}</div>}
-			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
-				<Dropdown>
-					<DropdownTrigger>
-						<Button
-							className="pl-3"
-							color="primary"
-							data-testid="Sort By"
-							isDisabled={!data || data.length === 0}
-							startContent={<SortIcon />}
-							variant="bordered"
-						>
-							{selectedValue}
-						</Button>
-					</DropdownTrigger>
+			<div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+				{/* Search Input */}
+				<div className="flex-1 max-w-md">
+					<input
+						type="text"
+						placeholder="Search by company name..."
+						value={searchTerm}
+						onChange={(e) => onSearchChange?.(e.target.value)}
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+					/>
+				</div>
+				
+				{/* Sort and Download Controls */}
+				<div className="flex items-center gap-4">
+					<Dropdown>
+						<DropdownTrigger>
+							<Button
+								className="pl-3"
+								color="primary"
+								data-testid="Sort By"
+								isDisabled={!data || data.length === 0}
+								startContent={<SortIcon />}
+								variant="bordered"
+							>
+								{selectedValue}
+							</Button>
+						</DropdownTrigger>
 					<DropdownMenu
 						disallowEmptySelection
 						aria-label="Single selection example"
@@ -329,6 +346,7 @@ export default function JobApplicationsDashboard({
 				>
 					Download CSV
 				</Button>
+				</div>
 			</div>
 
 			{loading ? (

@@ -24,6 +24,8 @@ export default function Dashboard() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const [sankeyData, setSankeyData] = useState<SankeyData | null>(null);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [filteredData, setFilteredData] = useState<Application[]>([]);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	useEffect(() => {
@@ -86,6 +88,18 @@ export default function Dashboard() {
 		};
 		fetchSankey();
 	}, [apiUrl, router, currentPage]);
+
+	// Filter data based on search term
+	useEffect(() => {
+		if (searchTerm.trim() === "") {
+			setFilteredData(data);
+		} else {
+			const filtered = data.filter((item) =>
+				item.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+			);
+			setFilteredData(filtered);
+		}
+	}, [data, searchTerm]);
 
 	const nextPage = () => {
 		if (currentPage < totalPages) {
@@ -392,12 +406,14 @@ export default function Dashboard() {
 	return (
 		<JobApplicationsDashboard
 			currentPage={currentPage}
-			data={data}
+			data={filteredData}
 			downloading={downloading}
 			loading={loading}
 			responseRate={responseRateContent}
 			sankeyChart={sankeyChartContent}
 			totalPages={totalPages}
+			searchTerm={searchTerm}
+			onSearchChange={setSearchTerm}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
 			onNextPage={nextPage}
