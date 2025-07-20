@@ -42,6 +42,9 @@ interface JobApplicationsDashboardProps {
 	onRemoveItem: (id: string) => void;
 	initialSortKey?: string;
 	responseRate?: React.ReactNode;
+	sankeyChart?: React.ReactNode;
+	searchTerm?: string;
+	onSearchChange?: (term: string) => void;
 	onNextPage: () => void;
 	onPrevPage: () => void;
 	currentPage: number;
@@ -53,6 +56,39 @@ const getInitialSortKey = (key: string) => {
 	return typeof window !== "undefined" ? localStorage.getItem("sortKey") || key : key;
 };
 
+//Function to get the CSS class based on application status
+function getStatusClass(status: string) {
+	const normalized = status?.toLowerCase();
+	switch (normalized) {
+		case "rejection":
+			return "bg-red-100 text-red-800 dark:bg-red-600 dark:text-white";
+		case "offer made":
+			return "bg-green-100 text-green-800 dark:bg-success dark:text-white";
+		case "application confirmation":
+			return "bg-blue-100 text-blue-800 dark:bg-primary dark:text-white";
+		case "availability request":
+			return "bg-emerald-100 text-emerald-800 dark:bg-emerald-600 dark:text-white";
+		case "information request":
+			return "bg-teal-100 text-teal-800 dark:bg-teal-600 dark:text-white";
+		case "assessment sent":
+			return "bg-yellow-100 text-yellow-800 dark:bg-yellow-600 dark:text-white";
+		case "interview invitation":
+			return "bg-cyan-100 text-cyan-800 dark:bg-cyan-600 dark:text-white";
+		case "did not apply - inbound request":
+			return "bg-purple-100 text-purple-800 dark:bg-purple-600 dark:text-white";
+		case "action required from company":
+			return "bg-lime-100 text-lime-800 dark:bg-lime-600 dark:text-white";
+		case "hiring freeze notification":
+			return "bg-orange-100 text-orange-800 dark:bg-orange-600 dark:text-white";
+		case "withdrew application":
+			return "bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-600 dark:text-white";
+		case "false positive":
+			return "bg-amber-100 text-amber-800 dark:bg-amber-600 dark:text-white";
+		default:
+			return "bg-zinc-200 text-zinc-800 dark:bg-zinc-600 dark:text-white";
+	}
+}
+
 export default function JobApplicationsDashboard({
 	title = "Job Applications Dashboard",
 	data,
@@ -60,9 +96,13 @@ export default function JobApplicationsDashboard({
 	downloading,
 	onDownloadCsv,
 	onDownloadSankey,
-	onRemoveItem, // Accept the callback
+	onRemoveItem,
 	initialSortKey = "Date (Newest)",
-	responseRate
+	responseRate,
+	sankeyChart,
+	searchTerm = "",
+	onSearchChange,
+	...props
 }: JobApplicationsDashboardProps) {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
 	const [selectedKeys, setSelectedKeys] = useState(new Set([getInitialSortKey(initialSortKey)]));
@@ -250,57 +290,63 @@ export default function JobApplicationsDashboard({
 			</Modal>
 			<h1 className="text-2xl font-bold mt-0">{title}</h1>
 			{responseRate}
-			<div className="flex flex-wrap items-center justify-end gap-4 mb-4">
-				<Dropdown>
-					<DropdownTrigger>
-						<Button
-							className="pl-3"
-							color="primary"
-							data-testid="Sort By"
-							isDisabled={!data || data.length === 0}
-							startContent={<SortIcon />}
-							variant="bordered"
+			{sankeyChart && <div className="mb-6">{sankeyChart}</div>}
+			<div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+				{/* Search Input */}
+				<div className="flex-1 max-w-md">
+					<input
+						className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+						placeholder="Search by company name..."
+						type="text"
+						value={searchTerm}
+						onChange={(e) => onSearchChange?.(e.target.value)}
+					/>
+				</div>
+
+				{/* Sort and Download Controls */}
+				<div className="flex items-center gap-4">
+					<Dropdown>
+						<DropdownTrigger>
+							<Button
+								className="pl-3"
+								color="primary"
+								data-testid="Sort By"
+								isDisabled={!data || data.length === 0}
+								startContent={<SortIcon />}
+								variant="bordered"
+							>
+								{selectedValue}
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu
+							disallowEmptySelection
+							aria-label="Single selection example"
+							selectedKeys={selectedKeys}
+							selectionMode="single"
+							variant="flat"
+							onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
 						>
-							{selectedValue}
-						</Button>
-					</DropdownTrigger>
-					<DropdownMenu
-						disallowEmptySelection
-						aria-label="Single selection example"
-						selectedKeys={selectedKeys}
-						selectionMode="single"
-						variant="flat"
-						onSelectionChange={(keys) => handleSortChange(keys as Set<string>)}
+							<DropdownSection title="Sort By">
+								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
+								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
+								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
+								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
+								<DropdownItem key="Status">Application Status</DropdownItem>
+							</DropdownSection>
+						</DropdownMenu>
+					</Dropdown>
+
+					<Button
+						className="w-full sm:w-auto text-white"
+						color="success"
+						isDisabled={!data || data.length === 0}
+						isLoading={downloading}
+						startContent={<DownloadIcon />}
+						onPress={onDownloadCsv}
 					>
-						<DropdownSection title="Sort By">
-							<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
-							<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
-							<DropdownItem key="Company">Company (A-Z)</DropdownItem>
-							<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
-							<DropdownItem key="Status">Application Status</DropdownItem>
-						</DropdownSection>
-					</DropdownMenu>
-				</Dropdown>
-				<Button
-					className="w-full sm:w-auto text-white"
-					color="primary"
-					isDisabled={!data || data.length === 0}
-					isLoading={downloading}
-					startContent={<DownloadIcon />}
-					onPress={onDownloadSankey}
-				>
-					Download Sankey Diagram
-				</Button>
-				<Button
-					className="w-full sm:w-auto text-white"
-					color="success"
-					isDisabled={!data || data.length === 0}
-					isLoading={downloading}
-					startContent={<DownloadIcon />}
-					onPress={onDownloadCsv}
-				>
-					Download CSV
-				</Button>
+						Download CSV
+					</Button>
+				</div>
 			</div>
 
 			{loading ? (
@@ -309,13 +355,13 @@ export default function JobApplicationsDashboard({
 				<div className="overflow-x-auto bg-white dark:bg-black shadow-md rounded-lg">
 					<Table aria-label="Applications Table">
 						<TableHeader>
-							<TableColumn>Company</TableColumn>
-							<TableColumn>Status</TableColumn>
-							<TableColumn>Received</TableColumn>
-							<TableColumn>Job Title</TableColumn>
-							<TableColumn>Subject</TableColumn>
-							<TableColumn>Sender</TableColumn>
-							<TableColumn>Actions</TableColumn>
+							<TableColumn className="text-center">Company</TableColumn>
+							<TableColumn className="text-center">Status</TableColumn>
+							<TableColumn className="text-center">Received</TableColumn>
+							<TableColumn className="text-center">Job Title</TableColumn>
+							<TableColumn className="text-center">Subject</TableColumn>
+							<TableColumn className="text-center">Sender</TableColumn>
+							<TableColumn className="text-center">Actions</TableColumn>
 						</TableHeader>
 						<TableBody>
 							{paginatedData.map((item) => (
@@ -323,22 +369,28 @@ export default function JobApplicationsDashboard({
 									key={item.id || item.received_at}
 									className="hover:bg-default-100 transition-colors"
 								>
-									<TableCell>{item.company_name || "--"}</TableCell>
-									<TableCell>
+									<TableCell className="max-w-[100px] text-center">
+										{item.company_name || "--"}
+									</TableCell>
+									<TableCell className="max-w-[120px] break-words whitespace-normal text-center">
 										<span
-											className={`inline-flex items-center justify-center px-2 py-1 rounded ${
-												item.application_status.toLowerCase() === "rejected"
-													? "bg-red-100 text-red-800"
-													: "bg-green-100 text-green-800"
-											}`}
+											className={`inline-flex items-center justify-center px-1.5 py-1 rounded text-sm font-medium ${getStatusClass(item.application_status)}`}
 										>
 											{item.application_status || "--"}
 										</span>
 									</TableCell>
-									<TableCell>{new Date(item.received_at).toLocaleDateString() || "--"}</TableCell>
-									<TableCell>{item.job_title || "--"}</TableCell>
-									<TableCell className="max-w-[300px] truncate">{item.subject || "--"}</TableCell>
-									<TableCell>{item.email_from || "--"}</TableCell>
+									<TableCell className="text-center">
+										{new Date(item.received_at).toLocaleDateString() || "--"}
+									</TableCell>
+									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">
+										{item.job_title || "--"}
+									</TableCell>
+									<TableCell className="max-w-[200px] break-words text-center">
+										{item.subject || "--"}
+									</TableCell>
+									<TableCell className="max-w-[220px] break-words whitespace-normal text-center">
+										{item.email_from || "--"}
+									</TableCell>
 									<TableCell className="text-center">
 										<Tooltip content="Remove">
 											<Button

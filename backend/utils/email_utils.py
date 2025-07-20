@@ -3,19 +3,22 @@ import email
 import logging
 import re
 from typing import Dict, Any
-
 from bs4 import BeautifulSoup
 from email_validator import validate_email, EmailNotValidError
 
 from constants import GENERIC_ATS_DOMAINS
+from utils.config_utils import get_settings
 
 logger = logging.getLogger(__name__)
 
+settings = get_settings()
 
 def clean_whitespace(text: str) -> str:
     """
-    remove \n, \r, and \t from strings
+    remove \n, \r, and \t from strings. If text is None, return an empty string.
     """
+    if text is None:
+        return ""
     return text.replace("\n", "").replace("\r", "").replace("\t", "")
 
 
@@ -82,7 +85,7 @@ def get_email_content(email_data: Dict[str, Any]) -> str:
     return text_content
 
 
-def get_email(message_id: str, gmail_instance=None):
+def get_email(message_id: str, gmail_instance=None, user_email: str = None):
     if gmail_instance:
         try:
             message = (
@@ -95,8 +98,6 @@ def get_email(message_id: str, gmail_instance=None):
                 "utf-8"
             )
             mime_msg = email.message_from_string(msg_str)
-            # logger.info("mime_msg: %s", mime_msg)
-            # logger.info("msg_str: %s", msg_str)
             email_data = {
                 "id": message_id,
                 "threadId": message.get("threadId", None),
@@ -113,6 +114,13 @@ def get_email(message_id: str, gmail_instance=None):
             email_data["to"] = clean_whitespace(mime_msg.get("To"))
             email_data["subject"] = clean_whitespace(mime_msg.get("Subject"))
             email_data["date"] = mime_msg.get("Date")
+
+            # Exclude if sender is user_email and to is not user_email
+            if user_email:
+                from_addr = email_data["from"] or ""
+                to_addr = email_data["to"] or ""
+                if user_email.lower() in from_addr.lower() and user_email.lower() not in to_addr.lower():
+                    return None
 
             # Extract body of the email
             if mime_msg.is_multipart():
@@ -160,17 +168,19 @@ def get_email_ids(query: tuple = None, gmail_instance=None):
     page_token = None
 
     while True:
+        
         response = (
-            gmail_instance.users()
-            .messages()
-            .list(
-                userId="me",
-                q=query,
-                includeSpamTrash=True,
-                pageToken=page_token,
+                gmail_instance.users()
+                .messages()
+                .list(
+                    userId="me",
+                    q=query,
+                    includeSpamTrash=True,
+                    pageToken=page_token,
+                    maxResults=settings.batch_size_by_env,
+                )
+                .execute()
             )
-            .execute()
-        )
 
         if "messages" in response:
             email_ids.extend(response["messages"])

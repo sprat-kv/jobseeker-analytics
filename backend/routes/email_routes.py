@@ -17,7 +17,7 @@ from google.oauth2.credentials import Credentials
 import json
 from start_date.storage import get_start_date_email_filter
 from constants import QUERY_APPLIED_EMAIL_FILTER
-from datetime import datetime, timedelta
+from datetime import datetime
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
@@ -30,7 +30,6 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 APP_URL = settings.APP_URL
 
-SECONDS_BETWEEN_FETCHING_EMAILS = 1 * 60 * 60  # 1 hour
 
 # FastAPI router for email routes
 router = APIRouter()
@@ -44,7 +43,7 @@ async def processing(request: Request, db_session: database.DBSession, user_id: 
 
     process_task_run: task_models.TaskRuns = db_session.get(task_models.TaskRuns, user_id)
 
-    if process_task_run is None:
+    if not process_task_run:
         raise HTTPException(
             status_code=404, detail="Processing has not started."
         )
@@ -79,8 +78,14 @@ def query_emails(request: Request, db_session: database.DBSession, user_id: str 
         statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
         user_emails = db_session.exec(statement).all()
 
-        logger.info(f"Found {len(user_emails)} emails for user_id: {user_id}")
-        return user_emails  # Return empty list if no emails exist
+        # Filter out records with "unknown" application status
+        filtered_emails = [
+            email for email in user_emails 
+            if email.application_status and email.application_status.lower() != "unknown"
+        ]
+
+        logger.info(f"Found {len(user_emails)} total emails, returning {len(filtered_emails)} after filtering out 'unknown' status")
+        return filtered_emails  # Return filtered list
 
     except Exception as e:
         logger.error(f"Error fetching emails for user_id {user_id}: {e}")
@@ -158,19 +163,17 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
 
     with Session(database.engine) as db_session:
         # we track starting and finishing fetching of emails for each user
-        process_task_run = (
-            db_session.query(task_models.TaskRuns).filter_by(user_id=user_id).one_or_none()
-        )
+        process_task_run = db_session.exec(
+            select(task_models.TaskRuns).filter_by(user_id=user_id)
+        ).one_or_none()
         if process_task_run is None:
             # if this is the first time running the task for the user, create a record
             process_task_run = task_models.TaskRuns(user_id=user_id)
             db_session.add(process_task_run)
-        elif datetime.now() - process_task_run.updated < timedelta(
-            seconds=SECONDS_BETWEEN_FETCHING_EMAILS
-        ):
+        elif process_task_run.processed_emails >= settings.batch_size_by_env:
             # limit how frequently emails can be fetched by a specific user
             logger.warning(
-                "Less than an hour since last fetch of emails for user",
+                "Already fetched the maximum number (%s) of emails for this user for today", settings.batch_size_by_env,
                 extra={"user_id": user_id},
             )
             return
@@ -183,6 +186,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         db_session.commit()  # sync with the database so calls in the future reflect the task is already started
 
         start_date = request.session.get("start_date")
+        logger.info(f"start_date: {start_date}")
         start_date_query = get_start_date_email_filter(start_date)
         is_new_user = request.session.get("is_new_user")
 
@@ -236,11 +240,11 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             process_task_run.processed_emails = idx + 1
             db_session.commit()
 
-            msg = get_email(message_id=msg_id, gmail_instance=service)
+            msg = get_email(message_id=msg_id, gmail_instance=service, user_email=user.user_email)
 
             if msg:
                 try:
-                    result = process_email(msg["text_content"])
+                    result = process_email(msg["text_content"], user_id)
                     # if values are empty strings or null, set them to "unknown"
                     for key in result.keys():
                         if not result[key]:
@@ -254,7 +258,12 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                     logger.info(
                         f"user_id:{user_id} successfully extracted email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
-                else:
+                    if result.get("job_application_status").lower().strip() == "false positive":
+                        logger.info(
+                            f"user_id:{user_id} email {idx + 1} of {len(messages)} with id {msg_id} is a false positive, not related to job search"
+                        )
+                        continue  # skip this email if it's a false positive
+                else:  # processing returned unknown which is also likely false positive
                     logger.warning(
                         f"user_id:{user_id} failed to extract email {idx + 1} of {len(messages)} with id {msg_id}"
                     )
@@ -263,7 +272,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 message_data = {
                     "id": msg_id,
                     "company_name": result.get("company_name", "unknown"),
-                    "application_status": result.get("application_status", "unknown"),
+                    "application_status": result.get("job_application_status", "unknown"),
                     "received_at": msg.get("date", "unknown"),
                     "subject": msg.get("subject", "unknown"),
                     "job_title": result.get("job_title", "unknown"),

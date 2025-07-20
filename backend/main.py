@@ -1,5 +1,5 @@
 import logging
-
+from datetime import datetime
 from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.responses import HTMLResponse 
 from fastapi.staticfiles import StaticFiles
@@ -16,6 +16,7 @@ from utils.config_utils import get_settings
 from session.session_layer import validate_session
 from contextlib import asynccontextmanager
 from database import create_db_and_tables
+from db.utils.dev_utils import clear_local_database  # noqa: F401
 
 # Import routes
 from routes import email_routes, auth_routes, file_routes, users_routes, start_date_routes
@@ -23,6 +24,8 @@ from routes import email_routes, auth_routes, file_routes, users_routes, start_d
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
+    # Clear database in local development
+    # clear_local_database()  # uncomment to clear database in local development
     yield
 
 app = FastAPI(lifespan=lifespan)
@@ -67,6 +70,16 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
         status_code=429,
         detail="Too many requests. Please try again later.",
     )
+
+
+@app.get("/heartbeat")
+@limiter.limit("4/hour")
+async def heartbeat(request: Request):
+    """
+    Lightweight endpoint to check if the backend is alive.
+    No rate limiting applied to prevent blocking health checks.
+    """
+    return {"status": "alive", "timestamp": datetime.now().isoformat()}
 
 
 @app.post("/api/add-user")
