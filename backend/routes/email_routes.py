@@ -3,7 +3,6 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Request, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from sqlmodel import Session, select, desc
-from googleapiclient.discovery import build
 from db.user_emails import UserEmails
 from db import processing_tasks as task_models
 from db.utils.user_email_utils import create_user_email
@@ -34,19 +33,27 @@ APP_URL = settings.APP_URL
 # FastAPI router for email routes
 router = APIRouter()
 
+
 @router.get("/processing", response_class=HTMLResponse)
-async def processing(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)):
+async def processing(
+    request: Request,
+    db_session: database.DBSession,
+    user_id: str = Depends(validate_session),
+):
     logging.info("user_id:%s processing", user_id)
     if not user_id:
         logger.info("user_id: not found, redirecting to login")
         return RedirectResponse("/logout", status_code=303)
 
-    process_task_run: task_models.TaskRuns = db_session.get(task_models.TaskRuns, user_id)
+    process_task_run: task_models.TaskRuns = db_session.get(
+        task_models.TaskRuns, user_id
+    )
 
     if not process_task_run:
-        raise HTTPException(
-            status_code=404, detail="Processing has not started."
-        )
+        raise HTTPException(status_code=404, detail="Processing has not started.")
+
+    # Refresh the session to ensure we get the latest data
+    db_session.refresh(process_task_run)
 
     if process_task_run.status == task_models.FINISHED:
         logger.info("user_id: %s processing complete", user_id)
@@ -58,7 +65,13 @@ async def processing(request: Request, db_session: database.DBSession, user_id: 
             }
         )
     else:
-        logger.info("user_id: %s processing not complete for file", user_id)
+        logger.info(
+            "user_id: %s processing not complete - processed: %s, total: %s, status: %s",
+            user_id,
+            process_task_run.processed_emails,
+            process_task_run.total_emails,
+            process_task_run.status,
+        )
         return JSONResponse(
             content={
                 "message": "Processing in progress",
@@ -158,8 +171,15 @@ async def start_fetch_emails(
         raise HTTPException(status_code=500, detail="Failed to authenticate user")
 
 
-def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: Optional[datetime] = None, *, user_id: str) -> None:
+def fetch_emails_to_db(
+    user: AuthenticatedUser,
+    request: Request,
+    last_updated: Optional[datetime] = None,
+    *,
+    user_id: str,
+) -> None:
     logger.info(f"Fetching emails to db for user_id: {user_id}")
+    gmail_instance = user.service
 
     with Session(database.engine) as db_session:
         # we track starting and finishing fetching of emails for each user
@@ -173,10 +193,17 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
         elif process_task_run.processed_emails >= settings.batch_size_by_env:
             # limit how frequently emails can be fetched by a specific user
             logger.warning(
-                "Already fetched the maximum number (%s) of emails for this user for today", settings.batch_size_by_env,
+                "Already fetched the maximum number (%s) of emails for this user for today",
+                settings.batch_size_by_env,
                 extra={"user_id": user_id},
             )
-            return
+            return JSONResponse(
+                content={
+                    "message": "Processing complete",
+                    "processed_emails": process_task_run.processed_emails,
+                    "total_emails": process_task_run.total_emails,
+                }
+            )
 
         # this is helpful if the user applies for a new job and wants to rerun the analysis during the same session
         process_task_run.processed_emails = 0
@@ -209,11 +236,7 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
                 f"user_id:{user_id} Fetching all emails (no last_date maybe with start date)"
             )
 
-        service = build("gmail", "v1", credentials=user.creds)
-
-        messages = get_email_ids(
-            query=query, gmail_instance=service
-        )
+        messages = get_email_ids(query=query, gmail_instance=gmail_instance)
         # Update session to remove "new user" status
         request.session["is_new_user"] = False
 
@@ -240,7 +263,11 @@ def fetch_emails_to_db(user: AuthenticatedUser, request: Request, last_updated: 
             process_task_run.processed_emails = idx + 1
             db_session.commit()
 
-            msg = get_email(message_id=msg_id, gmail_instance=service, user_email=user.user_email)
+            msg = get_email(
+                message_id=msg_id,
+                gmail_instance=gmail_instance,
+                user_email=user.user_email,
+            )
 
             if msg:
                 try:
