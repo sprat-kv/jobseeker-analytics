@@ -21,7 +21,7 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def process_email(email_text: str, user_id: str):
+def process_email(email_text: str, user_id: str, db_session):
     prompt = f"""
         First, extract the job application status from the following email using the labels below. 
         If the status is 'False positive', only return the status as 'False positive' and do not extract company name or job title. 
@@ -128,7 +128,7 @@ def process_email(email_text: str, user_id: str):
                 logger.error("Empty response received from the model.")
                 return None
         except Exception as e:
-            daily_batch_exceeded = processed_emails_exceeds_rate_limit(user_id)
+            daily_batch_exceeded = processed_emails_exceeds_rate_limit(user_id, db_session)
             if "429" in str(e) and not daily_batch_exceeded:
                 logger.warning(
                     f"Rate limit hit. Retrying in {delay} seconds (attempt {attempt + 1})."
