@@ -86,7 +86,9 @@ async def processing(
 def query_emails(request: Request, db_session: database.DBSession, user_id: str = Depends(validate_session)) -> None:
     try:
         logger.info(f"Fetching emails for user_id: {user_id}")
-
+        result = db_session.bind.url
+        logger.info("query_emails Connected to database: %s, user: %s, host: %s", 
+                   result.database, result.username, result.host)
         # Query emails sorted by date (newest first)
         statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
         user_emails = db_session.exec(statement).all()
@@ -182,9 +184,8 @@ def fetch_emails_to_db(
     gmail_instance = user.service
 
     with Session(database.engine) as db_session:
-        logger.info("dir(db_session): %s", dir(db_session))
         result = db_session.bind.url
-        logger.info("Connected to database: %s, user: %s, host: %s", 
+        logger.info("fetch_emails_to_db Connected to database: %s, user: %s, host: %s", 
                    result.database, result.username, result.host)
         # we track starting and finishing fetching of emails for each user
         process_task_run = db_session.exec(
