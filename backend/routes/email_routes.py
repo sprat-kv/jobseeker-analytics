@@ -90,6 +90,7 @@ def query_emails(request: Request, db_session: database.DBSession, user_id: str 
         logger.info("query_emails Connected to database: %s, user: %s, host: %s", 
                    result.database, result.username, result.host)
         # Query emails sorted by date (newest first)
+        db_session.commit()  # Commit pending changes to ensure the database is in latest state
         statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
         user_emails = db_session.exec(statement).all()
 
@@ -179,7 +180,7 @@ def fetch_emails_to_db(
     last_updated: Optional[datetime] = None,
     *,
     user_id: str,
-    db_session: database.DBSession,
+    db_session,
 ) -> None:
     logger.info(f"Fetching emails to db for user_id: {user_id}")
     gmail_instance = user.service
@@ -188,6 +189,7 @@ def fetch_emails_to_db(
     logger.info("fetch_emails_to_db Connected to database: %s, user: %s, host: %s", 
                 result.database, result.username, result.host)
     # we track starting and finishing fetching of emails for each user
+    db_session.commit()  # Commit pending changes to ensure the database is in latest state
     process_task_run = db_session.exec(
         select(task_models.TaskRuns).filter_by(user_id=user_id)
     ).one_or_none()
@@ -195,6 +197,7 @@ def fetch_emails_to_db(
         # if this is the first time running the task for the user, create a record
         process_task_run = task_models.TaskRuns(user_id=user_id)
         db_session.add(process_task_run)
+        db_session.commit()
     else:
         # Check if the task was completed on a different day
         from datetime import datetime, timezone
@@ -277,7 +280,6 @@ def fetch_emails_to_db(
             f"user_id:{user_id} begin processing for email {idx + 1} of {len(messages)} with id {msg_id}"
         )
         process_task_run.processed_emails = idx + 1
-        db_session.commit()
 
         msg = get_email(
             message_id=msg_id,
