@@ -6,9 +6,10 @@
 
 Isn't tracking companies you've applied to exhausting? The emotional toll burned me out faster than the job hunt itself.
 
-That's why I built JAJA—to automate the tedious work of tracking applications.
+That's why I built JAJA—
+to automate the tedious work of tracking applications.
 
-<img width="2800" height="1800" alt="sankey_diagram_2025-07-18" src="https://github.com/user-attachments/assets/085ced99-2913-4c85-9422-2d5f49363d70" />
+<img width="821" height="1049" alt="CleanShot 2025-08-02 at 00 20 18" src="https://github.com/user-attachments/assets/e02703d7-7d6a-4628-9737-4013c42274af" />
 
 
 🎥 [Watch a demo](https://youtube.com/shorts/YT7qzTh2Q7A?feature=share)
