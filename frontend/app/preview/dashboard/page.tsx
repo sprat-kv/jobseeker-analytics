@@ -175,6 +175,7 @@ export default function PreviewDashboard() {
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
 			onRemoveItem={handleRemoveItem}
+			onRefreshData={() => {}} // Placeholder for preview
 		/>
 	);
 }

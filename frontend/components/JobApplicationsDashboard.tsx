@@ -20,7 +20,8 @@ import {
 	Tooltip
 } from "@heroui/react";
 
-import { DownloadIcon, SortIcon, TrashIcon } from "@/components/icons";
+import { DownloadIcon, SortIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
+import JobApplicationModal from "./JobApplicationModal";
 
 export interface Application {
 	id?: string;
@@ -57,6 +58,7 @@ interface JobApplicationsDashboardProps {
 	onPrevPage: () => void;
 	currentPage: number;
 	totalPages: number;
+	onRefreshData?: () => void;
 }
 
 // Load sort key from localStorage or use default
@@ -118,6 +120,7 @@ export default function JobApplicationsDashboard({
 	onHideRejectionsChange,
 	hideApplicationConfirmations = true,
 	onHideApplicationConfirmationsChange,
+	onRefreshData,
 	...props
 }: JobApplicationsDashboardProps) {
 	const [sortedData, setSortedData] = useState<Application[]>([]);
@@ -133,6 +136,11 @@ export default function JobApplicationsDashboard({
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const pageSize = 10;
+
+	// Add/Edit modal state
+	const [showApplicationModal, setShowApplicationModal] = useState(false);
+	const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+	const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
 
 	// Get unique statuses and companies for filter dropdowns
 	const uniqueStatuses = React.useMemo(() => {
@@ -265,6 +273,54 @@ export default function JobApplicationsDashboard({
 	};
 
 	const totalPages = Math.ceil(sortedData.length / pageSize);
+
+	// Add/Edit application handlers
+	const handleAddApplication = () => {
+		setModalMode("create");
+		setSelectedApplication(null);
+		setShowApplicationModal(true);
+	};
+
+	const handleEditApplication = (application: Application) => {
+		setModalMode("edit");
+		setSelectedApplication(application);
+		setShowApplicationModal(true);
+	};
+
+	const handleSaveApplication = async (application: Application) => {
+		try {
+			const url = modalMode === "create" 
+				? `${apiUrl}/job-applications`
+				: `${apiUrl}/job-applications/${application.id}`;
+			
+			const method = modalMode === "create" ? "POST" : "PUT";
+			
+			const response = await fetch(url, {
+				method,
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+				body: JSON.stringify(application),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to ${modalMode} application`);
+			}
+
+			// Refresh the data by calling the parent's refresh function or refetch
+			setShowApplicationModal(false);
+			
+			// Call the refresh callback if provided
+			if (onRefreshData) {
+				onRefreshData();
+			}
+			
+		} catch (error) {
+			console.error(`Error ${modalMode === "create" ? "creating" : "updating"} application:`, error);
+			throw error;
+		}
+	};
 
 	return (
 		<div className="p-6">
@@ -488,6 +544,15 @@ export default function JobApplicationsDashboard({
 					>
 						Download CSV
 					</Button>
+
+					<Button
+						className="w-full sm:w-auto"
+						color="primary"
+						startContent={<PlusIcon />}
+						onPress={handleAddApplication}
+					>
+						Add Application
+					</Button>
 				</div>
 			</div>
 
@@ -534,19 +599,35 @@ export default function JobApplicationsDashboard({
 										{item.email_from || "--"}
 									</TableCell>
 									<TableCell className="text-center">
-										<Tooltip content="Remove">
-											<Button
-												isIconOnly
-												size="sm"
-												variant="light"
-												onPress={() => {
-													setItemToRemove(item.id || null);
-													setShowDelete(true);
-												}}
-											>
-												<TrashIcon className="text-gray-800 dark:text-gray-300" />
-											</Button>
-										</Tooltip>
+										<div className="flex justify-center gap-2">
+											<Tooltip content="Edit">
+												<Button
+													isIconOnly
+													size="sm"
+													variant="light"
+													onPress={() => {
+														setSelectedApplication(item);
+														setModalMode("edit");
+														setShowApplicationModal(true);
+													}}
+												>
+													<EditIcon className="text-gray-800 dark:text-gray-300" />
+												</Button>
+											</Tooltip>
+											<Tooltip content="Remove">
+												<Button
+													isIconOnly
+													size="sm"
+													variant="light"
+													onPress={() => {
+														setItemToRemove(item.id || null);
+														setShowDelete(true);
+													}}
+												>
+													<TrashIcon className="text-gray-800 dark:text-gray-300" />
+												</Button>
+											</Tooltip>
+										</div>
 									</TableCell>
 								</TableRow>
 							))}
@@ -563,6 +644,15 @@ export default function JobApplicationsDashboard({
 					Next
 				</Button>
 			</div>
+
+			{/* Add/Edit Application Modal */}
+			<JobApplicationModal
+				isOpen={showApplicationModal}
+				onOpenChange={setShowApplicationModal}
+				onSave={handleSaveApplication}
+				application={selectedApplication}
+				mode={modalMode}
+			/>
 		</div>
 	);
 }

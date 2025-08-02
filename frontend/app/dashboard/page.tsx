@@ -32,49 +32,48 @@ export default function Dashboard() {
 	const [filteredData, setFilteredData] = useState<Application[]>([]);
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				// Check if user is logged in
-				const isAuthenticated = await checkAuth(apiUrl);
-				if (!isAuthenticated) {
-					addToast({
-						title: "You need to be logged in to access this page.",
-						color: "warning"
-					});
-					router.push("/");
-					return;
-				}
-
-				// Fetch applicaions (if user is logged in)
-				const response = await fetch(`${apiUrl}/get-emails?page=${currentPage}`, {
-					method: "GET",
-					credentials: "include" // Include cookies for session management
+	const fetchData = async () => {
+		try {
+			setLoading(true);
+			// Check if user is logged in
+			const isAuthenticated = await checkAuth(apiUrl);
+			if (!isAuthenticated) {
+				addToast({
+					title: "You need to be logged in to access this page.",
+					color: "warning"
 				});
-
-				if (!response.ok) {
-					if (response.status === 404) {
-						setError("No applications found");
-					} else {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
-				}
-
-				const result = await response.json();
-				setTotalPages(result.totalPages);
-
-				setData(result);
-			} catch {
-				setError("Failed to load applications");
-			} finally {
-				setLoading(false);
+				router.push("/");
+				return;
 			}
-		};
 
+			// Fetch applications (if user is logged in)
+			const response = await fetch(`${apiUrl}/get-emails?page=${currentPage}`, {
+				method: "GET",
+				credentials: "include" // Include cookies for session management
+			});
+
+			if (!response.ok) {
+				if (response.status === 404) {
+					setError("No applications found");
+				} else {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+			}
+
+			const result = await response.json();
+			setTotalPages(result.totalPages);
+
+			setData(result);
+		} catch {
+			setError("Failed to load applications");
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
 		fetchData();
 	}, [apiUrl, router, currentPage]);
-
-
 
 	useEffect(() => {
 		// Fetch Sankey data
@@ -460,6 +459,7 @@ export default function Dashboard() {
 			onCompanyFilterChange={setCompanyFilter}
 			onHideRejectionsChange={setHideRejections}
 			onHideApplicationConfirmationsChange={setHideApplicationConfirmations}
+			onRefreshData={fetchData}
 		/>
 	);
 }
