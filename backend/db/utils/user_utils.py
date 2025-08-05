@@ -12,6 +12,8 @@ def get_last_email_date(user_id: str, db_session) -> Optional[datetime]:
     Checks date of user's most recent email 
 
     """
+    db_session.expire_all()  # Ensure we get fresh data
+    db_session.commit()  # Commit any pending changes to ensure the database is in the latest
     row = db_session.exec(
         select(func.max(UserEmails.received_at))
         .where(UserEmails.user_id == user_id)
