@@ -6,6 +6,7 @@ from sqlmodel import select, desc
 from db.user_emails import UserEmails
 from db import processing_tasks as task_models
 from db.utils.user_email_utils import create_user_email
+from db.utils.user_utils import get_last_email_date
 from utils.auth_utils import AuthenticatedUser
 from utils.email_utils import get_email_ids, get_email
 from utils.llm_utils import process_email
@@ -164,8 +165,11 @@ async def start_fetch_emails(
 
         logger.info(f"Starting email fetching process for user_id: {user_id}")
 
+        # Get the last email date for incremental fetching
+        last_updated = get_last_email_date(user_id, db_session)
+
         # Start email fetching in the background
-        background_tasks.add_task(fetch_emails_to_db, user, request, user_id=user_id, db_session=db_session)
+        background_tasks.add_task(fetch_emails_to_db, user, request, last_updated, user_id=user_id, db_session=db_session)
 
         return JSONResponse(content={"message": "Email fetching started"}, status_code=200)
     except Exception as e:
@@ -233,15 +237,14 @@ def fetch_emails_to_db(
     # check for users last updated email
     if last_updated:
         # this converts our date time to number of seconds 
-        additional_time = int(last_updated.timestamp())
+        additional_time = last_updated.strftime("%Y/%m/%d")
         # we append it to query so we get only emails recieved after however many seconds
         # for example, if the newest email you’ve stored was received at 2025‑03‑20 14:32 UTC, we convert that to 1710901920s 
         # and tell Gmail to fetch only messages received after March 20, 2025 at 14:32 UTC.
         if not start_date or not is_new_user:
             query = QUERY_APPLIED_EMAIL_FILTER
             query += f" after:{additional_time}"
-        
-            logger.info(f"user_id:{user_id} Fetching emails after {last_updated.isoformat()}")
+            logger.info(f"user_id:{user_id} Fetching emails after {additional_time}")
     else:
         logger.info(f"user_id:{user_id} Fetching all emails (no last_date maybe with start date)")
 
