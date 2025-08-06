@@ -275,6 +275,7 @@ def fetch_emails_to_db(
         )
         process_task_run.processed_emails = idx + 1
 
+        logger.debug(f"user_id:{user_id} getting email content for message {idx + 1}")
         msg = get_email(
             message_id=msg_id,
             gmail_instance=gmail_instance,
@@ -282,12 +283,17 @@ def fetch_emails_to_db(
         )
 
         if msg:
+            logger.debug(f"user_id:{user_id} email content retrieved for message {idx + 1}, processing with LLM")
             try:
                 result = process_email(msg["text_content"], user_id, db_session)
+                logger.debug(f"user_id:{user_id} LLM processing completed for message {idx + 1}")
+                
                 # if values are empty strings or null, set them to "unknown"
                 for key in result.keys():
                     if not result[key]:
                         result[key] = "unknown"
+                        
+                logger.debug(f"user_id:{user_id} processed result for message {idx + 1}: {result}")
             except Exception as e:
                 logger.error(
                     f"user_id:{user_id} Error processing email {idx + 1} of {len(messages)} with id {msg_id}: {e}"
@@ -308,6 +314,7 @@ def fetch_emails_to_db(
                 )
                 result = {"company_name": "unknown", "application_status": "unknown", "job_title": "unknown"}
 
+            logger.debug(f"user_id:{user_id} creating message data for email {idx + 1}")
             message_data = {
                 "id": msg_id,
                 "company_name": result.get("company_name", "unknown"),
@@ -317,7 +324,10 @@ def fetch_emails_to_db(
                 "job_title": result.get("job_title", "unknown"),
                 "from": msg.get("from", "unknown"),
             }
+            
+            logger.debug(f"user_id:{user_id} creating user email record for message {idx + 1}")
             email_record = create_user_email(user, message_data, db_session)
+            
             if email_record:
                 email_records.append(email_record)
                 # check rate limit against total daily count
@@ -327,6 +337,13 @@ def fetch_emails_to_db(
                 logger.debug(f"Added email record for {message_data.get('company_name', 'unknown')} - {message_data.get('application_status', 'unknown')}")
             else:
                 logger.debug(f"Skipped email record (already exists or error) for {message_data.get('company_name', 'unknown')}")
+                
+            logger.debug(f"user_id:{user_id} completed processing email {idx + 1} of {len(messages)}")
+        else:
+            logger.warning(f"user_id:{user_id} failed to retrieve email content for message {idx + 1} with id {msg_id}")
+
+        # Update the task status in the database after each email
+        logger.debug(f"user_id:{user_id} updating task status after processing email {idx + 1}")
 
     # batch insert all records at once
     if email_records:

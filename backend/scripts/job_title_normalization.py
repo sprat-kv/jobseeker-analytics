@@ -251,7 +251,8 @@ def normalize_job_title(title):
     if not clean_title:
         return None
 
-    return clean_title
+    # Capitalize each word in the final result
+    return clean_title.title()
 
 # --- Main Execution Block ---
 
