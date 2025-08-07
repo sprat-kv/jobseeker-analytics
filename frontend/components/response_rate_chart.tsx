@@ -56,7 +56,7 @@ export default function JobTitleResponseChart() {
 				} else {
 					// Sort the data by response rate from highest to lowest
 					const sortedData = result.sort((a: ResponseData, b: ResponseData) => b.rate - a.rate);
-					setData(sortedData);
+					setData(sortedData.slice(0, 5));
 				}
 			} catch {
 				addToast({
