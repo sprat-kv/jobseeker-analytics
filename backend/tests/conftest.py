@@ -1,11 +1,6 @@
 import database  # noqa: E402
 import sys
 import os
-
-# Add the parent directory to sys.path BEFORE any other imports
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 import pytest
 from testcontainers.postgres import PostgresContainer
 import sqlalchemy as sa
@@ -14,6 +9,10 @@ from fastapi.testclient import TestClient
 from fastapi import Request
 from datetime import datetime
 from unittest.mock import Mock
+
+# Add the parent directory to sys.path BEFORE any other imports
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import main
 from session.session_layer import validate_session

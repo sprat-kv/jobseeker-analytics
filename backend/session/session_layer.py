@@ -7,7 +7,6 @@ from utils.config_utils import get_settings
 import database
 from db.users import Users
 from sqlmodel import select
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,7 @@ def create_random_session_string() -> str:
 
 
 def clear_session(request: Request, user_id: str) -> None:
-    logging.info("user_id: %s clear_session" % user_id)
+    logger.info("user_id: %s clear_session" % user_id)
     request.cookies.clear()
 
 
@@ -40,17 +39,17 @@ def validate_session(request: Request, db_session: database.DBSession) -> str:
     user_id = request.session.get("user_id")
 
     if not session_authorization and not session_access_token:
-        logging.info(
+        logger.info(
             "No Authorization and access_token in session, redirecting to login"
         )
         return ""
 
     if session_authorization != session_id:
-        logging.info("Authorization does not match Session Id, redirecting to login")
+        logger.info("Authorization does not match Session Id, redirecting to login")
         return ""
 
     if is_token_expired(token_exp):
-        logging.info("Access_token is expired, redirecting to login")
+        logger.info("Access_token is expired, redirecting to login")
         return ""
 
     if user_id:
@@ -61,10 +60,10 @@ def validate_session(request: Request, db_session: database.DBSession) -> str:
         user = db_session.exec(select(Users).where(Users.user_id == user_id))
         if not user:
             clear_session(request, user_id)
-            logging.info("validate_session deleting user_id: %s", user_id)
+            logger.info("validate_session deleting user_id: %s", user_id)
             return ""
 
-    logging.info("Valid Session, Access granted.")
+    logger.info("Valid Session, Access granted.")
     return user_id
 
 
