@@ -20,8 +20,9 @@ import {
 	Tooltip
 } from "@heroui/react";
 
-import { DownloadIcon, SortIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
 import JobApplicationModal from "./JobApplicationModal";
+
+import { DownloadIcon, SortIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
 
 export interface Application {
 	id?: string;
@@ -29,6 +30,7 @@ export interface Application {
 	application_status: string;
 	received_at: string;
 	job_title: string;
+	normalized_job_title?: string;
 	subject: string;
 	email_from: string;
 }
@@ -50,6 +52,8 @@ interface JobApplicationsDashboardProps {
 	onStatusFilterChange?: (status: string) => void;
 	companyFilter?: string;
 	onCompanyFilterChange?: (company: string) => void;
+	normalizedJobTitleFilter?: string;
+	onNormalizedJobTitleFilterChange?: (title: string) => void;
 	hideRejections?: boolean;
 	onHideRejectionsChange?: (hide: boolean) => void;
 	hideApplicationConfirmations?: boolean;
@@ -116,6 +120,8 @@ export default function JobApplicationsDashboard({
 	onStatusFilterChange,
 	companyFilter = "",
 	onCompanyFilterChange,
+	normalizedJobTitleFilter = "",
+	onNormalizedJobTitleFilterChange,
 	hideRejections = true,
 	onHideRejectionsChange,
 	hideApplicationConfirmations = true,
@@ -144,13 +150,20 @@ export default function JobApplicationsDashboard({
 
 	// Get unique statuses and companies for filter dropdowns
 	const uniqueStatuses = React.useMemo(() => {
-		const statuses = new Set(data.map(item => item.application_status).filter(Boolean));
+		const statuses = new Set(data.map((item) => item.application_status).filter(Boolean));
 		return Array.from(statuses).sort();
 	}, [data]);
 
 	const uniqueCompanies = React.useMemo(() => {
-		const companies = new Set(data.map(item => item.company_name).filter(Boolean));
+		const companies = new Set(data.map((item) => item.company_name).filter(Boolean));
 		return Array.from(companies).sort();
+	}, [data]);
+
+	const uniqueNormalizedJobTitles = React.useMemo(() => {
+		const titles = new Set(
+			data.map((item) => item.normalized_job_title).filter((title) => title && title.trim() !== "")
+		);
+		return Array.from(titles).sort();
 	}, [data]);
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
@@ -230,6 +243,13 @@ export default function JobApplicationsDashboard({
 				case "Job Title":
 					sorted.sort((a, b) => a.job_title.localeCompare(b.job_title));
 					break;
+				case "Normalized Job Title":
+					sorted.sort((a, b) => {
+						const titleA = a.normalized_job_title?.toLowerCase() || "";
+						const titleB = b.normalized_job_title?.toLowerCase() || "";
+						return titleA.localeCompare(titleB);
+					});
+					break;
 				case "Status":
 					sorted.sort((a, b) => a.application_status.localeCompare(b.application_status));
 					break;
@@ -289,19 +309,18 @@ export default function JobApplicationsDashboard({
 
 	const handleSaveApplication = async (application: Application) => {
 		try {
-			const url = modalMode === "create" 
-				? `${apiUrl}/job-applications`
-				: `${apiUrl}/job-applications/${application.id}`;
-			
+			const url =
+				modalMode === "create" ? `${apiUrl}/job-applications` : `${apiUrl}/job-applications/${application.id}`;
+
 			const method = modalMode === "create" ? "POST" : "PUT";
-			
+
 			const response = await fetch(url, {
 				method,
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
 				credentials: "include",
-				body: JSON.stringify(application),
+				body: JSON.stringify(application)
 			});
 
 			if (!response.ok) {
@@ -310,12 +329,11 @@ export default function JobApplicationsDashboard({
 
 			// Refresh the data by calling the parent's refresh function or refetch
 			setShowApplicationModal(false);
-			
+
 			// Call the refresh callback if provided
 			if (onRefreshData) {
 				onRefreshData();
 			}
-			
 		} catch (error) {
 			console.error(`Error ${modalMode === "create" ? "creating" : "updating"} application:`, error);
 			throw error;
@@ -394,13 +412,20 @@ export default function JobApplicationsDashboard({
 							<Button
 								className="pl-3"
 								color={statusFilter ? "success" : "primary"}
-								variant="bordered"
 								isDisabled={!data || data.length === 0}
 								startContent={
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+									<svg
+										fill="none"
+										height="16"
+										stroke="currentColor"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+										width="16"
+									>
+										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
 									</svg>
 								}
+								variant="bordered"
 							>
 								{statusFilter || "All Statuses"}
 								{statusFilter && (
@@ -436,13 +461,20 @@ export default function JobApplicationsDashboard({
 							<Button
 								className="pl-3"
 								color={companyFilter ? "success" : "primary"}
-								variant="bordered"
 								isDisabled={!data || data.length === 0}
 								startContent={
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+									<svg
+										fill="none"
+										height="16"
+										stroke="currentColor"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+										width="16"
+									>
+										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
 									</svg>
 								}
+								variant="bordered"
 							>
 								{companyFilter || "All Companies"}
 								{companyFilter && (
@@ -472,16 +504,70 @@ export default function JobApplicationsDashboard({
 						</DropdownMenu>
 					</Dropdown>
 
+					{/* Normalized Job Title Filter */}
+					<Dropdown>
+						<DropdownTrigger>
+							<Button
+								className="pl-3"
+								color={normalizedJobTitleFilter ? "success" : "primary"}
+								isDisabled={!data || data.length === 0}
+								startContent={
+									<svg
+										fill="none"
+										height="16"
+										stroke="currentColor"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+										width="16"
+									>
+										<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+										<polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+										<line x1="12" x2="12" y1="22.08" y2="12" />
+									</svg>
+								}
+								variant="bordered"
+							>
+								{normalizedJobTitleFilter || "All Job Titles"}
+								{normalizedJobTitleFilter && (
+									<span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-success text-white rounded-full">
+										+
+									</span>
+								)}
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu
+							disallowEmptySelection
+							aria-label="Normalized job title filter"
+							selectedKeys={normalizedJobTitleFilter ? new Set([normalizedJobTitleFilter]) : new Set()}
+							selectionMode="single"
+							variant="flat"
+							onSelectionChange={(keys) => {
+								const selectedTitle = Array.from(keys)[0] as string;
+								onNormalizedJobTitleFilterChange?.(selectedTitle || "");
+							}}
+						>
+							<>
+								<DropdownItem key="">All Job Titles</DropdownItem>
+								{uniqueNormalizedJobTitles.map((title: string | undefined) =>
+									title ? <DropdownItem key={title}>{title}</DropdownItem> : null
+								)}
+							</>
+						</DropdownMenu>
+					</Dropdown>
+
 					{/* Hide Rejections Checkbox */}
 					<div className="flex items-center gap-2">
 						<input
-							type="checkbox"
-							id="hide-rejections"
 							checked={hideRejections}
-							onChange={(e) => onHideRejectionsChange?.(e.target.checked)}
 							className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+							id="hide-rejections"
+							type="checkbox"
+							onChange={(e) => onHideRejectionsChange?.(e.target.checked)}
 						/>
-						<label htmlFor="hide-rejections" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+						<label
+							className="text-sm font-medium text-gray-700 dark:text-gray-300"
+							htmlFor="hide-rejections"
+						>
 							Hide Rejections
 						</label>
 					</div>
@@ -489,13 +575,16 @@ export default function JobApplicationsDashboard({
 					{/* Hide Application Confirmations Checkbox */}
 					<div className="flex items-center gap-2">
 						<input
-							type="checkbox"
-							id="hide-application-confirmations"
 							checked={hideApplicationConfirmations}
-							onChange={(e) => onHideApplicationConfirmationsChange?.(e.target.checked)}
 							className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+							id="hide-application-confirmations"
+							type="checkbox"
+							onChange={(e) => onHideApplicationConfirmationsChange?.(e.target.checked)}
 						/>
-						<label htmlFor="hide-application-confirmations" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+						<label
+							className="text-sm font-medium text-gray-700 dark:text-gray-300"
+							htmlFor="hide-application-confirmations"
+						>
 							Hide Application Confirmations
 						</label>
 					</div>
@@ -528,6 +617,7 @@ export default function JobApplicationsDashboard({
 								<DropdownItem key="Date (Newest)">Date Received (Newest First)</DropdownItem>
 								<DropdownItem key="Date (Oldest)">Date Received (Oldest First)</DropdownItem>
 								<DropdownItem key="Company">Company (A-Z)</DropdownItem>
+								<DropdownItem key="Normalized Job Title">Normalized Job Title (A-Z)</DropdownItem>
 								<DropdownItem key="Job Title">Job Title (A-Z)</DropdownItem>
 								<DropdownItem key="Status">Application Status</DropdownItem>
 							</DropdownSection>
@@ -566,6 +656,7 @@ export default function JobApplicationsDashboard({
 							<TableColumn className="text-center">Status</TableColumn>
 							<TableColumn className="text-center">Received</TableColumn>
 							<TableColumn className="text-center">Job Title</TableColumn>
+							<TableColumn className="text-center">Normalized Job Title</TableColumn>
 							<TableColumn className="text-center">Subject</TableColumn>
 							<TableColumn className="text-center">Sender</TableColumn>
 							<TableColumn className="text-center">Actions</TableColumn>
@@ -591,6 +682,9 @@ export default function JobApplicationsDashboard({
 									</TableCell>
 									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">
 										{item.job_title || "--"}
+									</TableCell>
+									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">
+										{item.normalized_job_title || "--"}
 									</TableCell>
 									<TableCell className="max-w-[200px] break-words text-center">
 										{item.subject || "--"}
@@ -647,11 +741,11 @@ export default function JobApplicationsDashboard({
 
 			{/* Add/Edit Application Modal */}
 			<JobApplicationModal
+				application={selectedApplication}
 				isOpen={showApplicationModal}
+				mode={modalMode}
 				onOpenChange={setShowApplicationModal}
 				onSave={handleSaveApplication}
-				application={selectedApplication}
-				mode={modalMode}
 			/>
 		</div>
 	);

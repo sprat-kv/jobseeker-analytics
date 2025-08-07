@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
@@ -9,10 +9,7 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from db.users import UserData
-from db.utils.user_utils import add_user
 from utils.config_utils import get_settings
-from session.session_layer import validate_session
 from contextlib import asynccontextmanager
 from database import create_db_and_tables
 from db.utils.dev_utils import clear_local_database  # noqa: F401
