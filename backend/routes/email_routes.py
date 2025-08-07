@@ -21,6 +21,7 @@ from constants import QUERY_APPLIED_EMAIL_FILTER
 from datetime import datetime
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from scripts.job_title_normalization import normalize_job_title
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -93,6 +94,14 @@ def query_emails(request: Request, db_session: database.DBSession, user_id: str 
         db_session.commit()  # Commit pending changes to ensure the database is in latest state
         statement = select(UserEmails).where(UserEmails.user_id == user_id).order_by(desc(UserEmails.received_at))
         user_emails = db_session.exec(statement).all()
+
+        for email in user_emails:
+            logger.info(type(email))
+            if not email.normalized_job_title:
+                email.normalized_job_title = normalize_job_title(email.job_title)
+                if email.normalized_job_title:
+                    db_session.add(email)
+                    db_session.commit()
 
         # Filter out records with "unknown" application status
         filtered_emails = [

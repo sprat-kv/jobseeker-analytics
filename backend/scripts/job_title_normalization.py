@@ -20,7 +20,7 @@ LEVELS = {
         'manager', 'supervisor'
     ],
     'Senior': [
-        'senior', 'sr', 'lead', 'principal', 'staff', 'architect', 'founding', 'iv', 'v', 'iii'
+        'senior', 'sr', 'lead', 'principal', 'staff', 'founding', 'iv', 'v', 'iii'
     ],
     'Junior': [
         'junior', 'jr', 'entry level', 'entry-level', 'entry', 'i', 'ii', 'intern', 'internship', 'trainee', 
@@ -114,7 +114,7 @@ def remove_seniority_levels(title):
     for word in words:
         # Clean the word of punctuation for comparison
         clean_word = re.sub(r'[^\w]', '', word.lower())
-        if clean_word not in seniority_words:
+        if clean_word in words[-1].lower() or clean_word not in seniority_words:
             filtered_words.append(word)
     
     # Join back and clean up any extra spaces
@@ -270,7 +270,11 @@ def normalize_job_title(title):
                 capitalized_clean_titles.append(word.upper())
             else:
                 capitalized_clean_titles.append(word.title())
-    return " ".join(capitalized_clean_titles)
+    
+    cleaner = " ".join(capitalized_clean_titles)
+    if not ends_with_job_role(cleaner):
+        return "Unknown"
+    return cleaner
 
 # --- Main Execution Block ---
 
