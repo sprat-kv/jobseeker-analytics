@@ -6,8 +6,7 @@ from fastapi import Request
 from utils.config_utils import get_settings
 import database
 from db.users import Users
-from sqlmodel import select, Session
-from database import engine
+from sqlmodel import select
 import logging
 
 logger = logging.getLogger(__name__)

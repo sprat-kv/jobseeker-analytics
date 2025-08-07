@@ -1,3 +1,4 @@
+import database  # noqa: E402
 import sys
 import os
 
@@ -19,7 +20,6 @@ from session.session_layer import validate_session
 
 from db.processing_tasks import STARTED, FINISHED, TaskRuns
 from db.users import Users
-import database  # noqa: E402
 
 # Use SQLite for GitHub CI pipeline
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"

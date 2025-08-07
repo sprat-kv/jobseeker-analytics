@@ -7,7 +7,6 @@ from datetime import datetime
 import uuid
 
 from db.user_emails import UserEmails
-from utils.auth_utils import AuthenticatedUser
 from session.session_layer import validate_session
 import database
 from slowapi import Limiter
