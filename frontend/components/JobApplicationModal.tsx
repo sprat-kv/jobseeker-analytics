@@ -15,6 +15,7 @@ import {
 	Textarea
 } from "@heroui/react";
 import { CalendarDate } from "@internationalized/date";
+
 import { Application } from "./JobApplicationsDashboard";
 
 interface JobApplicationModalProps {
@@ -32,7 +33,7 @@ const STATUS_OPTIONS = [
 	"Interview Invitation",
 	"Offer Made",
 	"Assessment Sent",
-	"Availability Request", 
+	"Availability Request",
 	"Information Request",
 	"Action Required From Company",
 	"Hiring Freeze Notification",
@@ -75,11 +76,7 @@ export default function JobApplicationModal({
 				// Parse the received_at date for the DatePicker
 				if (application.received_at) {
 					const date = new Date(application.received_at);
-					setSelectedDate(new CalendarDate(
-						date.getFullYear(),
-						date.getMonth() + 1,
-						date.getDate()
-					));
+					setSelectedDate(new CalendarDate(date.getFullYear(), date.getMonth() + 1, date.getDate()));
 				}
 			} else {
 				// Reset form for create mode
@@ -91,11 +88,9 @@ export default function JobApplicationModal({
 					job_title: "",
 					email_from: ""
 				});
-				setSelectedDate(new CalendarDate(
-					new Date().getFullYear(),
-					new Date().getMonth() + 1,
-					new Date().getDate()
-				));
+				setSelectedDate(
+					new CalendarDate(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate())
+				);
 			}
 			setErrors({});
 		}
@@ -105,7 +100,7 @@ export default function JobApplicationModal({
 	useEffect(() => {
 		if (selectedDate) {
 			const isoString = `${selectedDate.year}-${String(selectedDate.month).padStart(2, "0")}-${String(selectedDate.day).padStart(2, "0")}T00:00:00.000Z`;
-			setFormData(prev => ({ ...prev, received_at: isoString }));
+			setFormData((prev) => ({ ...prev, received_at: isoString }));
 		}
 	}, [selectedDate]);
 
@@ -156,21 +151,15 @@ export default function JobApplicationModal({
 	};
 
 	const handleInputChange = (field: string, value: string) => {
-		setFormData(prev => ({ ...prev, [field]: value }));
+		setFormData((prev) => ({ ...prev, [field]: value }));
 		// Clear error when user starts typing
 		if (errors[field]) {
-			setErrors(prev => ({ ...prev, [field]: "" }));
+			setErrors((prev) => ({ ...prev, [field]: "" }));
 		}
 	};
 
 	return (
-		<Modal
-			isOpen={isOpen}
-			onOpenChange={onOpenChange}
-			size="2xl"
-			scrollBehavior="inside"
-			placement="center"
-		>
+		<Modal isOpen={isOpen} placement="center" scrollBehavior="inside" size="2xl" onOpenChange={onOpenChange}>
 			<ModalContent>
 				{(onClose) => (
 					<>
@@ -180,16 +169,19 @@ export default function JobApplicationModal({
 						<ModalBody>
 							<div className="flex flex-col gap-4">
 								<Input
+									isRequired
+									errorMessage={errors.company_name}
+									isInvalid={!!errors.company_name}
 									label="Company Name"
 									placeholder="Enter company name"
 									value={formData.company_name}
 									onChange={(e) => handleInputChange("company_name", e.target.value)}
-									isInvalid={!!errors.company_name}
-									errorMessage={errors.company_name}
-									isRequired
 								/>
 
 								<Select
+									isRequired
+									errorMessage={errors.application_status}
+									isInvalid={!!errors.application_status}
 									label="Application Status"
 									placeholder="Select application status"
 									selectedKeys={formData.application_status ? [formData.application_status] : []}
@@ -197,14 +189,9 @@ export default function JobApplicationModal({
 										const selectedStatus = Array.from(keys)[0] as string;
 										handleInputChange("application_status", selectedStatus || "");
 									}}
-									isInvalid={!!errors.application_status}
-									errorMessage={errors.application_status}
-									isRequired
 								>
 									{STATUS_OPTIONS.map((status) => (
-										<SelectItem key={status}>
-											{status}
-										</SelectItem>
+										<SelectItem key={status}>{status}</SelectItem>
 									))}
 								</Select>
 
@@ -212,33 +199,29 @@ export default function JobApplicationModal({
 									<label className="block text-sm font-medium mb-2">
 										Date Applied/Received <span className="text-red-500">*</span>
 									</label>
-									<DatePicker
-										value={selectedDate}
-										onChange={setSelectedDate}
-										className="w-full"
-									/>
+									<DatePicker className="w-full" value={selectedDate} onChange={setSelectedDate} />
 									{errors.received_at && (
 										<p className="text-red-500 text-sm mt-1">{errors.received_at}</p>
 									)}
 								</div>
 
 								<Input
+									isRequired
+									errorMessage={errors.job_title}
+									isInvalid={!!errors.job_title}
 									label="Job Title"
 									placeholder="Enter job title"
 									value={formData.job_title}
 									onChange={(e) => handleInputChange("job_title", e.target.value)}
-									isInvalid={!!errors.job_title}
-									errorMessage={errors.job_title}
-									isRequired
 								/>
 
 								<Textarea
 									label="Subject/Description"
+									maxRows={4}
+									minRows={2}
 									placeholder="Enter subject or description (optional)"
 									value={formData.subject}
 									onChange={(e) => handleInputChange("subject", e.target.value)}
-									minRows={2}
-									maxRows={4}
 								/>
 
 								<Input
@@ -253,11 +236,7 @@ export default function JobApplicationModal({
 							<Button color="danger" variant="light" onPress={onClose}>
 								Cancel
 							</Button>
-							<Button
-								color="primary"
-								onPress={handleSubmit}
-								isLoading={isLoading}
-							>
+							<Button color="primary" isLoading={isLoading} onPress={handleSubmit}>
 								{mode === "create" ? "Add Application" : "Update Application"}
 							</Button>
 						</ModalFooter>

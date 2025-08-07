@@ -98,26 +98,43 @@ export default function Dashboard() {
 	// Filter data based on search term, status, company, and hide options
 	const filteredData = useMemo(() => {
 		return data.filter((item) => {
-			const matchesSearch = !searchTerm || 
+			const matchesSearch =
+				!searchTerm ||
 				item.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				item.job_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
 				item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				(item.normalized_job_title && item.normalized_job_title.toLowerCase().includes(searchTerm.toLowerCase()));
+				(item.normalized_job_title &&
+					item.normalized_job_title.toLowerCase().includes(searchTerm.toLowerCase()));
 
 			const matchesStatus = !statusFilter || item.application_status === statusFilter;
 			const matchesCompany = !companyFilter || item.company_name === companyFilter;
-			const matchesNormalizedJobTitle = !normalizedJobTitleFilter || item.normalized_job_title === normalizedJobTitleFilter;
+			const matchesNormalizedJobTitle =
+				!normalizedJobTitleFilter || item.normalized_job_title === normalizedJobTitleFilter;
 
-			const isNotRejection = !hideRejections || 
-				!item.application_status.toLowerCase().includes("reject");
+			const isNotRejection = !hideRejections || !item.application_status.toLowerCase().includes("reject");
 
-			const isNotApplicationConfirmation = !hideApplicationConfirmations || 
+			const isNotApplicationConfirmation =
+				!hideApplicationConfirmations ||
 				!item.application_status.toLowerCase().includes("application confirmation");
 
-			return matchesSearch && matchesStatus && matchesCompany && matchesNormalizedJobTitle && 
-				   isNotRejection && isNotApplicationConfirmation;
+			return (
+				matchesSearch &&
+				matchesStatus &&
+				matchesCompany &&
+				matchesNormalizedJobTitle &&
+				isNotRejection &&
+				isNotApplicationConfirmation
+			);
 		});
-	}, [data, searchTerm, statusFilter, companyFilter, normalizedJobTitleFilter, hideRejections, hideApplicationConfirmations]);
+	}, [
+		data,
+		searchTerm,
+		statusFilter,
+		companyFilter,
+		normalizedJobTitleFilter,
+		hideRejections,
+		hideApplicationConfirmations
+	]);
 
 	const nextPage = () => {
 		if (currentPage < totalPages) {
@@ -421,31 +438,31 @@ export default function Dashboard() {
 
 	return (
 		<JobApplicationsDashboard
+			companyFilter={companyFilter}
 			currentPage={currentPage}
 			data={filteredData}
 			downloading={downloading}
+			hideApplicationConfirmations={hideApplicationConfirmations}
+			hideRejections={hideRejections}
 			loading={loading}
+			normalizedJobTitleFilter={normalizedJobTitleFilter}
 			responseRate={responseRateContent}
 			sankeyChart={sankeyChartContent}
 			searchTerm={searchTerm}
 			statusFilter={statusFilter}
-			companyFilter={companyFilter}
-			normalizedJobTitleFilter={normalizedJobTitleFilter}
-			hideRejections={hideRejections}
-			hideApplicationConfirmations={hideApplicationConfirmations}
 			totalPages={totalPages}
+			onCompanyFilterChange={setCompanyFilter}
 			onDownloadCsv={downloadCsv}
 			onDownloadSankey={downloadSankey}
+			onHideApplicationConfirmationsChange={setHideApplicationConfirmations}
+			onHideRejectionsChange={setHideRejections}
 			onNextPage={nextPage}
+			onNormalizedJobTitleFilterChange={setNormalizedJobTitleFilter}
 			onPrevPage={prevPage}
-			onRemoveItem={handleRemoveItem}
 			onRefreshData={fetchData}
+			onRemoveItem={handleRemoveItem}
 			onSearchChange={setSearchTerm}
 			onStatusFilterChange={setStatusFilter}
-			onCompanyFilterChange={setCompanyFilter}
-			onNormalizedJobTitleFilterChange={setNormalizedJobTitleFilter}
-			onHideRejectionsChange={setHideRejections}
-			onHideApplicationConfirmationsChange={setHideApplicationConfirmations}
 		/>
 	);
 }

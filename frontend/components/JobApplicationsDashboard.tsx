@@ -20,8 +20,9 @@ import {
 	Tooltip
 } from "@heroui/react";
 
-import { DownloadIcon, SortIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
 import JobApplicationModal from "./JobApplicationModal";
+
+import { DownloadIcon, SortIcon, TrashIcon, EditIcon, PlusIcon } from "@/components/icons";
 
 export interface Application {
 	id?: string;
@@ -149,23 +150,21 @@ export default function JobApplicationsDashboard({
 
 	// Get unique statuses and companies for filter dropdowns
 	const uniqueStatuses = React.useMemo(() => {
-		const statuses = new Set(data.map(item => item.application_status).filter(Boolean));
+		const statuses = new Set(data.map((item) => item.application_status).filter(Boolean));
 		return Array.from(statuses).sort();
 	}, [data]);
 
 	const uniqueCompanies = React.useMemo(() => {
-		const companies = new Set(data.map(item => item.company_name).filter(Boolean));
+		const companies = new Set(data.map((item) => item.company_name).filter(Boolean));
 		return Array.from(companies).sort();
 	}, [data]);
 
-    const uniqueNormalizedJobTitles = React.useMemo(() => {
-        const titles = new Set(
-            data
-                .map(item => item.normalized_job_title)
-                .filter(title => title && title.trim() !== "")
-        );
-        return Array.from(titles).sort();
-    }, [data]);
+	const uniqueNormalizedJobTitles = React.useMemo(() => {
+		const titles = new Set(
+			data.map((item) => item.normalized_job_title).filter((title) => title && title.trim() !== "")
+		);
+		return Array.from(titles).sort();
+	}, [data]);
 
 	const selectedValue = React.useMemo(() => Array.from(selectedKeys).join(", ").replace(/_/g, ""), [selectedKeys]);
 
@@ -310,19 +309,18 @@ export default function JobApplicationsDashboard({
 
 	const handleSaveApplication = async (application: Application) => {
 		try {
-			const url = modalMode === "create" 
-				? `${apiUrl}/job-applications`
-				: `${apiUrl}/job-applications/${application.id}`;
-			
+			const url =
+				modalMode === "create" ? `${apiUrl}/job-applications` : `${apiUrl}/job-applications/${application.id}`;
+
 			const method = modalMode === "create" ? "POST" : "PUT";
-			
+
 			const response = await fetch(url, {
 				method,
 				headers: {
-					"Content-Type": "application/json",
+					"Content-Type": "application/json"
 				},
 				credentials: "include",
-				body: JSON.stringify(application),
+				body: JSON.stringify(application)
 			});
 
 			if (!response.ok) {
@@ -331,12 +329,11 @@ export default function JobApplicationsDashboard({
 
 			// Refresh the data by calling the parent's refresh function or refetch
 			setShowApplicationModal(false);
-			
+
 			// Call the refresh callback if provided
 			if (onRefreshData) {
 				onRefreshData();
 			}
-			
 		} catch (error) {
 			console.error(`Error ${modalMode === "create" ? "creating" : "updating"} application:`, error);
 			throw error;
@@ -415,13 +412,20 @@ export default function JobApplicationsDashboard({
 							<Button
 								className="pl-3"
 								color={statusFilter ? "success" : "primary"}
-								variant="bordered"
 								isDisabled={!data || data.length === 0}
 								startContent={
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+									<svg
+										fill="none"
+										height="16"
+										stroke="currentColor"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+										width="16"
+									>
+										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
 									</svg>
 								}
+								variant="bordered"
 							>
 								{statusFilter || "All Statuses"}
 								{statusFilter && (
@@ -457,13 +461,20 @@ export default function JobApplicationsDashboard({
 							<Button
 								className="pl-3"
 								color={companyFilter ? "success" : "primary"}
-								variant="bordered"
 								isDisabled={!data || data.length === 0}
 								startContent={
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+									<svg
+										fill="none"
+										height="16"
+										stroke="currentColor"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+										width="16"
+									>
+										<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
 									</svg>
 								}
+								variant="bordered"
 							>
 								{companyFilter || "All Companies"}
 								{companyFilter && (
@@ -494,61 +505,69 @@ export default function JobApplicationsDashboard({
 					</Dropdown>
 
 					{/* Normalized Job Title Filter */}
-                    <Dropdown>
-                        <DropdownTrigger>
-                            <Button
-                                className="pl-3"
-                                color={normalizedJobTitleFilter ? "success" : "primary"}
-                                variant="bordered"
-                                isDisabled={!data || data.length === 0}
-                                startContent={
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                                        <line x1="12" y1="22.08" x2="12" y2="12"/>
-                                    </svg>
-                                }
-                            >
-                                {normalizedJobTitleFilter || "All Job Titles"}
-                                {normalizedJobTitleFilter && (
-                                    <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-success text-white rounded-full">
-                                        +
-                                    </span>
-                                )}
-                            </Button>
-                        </DropdownTrigger>
-                        <DropdownMenu
-                            disallowEmptySelection
-                            aria-label="Normalized job title filter"
-                            selectedKeys={normalizedJobTitleFilter ? new Set([normalizedJobTitleFilter]) : new Set()}
-                            selectionMode="single"
-                            variant="flat"
-                            onSelectionChange={(keys) => {
-                                const selectedTitle = Array.from(keys)[0] as string;
-                                onNormalizedJobTitleFilterChange?.(selectedTitle || "");
-                            }}
-                        >
-                            <>
-                                <DropdownItem key="">All Job Titles</DropdownItem>
-								{uniqueNormalizedJobTitles.map((title: string | undefined) =>
-									title ? (
-										<DropdownItem key={title}>{title}</DropdownItem>
-									) : null
+					<Dropdown>
+						<DropdownTrigger>
+							<Button
+								className="pl-3"
+								color={normalizedJobTitleFilter ? "success" : "primary"}
+								isDisabled={!data || data.length === 0}
+								startContent={
+									<svg
+										fill="none"
+										height="16"
+										stroke="currentColor"
+										strokeWidth="2"
+										viewBox="0 0 24 24"
+										width="16"
+									>
+										<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+										<polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+										<line x1="12" x2="12" y1="22.08" y2="12" />
+									</svg>
+								}
+								variant="bordered"
+							>
+								{normalizedJobTitleFilter || "All Job Titles"}
+								{normalizedJobTitleFilter && (
+									<span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-success text-white rounded-full">
+										+
+									</span>
 								)}
-                            </>
-                        </DropdownMenu>
-                    </Dropdown>
+							</Button>
+						</DropdownTrigger>
+						<DropdownMenu
+							disallowEmptySelection
+							aria-label="Normalized job title filter"
+							selectedKeys={normalizedJobTitleFilter ? new Set([normalizedJobTitleFilter]) : new Set()}
+							selectionMode="single"
+							variant="flat"
+							onSelectionChange={(keys) => {
+								const selectedTitle = Array.from(keys)[0] as string;
+								onNormalizedJobTitleFilterChange?.(selectedTitle || "");
+							}}
+						>
+							<>
+								<DropdownItem key="">All Job Titles</DropdownItem>
+								{uniqueNormalizedJobTitles.map((title: string | undefined) =>
+									title ? <DropdownItem key={title}>{title}</DropdownItem> : null
+								)}
+							</>
+						</DropdownMenu>
+					</Dropdown>
 
 					{/* Hide Rejections Checkbox */}
 					<div className="flex items-center gap-2">
 						<input
-							type="checkbox"
-							id="hide-rejections"
 							checked={hideRejections}
-							onChange={(e) => onHideRejectionsChange?.(e.target.checked)}
 							className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+							id="hide-rejections"
+							type="checkbox"
+							onChange={(e) => onHideRejectionsChange?.(e.target.checked)}
 						/>
-						<label htmlFor="hide-rejections" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+						<label
+							className="text-sm font-medium text-gray-700 dark:text-gray-300"
+							htmlFor="hide-rejections"
+						>
 							Hide Rejections
 						</label>
 					</div>
@@ -556,13 +575,16 @@ export default function JobApplicationsDashboard({
 					{/* Hide Application Confirmations Checkbox */}
 					<div className="flex items-center gap-2">
 						<input
-							type="checkbox"
-							id="hide-application-confirmations"
 							checked={hideApplicationConfirmations}
-							onChange={(e) => onHideApplicationConfirmationsChange?.(e.target.checked)}
 							className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+							id="hide-application-confirmations"
+							type="checkbox"
+							onChange={(e) => onHideApplicationConfirmationsChange?.(e.target.checked)}
 						/>
-						<label htmlFor="hide-application-confirmations" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+						<label
+							className="text-sm font-medium text-gray-700 dark:text-gray-300"
+							htmlFor="hide-application-confirmations"
+						>
 							Hide Application Confirmations
 						</label>
 					</div>
@@ -625,88 +647,88 @@ export default function JobApplicationsDashboard({
 			</div>
 
 			{loading ? (
-                <p>Loading applications...</p>
-            ) : (
-                <div className="overflow-x-auto bg-white dark:bg-black shadow-md rounded-lg">
-                    <Table aria-label="Applications Table">
-                        <TableHeader>
-                            <TableColumn className="text-center">Company</TableColumn>
-                            <TableColumn className="text-center">Status</TableColumn>
-                            <TableColumn className="text-center">Received</TableColumn>
-                            <TableColumn className="text-center">Job Title</TableColumn>
-                            <TableColumn className="text-center">Normalized Job Title</TableColumn>
-                            <TableColumn className="text-center">Subject</TableColumn>
-                            <TableColumn className="text-center">Sender</TableColumn>
-                            <TableColumn className="text-center">Actions</TableColumn>
-                        </TableHeader>
-                        <TableBody>
-                            {paginatedData.map((item) => (
-                                <TableRow
-                                    key={item.id || item.received_at}
-                                    className="hover:bg-default-100 transition-colors"
-                                >
-                                    <TableCell className="max-w-[100px] text-center">
-                                        {item.company_name || "--"}
-                                    </TableCell>
-                                    <TableCell className="max-w-[120px] break-words whitespace-normal text-center">
-                                        <span
-                                            className={`inline-flex items-center justify-center px-1.5 py-1 rounded text-sm font-medium ${getStatusClass(item.application_status)}`}
-                                        >
-                                            {item.application_status || "--"}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        {new Date(item.received_at).toLocaleDateString() || "--"}
-                                    </TableCell>
-                                    <TableCell className="max-w-[136px] break-words whitespace-normal text-center">
-                                        {item.job_title || "--"}
-                                    </TableCell>
-                                    <TableCell className="max-w-[136px] break-words whitespace-normal text-center">
-                                        {item.normalized_job_title || "--"}
-                                    </TableCell>
-                                    <TableCell className="max-w-[200px] break-words text-center">
-                                        {item.subject || "--"}
-                                    </TableCell>
-                                    <TableCell className="max-w-[220px] break-words whitespace-normal text-center">
-                                        {item.email_from || "--"}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        <div className="flex justify-center gap-2">
-                                            <Tooltip content="Edit">
-                                                <Button
-                                                    isIconOnly
-                                                    size="sm"
-                                                    variant="light"
-                                                    onPress={() => {
-                                                        setSelectedApplication(item);
-                                                        setModalMode("edit");
-                                                        setShowApplicationModal(true);
-                                                    }}
-                                                >
-                                                    <EditIcon className="text-gray-800 dark:text-gray-300" />
-                                                </Button>
-                                            </Tooltip>
-                                            <Tooltip content="Remove">
-                                                <Button
-                                                    isIconOnly
-                                                    size="sm"
-                                                    variant="light"
-                                                    onPress={() => {
-                                                        setItemToRemove(item.id || null);
-                                                        setShowDelete(true);
-                                                    }}
-                                                >
-                                                    <TrashIcon className="text-gray-800 dark:text-gray-300" />
-                                                </Button>
-                                            </Tooltip>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-            )}
+				<p>Loading applications...</p>
+			) : (
+				<div className="overflow-x-auto bg-white dark:bg-black shadow-md rounded-lg">
+					<Table aria-label="Applications Table">
+						<TableHeader>
+							<TableColumn className="text-center">Company</TableColumn>
+							<TableColumn className="text-center">Status</TableColumn>
+							<TableColumn className="text-center">Received</TableColumn>
+							<TableColumn className="text-center">Job Title</TableColumn>
+							<TableColumn className="text-center">Normalized Job Title</TableColumn>
+							<TableColumn className="text-center">Subject</TableColumn>
+							<TableColumn className="text-center">Sender</TableColumn>
+							<TableColumn className="text-center">Actions</TableColumn>
+						</TableHeader>
+						<TableBody>
+							{paginatedData.map((item) => (
+								<TableRow
+									key={item.id || item.received_at}
+									className="hover:bg-default-100 transition-colors"
+								>
+									<TableCell className="max-w-[100px] text-center">
+										{item.company_name || "--"}
+									</TableCell>
+									<TableCell className="max-w-[120px] break-words whitespace-normal text-center">
+										<span
+											className={`inline-flex items-center justify-center px-1.5 py-1 rounded text-sm font-medium ${getStatusClass(item.application_status)}`}
+										>
+											{item.application_status || "--"}
+										</span>
+									</TableCell>
+									<TableCell className="text-center">
+										{new Date(item.received_at).toLocaleDateString() || "--"}
+									</TableCell>
+									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">
+										{item.job_title || "--"}
+									</TableCell>
+									<TableCell className="max-w-[136px] break-words whitespace-normal text-center">
+										{item.normalized_job_title || "--"}
+									</TableCell>
+									<TableCell className="max-w-[200px] break-words text-center">
+										{item.subject || "--"}
+									</TableCell>
+									<TableCell className="max-w-[220px] break-words whitespace-normal text-center">
+										{item.email_from || "--"}
+									</TableCell>
+									<TableCell className="text-center">
+										<div className="flex justify-center gap-2">
+											<Tooltip content="Edit">
+												<Button
+													isIconOnly
+													size="sm"
+													variant="light"
+													onPress={() => {
+														setSelectedApplication(item);
+														setModalMode("edit");
+														setShowApplicationModal(true);
+													}}
+												>
+													<EditIcon className="text-gray-800 dark:text-gray-300" />
+												</Button>
+											</Tooltip>
+											<Tooltip content="Remove">
+												<Button
+													isIconOnly
+													size="sm"
+													variant="light"
+													onPress={() => {
+														setItemToRemove(item.id || null);
+														setShowDelete(true);
+													}}
+												>
+													<TrashIcon className="text-gray-800 dark:text-gray-300" />
+												</Button>
+											</Tooltip>
+										</div>
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+				</div>
+			)}
 			<div className="flex justify-between items-center mt-4">
 				<Button disabled={currentPage === 1} onPress={handlePreviousPage}>
 					Previous
@@ -719,11 +741,11 @@ export default function JobApplicationsDashboard({
 
 			{/* Add/Edit Application Modal */}
 			<JobApplicationModal
+				application={selectedApplication}
 				isOpen={showApplicationModal}
+				mode={modalMode}
 				onOpenChange={setShowApplicationModal}
 				onSave={handleSaveApplication}
-				application={selectedApplication}
-				mode={modalMode}
 			/>
 		</div>
 	);
