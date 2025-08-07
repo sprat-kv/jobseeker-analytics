@@ -96,10 +96,12 @@ def query_emails(request: Request, db_session: database.DBSession, user_id: str 
         user_emails = db_session.exec(statement).all()
 
         for email in user_emails:
-            email.normalized_job_title = normalize_job_title(email.job_title)
-            if email.normalized_job_title:
+            new_job_title = normalize_job_title(email.job_title)
+            if email.normalized_job_title != new_job_title:
+                email.normalized_job_title = new_job_title
                 db_session.add(email)
                 db_session.commit()
+                logger.info(f"Updated normalized job title for email {email.id} to {new_job_title}")
 
         # Filter out records with "unknown" application status
         filtered_emails = [
