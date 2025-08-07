@@ -1,4 +1,3 @@
-import database  # noqa: E402
 import sys
 import os
 import pytest
@@ -14,6 +13,7 @@ from unittest.mock import Mock
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 os.chdir(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+import database  # noqa: E402 DONT MOVE THIS
 import main
 from session.session_layer import validate_session
 
