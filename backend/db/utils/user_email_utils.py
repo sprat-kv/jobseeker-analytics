@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import email.utils
 import logging
 from sqlmodel import select
-from scripts.job_title_normalization import normalize_job_title
+from utils.job_utils import normalize_job_title
 
 logger = logging.getLogger(__name__)
 

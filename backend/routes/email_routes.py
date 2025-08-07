@@ -21,7 +21,7 @@ from constants import QUERY_APPLIED_EMAIL_FILTER
 from datetime import datetime
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from scripts.job_title_normalization import normalize_job_title
+from utils.job_utils import normalize_job_title
 
 limiter = Limiter(key_func=get_remote_address)
 

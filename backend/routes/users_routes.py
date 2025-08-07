@@ -8,7 +8,7 @@ from routes.email_routes import query_emails
 import database
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from scripts.job_title_normalization import normalize_job_title
+from utils.job_utils import normalize_job_title
 
 # Logger setup
 logger = logging.getLogger(__name__)

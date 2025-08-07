@@ -1,4 +1,4 @@
-from scripts.job_title_normalization import get_side_with_job_role, remove_text_after_first_dash, remove_seniority_levels, remove_numbers_and_ids, normalize_job_title, is_job_role_word, ends_with_job_role
+from utils.job_utils import get_side_with_job_role, remove_text_after_first_dash, remove_seniority_levels, remove_numbers_and_ids, normalize_job_title, is_job_role_word, ends_with_job_role
 
 def test_normalize_job_title():
     assert normalize_job_title("Delivery Consultant") == "Delivery Consultant"

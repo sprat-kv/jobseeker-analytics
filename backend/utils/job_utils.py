@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 import logging
 
 logger = logging.getLogger(__name__)
@@ -275,30 +274,3 @@ def normalize_job_title(title):
     if not ends_with_job_role(cleaner):
         return "Unknown"
     return cleaner
-
-# --- Main Execution Block ---
-
-if __name__ == '__main__':
-    try:
-        # To test with the list you provided, we can create a DataFrame in memory
-        
-        
-        # Or load from your CSV file
-        df = pd.read_csv('job_titles_aug2025.csv')
-
-        df['normalized_title'] = df['job_title'].apply(normalize_job_title)
-        
-        output_df = df[['job_title', 'normalized_title']]
-        output_filename = 'normalized_job_titles_fixed.csv'
-        output_df.to_csv(output_filename, index=False)
-        
-        print(f"✅ Success! Job titles have been processed.")
-        print(f"Results saved to: {output_filename}")
-        
-        print("\n--- Sample of Normalization Results ---")
-        pd.set_option('display.max_rows', 150)
-        pd.set_option('display.max_colwidth', 80)
-        print(output_df.dropna(subset=['normalized_title']).sample(min(50, len(output_df.dropna()))))
-        
-    except Exception as e:
-        print(f"\n❌ An unexpected error occurred: {e}")
