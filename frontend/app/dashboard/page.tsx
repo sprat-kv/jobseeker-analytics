@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { addToast } from "@heroui/toast";
 import React from "react";
@@ -29,7 +29,8 @@ export default function Dashboard() {
 	const [companyFilter, setCompanyFilter] = useState("");
 	const [hideRejections, setHideRejections] = useState<boolean>(true);
 	const [hideApplicationConfirmations, setHideApplicationConfirmations] = useState<boolean>(true);
-	const [filteredData, setFilteredData] = useState<Application[]>([]);
+	const [normalizedJobTitleFilter, setNormalizedJobTitleFilter] = useState("");
+
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 	const fetchData = async () => {
@@ -95,45 +96,28 @@ export default function Dashboard() {
 	}, [apiUrl, router, currentPage]);
 
 	// Filter data based on search term, status, company, and hide options
-	useEffect(() => {
-		let filtered = data;
+	const filteredData = useMemo(() => {
+		return data.filter((item) => {
+			const matchesSearch = !searchTerm || 
+				item.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				item.job_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+				(item.normalized_job_title && item.normalized_job_title.toLowerCase().includes(searchTerm.toLowerCase()));
 
-		// Apply hide filters first
-		if (hideRejections) {
-			filtered = filtered.filter((item) => 
-				item.application_status.toLowerCase() !== "rejection"
-			);
-		}
+			const matchesStatus = !statusFilter || item.application_status === statusFilter;
+			const matchesCompany = !companyFilter || item.company_name === companyFilter;
+			const matchesNormalizedJobTitle = !normalizedJobTitleFilter || item.normalized_job_title === normalizedJobTitleFilter;
 
-		if (hideApplicationConfirmations) {
-			filtered = filtered.filter((item) => 
-				item.application_status.toLowerCase() !== "application confirmation"
-			);
-		}
+			const isNotRejection = !hideRejections || 
+				!item.application_status.toLowerCase().includes("reject");
 
-		// Apply search filter
-		if (searchTerm.trim() !== "") {
-			filtered = filtered.filter((item) => 
-				item.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-			);
-		}
+			const isNotApplicationConfirmation = !hideApplicationConfirmations || 
+				!item.application_status.toLowerCase().includes("application confirmation");
 
-		// Apply status filter
-		if (statusFilter.trim() !== "") {
-			filtered = filtered.filter((item) => 
-				item.application_status === statusFilter
-			);
-		}
-
-		// Apply company filter
-		if (companyFilter.trim() !== "") {
-			filtered = filtered.filter((item) => 
-				item.company_name === companyFilter
-			);
-		}
-
-		setFilteredData(filtered);
-	}, [data, searchTerm, statusFilter, companyFilter, hideRejections, hideApplicationConfirmations]);
+			return matchesSearch && matchesStatus && matchesCompany && matchesNormalizedJobTitle && 
+				   isNotRejection && isNotApplicationConfirmation;
+		});
+	}, [data, searchTerm, statusFilter, companyFilter, normalizedJobTitleFilter, hideRejections, hideApplicationConfirmations]);
 
 	const nextPage = () => {
 		if (currentPage < totalPages) {
@@ -446,6 +430,7 @@ export default function Dashboard() {
 			searchTerm={searchTerm}
 			statusFilter={statusFilter}
 			companyFilter={companyFilter}
+			normalizedJobTitleFilter={normalizedJobTitleFilter}
 			hideRejections={hideRejections}
 			hideApplicationConfirmations={hideApplicationConfirmations}
 			totalPages={totalPages}
@@ -454,12 +439,13 @@ export default function Dashboard() {
 			onNextPage={nextPage}
 			onPrevPage={prevPage}
 			onRemoveItem={handleRemoveItem}
+			onRefreshData={fetchData}
 			onSearchChange={setSearchTerm}
 			onStatusFilterChange={setStatusFilter}
 			onCompanyFilterChange={setCompanyFilter}
+			onNormalizedJobTitleFilterChange={setNormalizedJobTitleFilter}
 			onHideRejectionsChange={setHideRejections}
 			onHideApplicationConfirmationsChange={setHideApplicationConfirmations}
-			onRefreshData={fetchData}
 		/>
 	);
 }
