@@ -1,7 +1,8 @@
 import re
 import pandas as pd
+import logging
 
-# --- Dictionaries and Constants ---
+logger = logging.getLogger(__name__)
 
 INVALID_TITLES = {}
 
@@ -47,7 +48,7 @@ JOB_ROLE_TYPES = {
 
 def is_job_role_word(word):
     """Check if a word is likely a job role type."""
-    return word.lower() in JOB_ROLE_TYPES
+    return word if word.lower() in JOB_ROLE_TYPES else False
 
 def ends_with_job_role(title):
     """Check if the title ends with a recognized job role word."""
@@ -81,7 +82,6 @@ def remove_seniority_levels(title):
     """Remove only Senior and Junior level indicators from a job title."""
     if not title:
         return title
-    
     # Only remove Senior and Junior seniority levels
     seniority_phrases = []
     seniority_words = set()
@@ -104,8 +104,9 @@ def remove_seniority_levels(title):
     for phrase in seniority_phrases:
         if phrase not in ['entry level', 'entry-level']:  # Skip entry level since we handled it above
             pattern = phrase.replace(' ', r'\s+')  # Allow multiple spaces
-            title = re.sub(r'\b' + re.escape(pattern) + r'\b', '', title, flags=re.IGNORECASE)
-    
+            #logger.info("before sub title %s for pattern %s", title, r'\b' + pattern + r'\b')
+            title = re.sub(r'\b' + pattern + r'\b', '', title, flags=re.IGNORECASE)
+            #logger.info("after sub title %s", title)
     # Then remove single words
     words = title.split()
     filtered_words = []
@@ -122,21 +123,35 @@ def remove_seniority_levels(title):
     
     return result
 
-def preprocess_title(title):
-    """Cleans a raw job title string for further processing."""
-    if not isinstance(title, str):
-        return ""
-    
-    title = title.lower()
-    title = re.sub(r'\[.*?\]|\(.*?\)|#.*|:.+', '', title) # More aggressive cleaning
-    
-    # Remove seniority levels early, before character cleaning removes hyphens
-    title = remove_seniority_levels(title)
-    
+def remove_text_after_first_dash(title):
     # Remove all text after the first dash (regular hyphen, em dash, en dash)
-    # But be smart about it - if what comes after the dash ends with a job role, keep that instead
-    if re.search(r'\s*[-–—]\s*', title):
-        parts = re.split(r'\s*[-–—]\s*', title, 1)  # Split on first dash only
+    space_before_dash = r'\s*\s[-–—]\s*'
+    space_after_dash = r'\s*[-–—]\s\s*'
+    if re.search(space_before_dash, title):
+        return re.split(space_before_dash, title, 1)
+    elif re.search(space_after_dash, title):
+        return re.split(space_after_dash, title, 1)
+    else:
+        return title
+    
+def remove_text_after_first_slash(title):
+    # Remove all text after the first dash (regular hyphen, em dash, en dash)
+    space_before_slash = r'\s*\s/\s*'
+    space_after_slash = r'\s*/\s\s*'
+    if re.search(space_before_slash, title):
+        return re.split(space_before_slash, title, 1)
+    elif re.search(space_after_slash, title):
+        return re.split(space_after_slash, title, 1)
+    else:
+        return title
+
+def get_side_with_job_role(title: str, cat: str = "dash"):
+    if cat == "dash":
+        result = remove_text_after_first_dash(title)
+    elif cat == "slash":
+        result = remove_text_after_first_slash(title)
+    if isinstance(result, list):
+        parts = result # Split on first dash only
         if len(parts) == 2:
             before_dash = parts[0].strip()
             after_dash = parts[1].strip()
@@ -162,8 +177,28 @@ def preprocess_title(title):
                     title = before_dash
                 else:
                     # Default to after dash if it has job role words, otherwise before
-                    title = after_dash if after_job_words > 0 else before_dash
+                    title = before_dash if before_job_words > 0 else after_dash
+    else:
+        return result
+    return title
+
+def preprocess_title(title):
+    """Cleans a raw job title string for further processing."""
+    if not isinstance(title, str):
+        return ""
     
+    title = title.lower()
+    title = re.sub(r'\[.*?\]|\(.*?\)|#.*|:.+', '', title) # More aggressive cleaning
+    
+    # Remove seniority levels early, before character cleaning removes hyphens
+    title = remove_seniority_levels(title)
+    
+    # Remove all text after the first dash (regular hyphen, em dash, en dash)
+    # But be smart about it - if what comes after the dash ends with a job role, keep that instead
+    title = get_side_with_job_role(title, "dash")
+    logger.info("side with dash %s", title)
+    title = get_side_with_job_role(title, "slash")
+    logger.info("side with slash %s", title)
     # Remove text after comma only if it looks like location info (keep first part)
     # Only split on comma if what comes after doesn't end with a job role
     if ',' in title:
@@ -174,40 +209,6 @@ def preprocess_title(title):
             if not has_job_role_after_comma:
                 title = comma_parts[0].strip()
             # Otherwise keep the whole title
-    
-    # remove all text after a slash or pipe - but be smart about it
-    if '/' in title or '|' in title:
-        # Try to be smart about slash/pipe - similar to dash logic
-        parts = re.split(r'\s*[/|]\s*', title, 1)  # Split on first slash/pipe only
-        if len(parts) == 2:
-            before_slash = parts[0].strip()
-            after_slash = parts[1].strip()
-            
-            # Check if either part contains a job role
-            before_has_job_role = ends_with_job_role(before_slash)
-            after_has_job_role = ends_with_job_role(after_slash)
-            
-            # Priority: prefer the part that ends with a job role
-            if after_has_job_role and not before_has_job_role:
-                title = after_slash
-            elif before_has_job_role and not after_has_job_role:
-                title = before_slash
-            # If both or neither have job roles, check which contains more job role words
-            else:
-                # Clean punctuation when counting job role words
-                before_job_words = sum(1 for word in before_slash.split() if is_job_role_word(re.sub(r'[^\w]', '', word)))
-                after_job_words = sum(1 for word in after_slash.split() if is_job_role_word(re.sub(r'[^\w]', '', word)))
-                
-                if after_job_words > before_job_words:
-                    title = after_slash
-                elif before_job_words > after_job_words:
-                    title = before_slash
-                else:
-                    # Default to before slash if no clear winner
-                    title = before_slash
-        else:
-            # Fallback to old behavior if splitting didn't work as expected
-            title = re.sub(r'\s*[/|].*', '', title).strip()
     
     # Remove company names or anything after " at " - but only if what remains ends with a job role
     if ' at ' in title:
@@ -236,7 +237,7 @@ def normalize_job_title(title):
     for invalid in INVALID_TITLES:
         # Use word boundaries for single words, exact match for phrases
         if len(invalid.split()) == 1:
-            if re.search(r'\b' + re.escape(invalid) + r'\b', title_lower):
+            if re.search(r'\b' + invalid + r'\b', title_lower):
                 return None
         else:
             if invalid in title_lower:
@@ -252,7 +253,24 @@ def normalize_job_title(title):
         return None
 
     # Capitalize each word in the final result
-    return clean_title.title()
+    capitalized_clean_titles = []
+    for word in clean_title.split(" "):
+        # If the word contains a slash, split and capitalize each part
+        if "/" in word:
+            parts = word.split("/")
+            capitalized_parts = []
+            for part in parts:
+                if len(part) == 2:  # except 2 letter words like AI
+                    capitalized_parts.append(part.upper())
+                else:
+                    capitalized_parts.append(part.title())
+            capitalized_clean_titles.append("/".join(capitalized_parts))
+        else:
+            if len(word) == 2:
+                capitalized_clean_titles.append(word.upper())
+            else:
+                capitalized_clean_titles.append(word.title())
+    return " ".join(capitalized_clean_titles)
 
 # --- Main Execution Block ---
 
