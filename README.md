@@ -9,11 +9,21 @@ Isn't tracking companies you've applied to exhausting? The emotional toll burned
 That's why I built JAJA—
 to automate the tedious work of tracking applications.
 
-🎥 JAJA was featured on GitHub's Open Source Friday! [Watch the full episode here](https://youtu.be/sbzKMVaYHZw?list=PL0ZEIUccq0tD_c7gV0lAMXDXl-xK4pxch&t=1260) 
+---
+
+JAJA was featured on GitHub's official YouTube channel for Open Source Friday! 
+
+🎥 [Watch the full episode here](https://youtu.be/sbzKMVaYHZw?list=PL0ZEIUccq0tD_c7gV0lAMXDXl-xK4pxch&t=1260) 
+
 
 <img width="1778" height="1100" alt="CleanShot 2025-08-08 at 23 01 30" src="https://github.com/user-attachments/assets/3fecb216-b476-4c3d-aced-8b0eee6b6892" />
 
 
+JAJA was featured on GitHub's official YouTube channel for Open Source Friday! 
+
+🎥 [Watch the full episode here](https://youtu.be/sbzKMVaYHZw?list=PL0ZEIUccq0tD_c7gV0lAMXDXl-xK4pxch&t=1260) 
+
+---
 
 ## **Try the App**
 
