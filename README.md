@@ -11,6 +11,10 @@ to automate the tedious work of tracking applications.
 
 ---
 
+Sign up for an upcoming open source install party workshop: https://lu.ma/justajobapp
+
+---
+
 JAJA was featured on GitHub's official YouTube channel for Open Source Friday! 
 
 🎥 [Watch the full episode here](https://youtu.be/sbzKMVaYHZw?list=PL0ZEIUccq0tD_c7gV0lAMXDXl-xK4pxch&t=1260) 
