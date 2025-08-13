@@ -28,20 +28,25 @@ JAJA was featured on GitHub's official YouTube channel for Open Source Friday!
 
 ## **Try the App**
 
-**Option 1: Join the beta**
+**Option 1: Join the JAJA(Pro) beta**
 
 [Get on the waitlist](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq) to reserve your spot.
+
+The beta's perfect if you're:
+- strapped for time
+- don't want to install anything.
 
 **Option 2: Do-It-Yourself (DIY) Install**
 -  📹 Video tutorial: https://youtu.be/6LXlCdcsXPE 
 - Already familiar with GitHub? Start with [CONTRIBUTING.md](https://github.com/lnovitz/jobseeker-analytics/blob/main/CONTRIBUTING.md).
 - If you run into issues, hop into [Discord](https://discord.gg/gsdpMchCam).
-- Not familiar with GitHub? We’ll help you get set up! [Email us](mailto:help@justajobapp.com?subject=Help%20Running%20App%20On%20Personal%20Computer) to book time with a friendly developer
+- Prefer live help? Get notified about upcoming guided tutorials, hosted online: https://lu.ma/justajobapp
+
+Changed your mind about DIY Install? [Get JAJA(Pro)](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq)
 
 ## **Support & Feedback**
 
 - Join our [Discord community](https://discord.gg/gsdpMchCam)
-- [Send us feedback](https://docs.google.com/forms/d/e/1FAIpQLSeTJB5JDo-SNdVn2Ga3caExaYlwempeYHhWbEiao3jNCWXogQ/viewform?usp=sharing)
 - Or email [help@justajobapp.com](mailto:help@justajobapp.com)
 
 ## Want to Get Involved?
