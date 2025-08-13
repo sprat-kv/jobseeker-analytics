@@ -2,12 +2,9 @@
 
 ## **About Just A Job App (JAJA)**
 
-**JAJA tracks your job applications automatically, no spreadsheet required.** 
+**JAJA tracks job applications automatically by syncing with your inbox.** 
 
-Isn't tracking companies you've applied to exhausting? The emotional toll burned me out faster than the job hunt itself.
-
-That's why I built JAJA—
-to automate the tedious work of tracking applications.
+Built for the data-driven job seeker who dreams of a r/DataIsBeautiful post but can't face the emotional toll of updating a spreadsheet with every rejection. 
 
 ---
 
