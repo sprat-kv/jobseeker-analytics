@@ -86,7 +86,7 @@ export default function ContributorsPage() {
 							Make your first contribution and get your profile added to our Wall of Fame! Check out our
 							contributor onboarding guide to get started.
 						</p>
-						<div className="flex flex-col sm:flex-row gap-4 justify-center">
+						<div className="flex flex-col sm:flex-col gap-4 justify-center">
 							<a
 								className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
 								href="https://github.com/just-a-job-app/jobseeker-analytics/blob/main/CONTRIBUTOR_ONBOARDING.md"
@@ -94,6 +94,14 @@ export default function ContributorsPage() {
 								target="_blank"
 							>
 								View on GitHub
+							</a>
+							<a
+								className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-400"
+								href="https://github.com/just-a-job-app/jobseeker-analytics/blob/main/CONTRIBUTOR_ONBOARDING.md#step-3-add-yourself-to-the-wall-of-fame"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								Are you in the guided install workshop? Click here!
 							</a>
 						</div>
 					</div>
