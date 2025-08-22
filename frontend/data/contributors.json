@@ -26,5 +26,12 @@
 		"avatar": "https://github.com/okimin.png",
 		"message": "Daniel Gaston was here! 🚀",
 		"date": "2025-06-24"
-	}
+	},
+  {
+	  "name": "Amelia Dutta",
+		"github": "amelia2802",
+		"avatar": "https://github.com/amelia2802.png",
+		"message": "Amelia was here! 🚀",
+		"date": "2025-08-20"
+  }
 ]
