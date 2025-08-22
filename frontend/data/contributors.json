@@ -12,5 +12,12 @@
 		"avatar": "https://github.com/gillian-black.png",
 		"message": "Gillian was here! 🚀",
 		"date": "2025-07-29"
+	},
+	{
+		"name": "Daniel",
+		"github": "okimin",
+		"avatar": "https://github.com/okimin.png",
+		"message": "Daniel was here! 👾",
+		"date": "2025-06-24"
 	}
 ]
