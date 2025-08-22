@@ -14,10 +14,24 @@
 		"date": "2025-07-29"
 	},
 	{
-		"name": "Amelia Dutta",
+		"name": "Jon Wesneski",
+		"github": "jonwesneski",
+		"avatar": "https://github.com/jonwesneski.png",
+		"message": "Jon Wesneski was here! 🚀",
+		"date": "2025-08-21"
+	},
+	{
+		"name": "Daniel Gaston",
+		"github": "okimin",
+		"avatar": "https://github.com/okimin.png",
+		"message": "Daniel Gaston was here! 🚀",
+		"date": "2025-06-24"
+	},
+  {
+	  "name": "Amelia Dutta",
 		"github": "amelia2802",
 		"avatar": "https://github.com/amelia2802.png",
 		"message": "Amelia was here! 🚀",
 		"date": "2025-08-20"
-	}
+  }
 ]
