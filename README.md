@@ -2,7 +2,7 @@
 
 ## **About Just A Job App (JAJA)**
 
-**JAJA tracks job applications automatically by syncing with your inbox.** 
+**JAJA is an email analytics tool for the 30% of jobseekers exhausted by rejections..** 
 
 Built for the data-driven job seeker who dreams of a r/DataIsBeautiful post but can't face the emotional toll of updating a spreadsheet with every rejection. 
 
