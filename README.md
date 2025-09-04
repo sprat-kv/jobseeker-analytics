@@ -4,7 +4,9 @@
 
 In 2024, I was laid off by an email. Existing job search tools are just as broken and transactional. A user pays for a resume rewrite, but there’s no feedback loop to see if it works.
 
-Today, JAJA closes that loop. It syncs with a user’s email to surface interview invitations, highlighting which application strategies are successful.
+Today, JAJA closes that loop. It syncs with a user’s email to surface interview invitations, highlighting which application strategies are successful. 
+
+[Sign up to get notified when we launch JAJA(Pro), the no-install app](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
 
 But what happens if none of your strategies are successful? 
 
@@ -43,10 +45,12 @@ Building on the email analytics feature, JAJA will automatically detect the mome
 
 *Again, the ATS isn't your enemy - your weak story is.*
 
+[Sign up to get notified when we launch JAJA(Pro), the no-install app](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
+
 ### Immediate Priorities
 1. October 2025: Complete and pass Google's OAuth Application Security Audit.
 2. November 2025: Launch JAJA(Pro), a paid cloud-hosted version for users who require access without local installation.
-3. December 2025: With initial revenue from JAJA(Pro), we'll begin development of the Accomplishment Vault feature set.
+3. December 2025: With initial revenue from JAJA(Pro), we'll begin development of the Story Engine feature.
 
 ---
 
