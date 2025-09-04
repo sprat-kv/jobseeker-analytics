@@ -2,9 +2,24 @@
 
 ## **About Just A Job App (JAJA)**
 
-**JAJA is an email analytics tool for the 30% of jobseekers exhausted by rejections.** 
+In 2024, I was laid off by an email. Existing job search tools are just as broken and transactional. A user pays for a resume rewrite, but there’s no feedback loop to see if it works.
 
-Built for the data-driven job seeker who dreams of a r/DataIsBeautiful post but can't face the emotional toll of updating a spreadsheet with every rejection. 
+Today, JAJA closes that loop. It syncs with a user’s email to surface interview invitations, highlighting which application strategies are successful.
+
+### Current State of the Job Search
+
+It's not a numbers game anymore. There are 25% more job applications per posting since the pandemic. Recruiters are scrambling to find qualified applicants in a pile of generic, often irrelevant, resumes. Hiring managers are afraid of getting scammed by international espionage. Authentic, human signal is more important than ever.
+
+### What's next for JAJA?
+
+We need to shift the focus from manufacturing generic resumes to marketing **undeniably human** achievements that leave hiring managers wanting to interview you.
+
+Cue, the "Accomplishment Vault": A tool to help you quantify your accomplishments and craft specific stories that resonate with hiring managers.
+
+### What's next for JAJA?
+1. Pass Google's required security audit.
+2. Launch JAJA(Pro), the paid cloud version for users who are strapped for time or don't want to install anything.
+3. Develop the Accomplishment Vault.
 
 ---
 
