@@ -9,12 +9,22 @@ interface HeroSectionProps {
 const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 	return (
 		<section className="py-12 md:py-20 text-center">
+			<div className="flex flex-col items-center mb-8">
+				<img 
+					src="/logo.png" 
+					alt="Just a Job App Logo" 
+					className="h-24 w-24 md:h-32 md:w-32 object-contain mb-6"
+				/>
+				<h2 className="text-2xl md:text-3xl font-bold text-purple-600 mb-2">
+					Unearthing Your Career Gold
+				</h2>
+			</div>
 			<h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 leading-tight max-w-4xl mx-auto">
-				You're applying everywhere. But tracking it all? Exhausting.
+				There's no ATS hack. No bots to beat. It's just you.
 			</h1>
 
 			<p className="text-xl md:text-2xl text-default-500 mb-10 max-w-3xl mx-auto">
-				Built by jobseekers, for jobseekers. Track your applications automatically, straight from your inbox.
+				The most powerful tool in your job search isn't an ATS-proof resume. It's a deeply understood and confidently told personal narrative.
 			</p>
 
 			<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -69,8 +79,8 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 					/>
 					<div className="bg-background/80 backdrop-blur-sm py-2 px-4 text-center">
 						<p className="text-sm text-default-600 font-medium">
-							No more abandoned spreadsheets. No more forgotten Notion tables.{" "}
-							<span className="text-purple-600 font-bold">Open source and free to use.</span>
+							Turn "wrote 5 SQL queries" into "queried performance data from over 20 email campaigns using Snowflake to isolate the top three performers and inform the next quarter's marketing strategy."{" "}
+							<span className="text-purple-600 font-bold">Your story is your competitive advantage.</span>
 						</p>
 					</div>
 				</div>
