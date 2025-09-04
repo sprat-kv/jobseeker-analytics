@@ -6,20 +6,47 @@ In 2024, I was laid off by an email. Existing job search tools are just as broke
 
 Today, JAJA closes that loop. It syncs with a user’s email to surface interview invitations, highlighting which application strategies are successful.
 
-### Current State of the Job Search
+But what happens if none of your strategies are successful? 
 
-It's not a numbers game anymore. There are 25% more job applications per posting since the pandemic. Recruiters are scrambling to find qualified applicants in a pile of generic, often irrelevant, resumes. Hiring managers are afraid of getting scammed by international espionage. Authentic, human signal is more important than ever.
+Turns out, your odds of failing are pretty high.
+
+### Current State of the Job Search: Your odds of getting an interview suck.
+
+*It's not a numbers game anymore*. Ashby's [Talent Trends Report](https://www.ashbyhq.com/talent-trends-report/reports/2023-recruiter-productivity-trends-report#the-percentage-of-technical-candidates-getting-an-interview-has-decreased) shares that:
+
+- Applications per role tripled from 2021 to 2024.
+- The percentage of technical candidates getting interviews from an application hit 4.7% in 2023.
+
+Some theories verified by my LinkedIn feed:
+- Recruiters are scrambling to find qualified applicants in a pile of generic, often irrelevant, resumes.
+- Hiring managers are afraid of getting scammed by international espionage.
+- Authentic, human signal is more important than ever.
 
 ### What's next for JAJA?
 
-We need to shift the focus from manufacturing generic resumes to marketing **undeniably human** achievements that leave hiring managers wanting to interview you.
+The most powerful and effective tool in your job search is not an ATS proof resume; it is a deeply understood and confidently told personal narrative. 
 
-Cue, the "Accomplishment Vault": A tool to help you quantify your accomplishments and craft specific stories that resonate with hiring managers.
+Step 1: Convince yourself.
+- Find the undeniable evidence of your own value and build a case for yourself that is so compelling, it silences your own inner critic. Only when you truly believe you are the perfect hire can you ever hope to convince anyone else.
 
-### What's next for JAJA?
-1. Pass Google's required security audit.
-2. Launch JAJA(Pro), the paid cloud version for users who are strapped for time or don't want to install anything.
-3. Develop the Accomplishment Vault.
+Step 2: Convince everyone else.
+
+### Solution: The AI-Powered Story Engine
+
+This is not another resume writer promising to help you beat the ATS.
+
+It is a storytelling tool that helps you turn fragmented, unmemorable bullets "wrote 5 SQL queries in Snowflake" into achievements bursting with context like "queried performance data from over 20 email campaigns using Snowflake to isolate the top three performers and inform the next quarter's marketing strategy."
+
+JAJA will be a space to record your successes and remember the value you bring.
+
+Building on the email analytics feature, JAJA will automatically detect the moment you get an interview invite and generate interview talking points from your story vault, tailored to the saved job description.
+
+*Again, the ATS isn't your enemy - your weak story is.*
+
+### Immediate Priorities
+1. October 2025: Complete and pass Google's OAuth Application Security Audit.
+2. November 2025: Launch JAJA(Pro), a paid cloud-hosted version for users who require access without local installation.
+3. December 2025: With initial revenue from JAJA(Pro), we'll begin development of the Accomplishment Vault feature set.
 
 ---
 
