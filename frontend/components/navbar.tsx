@@ -53,14 +53,13 @@ export const Navbar = () => {
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
 						<div className="flex items-center gap-3">
-							<img alt="Just a Job App Logo" className="h-12 w-12 object-contain" src="/logo.png" />
+							<img alt="Just a Job App Logo" className="h-12 w-12 object-contain" src="/favicon.ico" />
 							<div className="flex flex-col">
 								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
 									Just A Job App
 								</span>
 								<span className="text-xs text-default-500 -mt-1">Unearthing Your Career Gold</span>
 							</div>
-							<span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">Beta</span>
 						</div>
 					</NextLink>
 				</NavbarBrand>

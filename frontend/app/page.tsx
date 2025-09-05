@@ -11,9 +11,6 @@ import HeroSection from "@/components/HeroSection";
 const Index = () => {
 	const [tab, setTab] = useState("waitlist");
 
-	const handleWatchDemo = () => {
-		window.open("https://www.youtube.com/shorts/YT7qzTh2Q7A", "_blank");
-	};
 
 	return (
 		<div className="flex flex-col min-h-screen">
