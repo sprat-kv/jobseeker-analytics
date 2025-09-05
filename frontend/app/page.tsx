@@ -26,10 +26,10 @@ const Index = () => {
 							</h2>
 							<div className="text-lg text-default-600 leading-relaxed space-y-4">
 								<p>
-									Rejection by rejection, the job search convinces you of a lie: that your experience is common, that your skills are worthless, that you are just a pile of dirt. The self-doubt becomes so heavy it's impossible to see any value.
+									Rejection by rejection, the job search convinces you of a lie: that your experience is worthless. You're told to try countless complex tools, but they all miss the point. The self-doubt becomes so heavy that you start to believe there's no gold to be found.
 								</p>
 								<p className="text-xl font-semibold text-amber-600">
-									You start to believe there's no gold to be found, so you stop digging. You can't market what you don't believe you have.
+									You can't market what you don't believe you have.
 								</p>
 							</div>
 						</div>
@@ -79,6 +79,23 @@ const Index = () => {
 						</div>
 					</section>
 
+					{/* Our Philosophy Section */}
+					<section className="max-w-4xl mx-auto py-16">
+						<div className="text-center mb-12">
+							<h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+								More Than 'Just' a Job App.
+							</h2>
+							<div className="text-lg text-default-600 leading-relaxed space-y-4">
+								<p>
+									We chose the name JustAJobApp.com for a reason. The job search industry is full of complicated tools that don't solve the core problem: a crisis of confidence.
+								</p>
+								<p>
+									Our platform may look simple, but its purpose is profound. We believe the focus shouldn't be on the application itself, but on the undeniable value of the person applying. Our job is to help you unearth that value. The rest is just an application.
+								</p>
+							</div>
+						</div>
+					</section>
+
 					{/* Features as Benefits Section */}
 					<section className="max-w-5xl mx-auto py-16">
 						<h2 className="text-3xl font-bold text-center mb-12">Features as Benefits</h2>
@@ -88,7 +105,7 @@ const Index = () => {
 									<HeartFilledIcon className="text-amber-500 mb-4 mx-auto" size={48} />
 									<h3 className="text-xl font-semibold mb-4">Your Evidence of Uncovered Value</h3>
 									<p className="text-default-500">
-										Stop seeing yourself as dirt. The Story Vault is a systematic process for unearthing the undeniable evidence of your accomplishments. It's a living record of your value, proving your worth first and foremost, to you.
+										Stop seeing yourself as dirt. The JAJA Story Vault is a systematic process for unearthing the undeniable evidence of your accomplishments. It's a living record of your value, proving your worth first and foremost, to you.
 									</p>
 								</div>
 							</Card>

@@ -17,7 +17,7 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 			</h1>
 
 			<p className="text-xl md:text-2xl text-default-500 mb-10 max-w-3xl mx-auto">
-				After months of job searching, it's easy to see your experience as worthless. JAJA is a system designed to unearth the value in your entire career, revealing the undeniable flecks of gold—your achievements—and proving their worth first to you, and then to the world.
+				After months of job searching, it's easy to see your experience as worthless. JAJA is a system designed to unearth the one thing that truly matters: the gold in your career experience. We help you prove your value first to you, and then to the world.
 			</p>
 
 			<div className="flex justify-center mb-12">

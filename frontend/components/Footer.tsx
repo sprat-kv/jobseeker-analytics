@@ -8,7 +8,7 @@ const Footer = () => {
 					<div>
 						<h3 className="text-lg font-semibold mb-4 text-emerald-700">About JAJA</h3>
 						<p className="text-default-500 mb-4">
-							You see dirt. We see gold. JAJA is a system designed to unearth the value in your entire career, revealing the undeniable flecks of gold—your achievements—and proving their worth first to you, and then to the world.
+							You see dirt. We see gold. JAJA is a system designed to unearth the one thing that truly matters: the gold in your career experience. We help you prove your value first to you, and then to the world.
 						</p>
 						<a
 							className="flex items-center gap-2 text-sm text-amber-600 hover:text-amber-700 transition-colors font-medium"
