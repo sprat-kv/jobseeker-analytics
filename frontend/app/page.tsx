@@ -28,7 +28,8 @@ const Index = () => {
 								<div className="p-6">
 									<LineChartIcon className="text-amber-500 mb-4" size={48} />
 									<h3 className="text-xl font-semibold mb-2">
-										Applications Tripled, <br />90% Lead to Rejections
+										Applications Tripled, <br />
+										90% Lead to Rejections
 									</h3>
 									<p className="text-default-500">
 										Through analyzing 31M+ applications, AshbyHQ found applications per hire tripled
@@ -83,7 +84,8 @@ const Index = () => {
 									As you apply, our email integration records the job titles and companies.
 								</p>
 								<p className="text-lg font-semibold text-emerald-700 mb-6">
-									When a recruiter or hiring manager reaches out for an interview,<br />
+									When a recruiter or hiring manager reaches out for an interview,
+									<br />
 									JAJA will tailor stories from your vault, resume, and job description.
 								</p>
 								<p className="text-lg text-gray-700 mb-6 leading-relaxed">

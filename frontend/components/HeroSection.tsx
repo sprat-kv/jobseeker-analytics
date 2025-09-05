@@ -1,5 +1,3 @@
-
-
 interface HeroSectionProps {
 	onTabChange: (tab: string) => void;
 }
@@ -10,7 +8,7 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 			<div className="flex flex-col items-center mb-8">
 				<img
 					alt="Just a Job App Logo"
-					className="h-24 w-24 md:h-32 md:w-32 object-contain mb-6"
+					className="h-24 w-24 md:h-64 md:w-64 object-contain mb-6"
 					src="/logo.png"
 				/>
 				<h2 className="text-2xl md:text-3xl font-bold text-amber-600 mb-2">Unearthing Your Career Gold</h2>
