@@ -2,16 +2,19 @@
 
 You Are Not a Pile of Dirt.
 
-Job search crushes confidence. Rejection after rejection convinces you your experience is worthless — and no tool fixes that. JAJA exists to change the story.
+<img width="23%" height="23%" alt="Logo" src="frontend/public/logo.png" />
 
----
+The Job Search crushes confidence.
+
+Rejection after rejection convinces you your experience is worthless. JAJA's here to fix that.
+
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
 
 ## Get Started
 
 Choose your DIY Install path: Video [📹](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-video-tutorial-diy-install) or Manual [📖](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-written-tutorial-diy-install)
 
-No GitHub account? [Join the waitlist](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
+No GitHub account? [Join the waitlist](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
 
 ## Problem
 
@@ -49,7 +52,7 @@ JAJA is built around a simple, human-centered process:
 
 ## Launch & Beta
 
-We're launching The Gold Mine and Polish features in Q4 2025. Join the waitlist [here](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
+We're launching The Gold Mine and Polish features in Q4 2025. Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
 
 ## News 
 
