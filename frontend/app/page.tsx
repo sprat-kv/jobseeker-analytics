@@ -30,7 +30,7 @@ const Index = () => {
 							<Card>
 								<div className="p-6">
 									<LineChartIcon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">Applications Tripled, <br></br>90% of Applications Failed</h3>
+									<h3 className="text-xl font-semibold mb-2">Applications Tripled, <br></br>90% Lead to Rejections</h3>
 									<p className="text-default-500">
 										Through analyzing 31M+ applications, AshbyHQ found applications per hire tripled from 2021-2024. Cold applications have less than 10% response rate.
 									</p>
