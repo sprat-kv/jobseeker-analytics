@@ -73,7 +73,7 @@ In July 2025, we secured a feature on GitHub's official YouTube channel, which h
 - Support: help@justajobapp.com
 
 
-## Join the Contributors Wall of Fame
+## Join the Miner's Union
 
 <a href="https://github.com/just-a-job-app/jobseeker-analytics/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=just-a-job-app/jobseeker-analytics" />
