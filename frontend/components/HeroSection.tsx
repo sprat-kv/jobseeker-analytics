@@ -25,7 +25,7 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 				<div style={{ position: "relative", overflow: "auto" }}>
 					<iframe
 						src="https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?embed=true"
-						style={{ width: "100%", height: "270px", border: 0 }}
+						style={{ width: "400px", height: "270px", border: 0 }}
 					/>
 				</div>
 			</div>
