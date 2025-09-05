@@ -42,7 +42,7 @@ const Index = () => {
 									<CheckCircle2Icon className="text-purple-500 mb-4" size={48} />
 									<h3 className="text-xl font-semibold mb-2">Broken Feedback Loop</h3>
 									<p className="text-default-500">
-										Existing tools operate on a transactional model: pay for resume rewrites or ATS scans with zero feedback on whether they lead to interviews.
+									  Existing resume services are a one-time transaction. They get paid to deliver a document, and their job is done- whether it actually gets interviews or not. There's no accountability.
 									</p>
 								</div>
 							</Card>
@@ -52,7 +52,7 @@ const Index = () => {
 									<UsersIcon className="text-purple-500 mb-4" size={48} />
 									<h3 className="text-xl font-semibold mb-2">64% of Job Seekers Are Burned Out</h3>
 									<p className="text-default-500">
-										AI auto-apply tools accelerate the cycle of rejection, contributing to candidate burnout and overwhelmed hiring teams.
+										Auto-apply bots and generic AI resume builders accelerate the cycle of rejection, contributing to candidate burnout and overwhelmed hiring teams.
 									</p>
 								</div>
 							</Card>
