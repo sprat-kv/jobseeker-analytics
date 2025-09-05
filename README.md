@@ -1,80 +1,77 @@
-<img width="100" height="100" alt="void-logo" src="https://github.com/user-attachments/assets/6fae9187-4ba6-4b2d-94d2-94645a051e33" />
+# Just A Job App (JAJA)
 
-<i>"Existing job search tools operate on a broken, transactional model.<br></br>
-A user pays for a resume rewrite or an ATS scan, <br></br>but there is no feedback loop." <br></br>- A Frustrated Jobseeker</i>
+You Are Not a Pile of Dirt.
 
+Job search crushes confidence. Rejection after rejection convinces you your experience is worthless — and no tool fixes that. JAJA exists to change the story.
+
+---
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
 
-## **Get Started**
+## Get Started
 
-### **Option 1: Do-It-Yourself (DIY) Install**
-- ⏺️ [Watch replay of guided tutorial](https://youtube.com/playlist?list=PL0ZEIUccq0tDV-gzv2GgjVr0Nwjpc2p-G&si=lccbmgSRxd9x8NeE )  
-- Already familiar with GitHub? Start with [CONTRIBUTING.md](https://github.com/lnovitz/jobseeker-analytics/blob/main/CONTRIBUTING.md).
-- If you run into issues, hop into [Discord](https://discord.gg/gsdpMchCam).
-- Prefer live help? Get notified about upcoming guided tutorials, hosted online: https://lu.ma/justajobapp
-- Changed your mind about DIY Install? [Get JAJA(Pro)](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq)
+Choose your DIY Install path: Video [📹](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-video-tutorial-diy-install) or Manual [📖](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-written-tutorial-diy-install)
 
+No GitHub account? [Join the waitlist](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
 
-### **Option 2: Join the JAJA(Pro) beta**
+## Problem
 
-[Get on the waitlist](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq) to reserve your spot.
+The job search industry is transactional: resume rewrites and ATS scans happen in isolation, with no feedback loop to show whether those actions actually lead to interviews. That gap leaves candidates guessing and second-guessing their value.
 
-The beta's perfect if you're:
-- strapped for time
-- don't want to install anything.
+## Our Approach — Unearthing, Polishing, Proving
 
+JAJA is built around a simple, human-centered process:
 
-## **About Just A Job App (JAJA)**
+1. The Unearthing Process  
+   - The Gold Mine guides you through prompts and teammates' testimonials to surface specific, quantified achievements you may be overlooking.
 
-In 2024, I was laid off by an email.
+2. Polishing Each Find  
+   - AI transforms those raw moments into clear, fact-backed resume bullets and interview talking points that highlight measurable impact.
 
-I started applying and despite tailoring my resume for 100 roles, received nothing but automated rejections. The lack of feedback was frustrating.
+3. Proving Market Value  
+   - Our analytics engine tracks application outcomes and shows which of your polished achievements are actually earning interviews — the final proof that your value resonates with the market.
 
-Existing job search tools operate on a broken, transactional model: a user pays for a resume rewrite or an ATS scan, but there is no feedback loop to validate if these actions lead to more interviews.
-
-JAJA closes that feedback loop with our email integration - we can tell if you're actually landing interviews after that resume rewrite.
-
-It's important to me that this project remains independent and open-source, with jobseekers and not shareholders top of mind. 
-
+---
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
 
 
-[Get notified when we launch JAJA(Pro), the no-install app](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
+## Features as Benefits
 
-### JAJA was featured on GitHub's official YouTube channel for Open Source Friday! 
+- Your Evidence of Untapped Value  
+  - A living Gold Mine that helps you stop doubting and start documenting real accomplishments.
+
+- Presenting Your Polished Gold  
+  - Ready-to-use talking points and resume copy grounded in facts and metrics.
+
+- A Continuously Richer Vein  
+  - Keep logging achievements after you land a role so your professional value keeps compounding.
+
+---
+
+## Launch & Beta
+
+We're launching The Gold Mine and Polish features in Q4 2025. Join the waitlist [here](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq).
+
+## News 
+
+In July 2025, we secured a feature on GitHub's official YouTube channel, which has over 500,000 subscribers.
 
 🎥 [Watch the full episode here](https://youtu.be/sbzKMVaYHZw?list=PL0ZEIUccq0tD_c7gV0lAMXDXl-xK4pxch&t=1260) 
 
 
-<img width="1778" height="1100" alt="CleanShot 2025-08-08 at 23 01 30" src="https://github.com/user-attachments/assets/3fecb216-b476-4c3d-aced-8b0eee6b6892" />
+<img width="50%" height="50%" alt="GitHubFeatureYouTube" src="frontend/public/contributors/GitHubFeatureYouTube.png" />
 
 
----
-
-## **Want to get involved or share feedback?**
-
-- Join our [Discord community](https://discord.gg/gsdpMchCam)
-- Or email [help@justajobapp.com](mailto:help@justajobapp.com)
+## Get Involved
 
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
+
+- Contribute: see [CONTRIBUTING.md](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#welcome-to-do-it-yourself-diy-install)  
+- Community: https://discord.gg/gsdpMchCam  
+- Support: help@justajobapp.com
+
 
 ## Join the Contributors Wall of Fame
 
 <a href="https://github.com/just-a-job-app/jobseeker-analytics/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=just-a-job-app/jobseeker-analytics" />
 </a>
-
-- Click [here](https://github.com/lnovitz/jobseeker-analytics/blob/main/CONTRIBUTING.md) for instructions on how to contribute.
-
-## 🔒 **Privacy & Security**
-
-- Found a vulnerability? Email security@justajobapp.com
-
-## 📢 **A note from the maintainer**
-
-- Just A Job App is open source. Fork it, remix it, or carry it on if I ever disappear to open a cat café. 🐾
-
-[Join the waitlist for JAJA(Pro)](https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq)
-
-[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
-
