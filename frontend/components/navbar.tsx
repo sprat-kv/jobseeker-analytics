@@ -18,7 +18,7 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, HeartFilledIcon, GoogleIcon, LogOutIcon, InfoIcon } from "@/components/icons";
+import { GithubIcon, DiscordIcon, HeartFilledIcon, GoogleIcon, LogOutIcon, InfoIcon } from "@/components/icons";
 
 export const Navbar = () => {
 	const pathname = usePathname();
@@ -81,6 +81,9 @@ export const Navbar = () => {
 				<NavbarItem className="flex gap-2">
 					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
 						<GithubIcon className="text-default-500" />
+					</Link>
+					<Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
+						<DiscordIcon className="text-default-500" />
 					</Link>
 					<ThemeSwitch />
 				</NavbarItem>
@@ -184,6 +187,17 @@ export const Navbar = () => {
 					>
 						<GithubIcon className="w-5 h-5 text-default-500" />
 						<span>View code</span>
+					</Link>
+				</NavbarMenuItem>
+				<NavbarMenuItem>
+					<Link
+						isExternal
+						aria-label="Discord"
+						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
+						href={siteConfig.links.discord}
+					>
+						<DiscordIcon className="w-5 h-5 text-default-500" />
+						<span>Join Discord</span>
 					</Link>
 				</NavbarMenuItem>
 

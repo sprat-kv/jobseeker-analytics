@@ -83,7 +83,7 @@ const Index = () => {
 								JAJA will tailor stories from your vault, resume, and job description.
 								</p>
 								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
-								  The goal: bring stories so relevant that even you believe you deserve the role.
+								  The goal: tell stories so relevant that even you believe you deserve the role.
 								</p>
 								<p className="text-lg font-semibold text-emerald-700 mb-6">
 								Because if you don't believe in yourself, no one else will.
