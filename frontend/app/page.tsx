@@ -64,27 +64,43 @@ const Index = () => {
 							<h2 className="text-2xl font-bold text-center mb-6 text-amber-800">Complete the Feedback Loop <br></br> (Without Burning Out)</h2>
 							<div className="text-center">
 								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
-								JAJA's Story Vault, launching Q4 2025, starts with you logging accomplishments via text, voice, email, or with the help of trusted mentors and colleagues who are invited to share testimonials. 
-								</p>
-								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
-								Guided prompts will uncover the metrics and nuanced details that sharpen the human authenticity of your candidate profile. This is your career gold. Spread the riches from your resume to your LinkedIn profile.
+								JAJA's Story Vault, launching Q4 2025, starts with you logging accomplishments via text, voice, email, even testimonials from trusted mentors and colleagues. 
 								</p>
 								<p className="text-lg font-semibold text-emerald-700 mb-6">
+								Guided prompts will unearth the metrics and human nuance of your stories.
+								</p>
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
 								  This is your career gold.
 								</p>
-								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
-								Spread these curated riches from your resume to your LinkedIn profile.
-								</p>
 								<p className="text-lg font-semibold text-emerald-700 mb-6">
-								As you apply, JAJA’s email integration provides real-time analytics, showing which job titles and companies result in interviews.
+								Spread these curated riches from your vault to your resume and LinkedIn profile.
 								</p>
 								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
-								When a recruiter or hiring manager reaches out by email,<br></br>
-								JAJA will automatically synthesize stories from your vault, the submitted resume, and the job description into factually-grounded talking points.
+								As you apply, our email integration records the job titles and companies.
 								</p>
 								<p className="text-lg font-semibold text-emerald-700 mb-6">
-								  You will be as prepared for that high stakes moment as you can be with a confident, relevant narrative.
+								When a recruiter or hiring manager reaches out for an interview,<br></br>
+								JAJA will tailor stories from your vault, resume, and job description.
 								</p>
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
+								  The goal: bring stories so relevant that even you believe you deserve the role.
+								</p>
+								<p className="text-lg font-semibold text-emerald-700 mb-6">
+								Because if you don't believe in yourself, no one else will.
+								</p>
+
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div className="flex justify-center mb-12 pt-12">
+										{/* Embedded Formbricks Survey */}
+							<div style={{ position: "relative", overflow: "auto" }}>
+								<iframe
+									src="https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?embed=true"
+									style={{ width: "100%", height: "270px", border: 0 }}
+								/>
 							</div>
 						</div>
 					</section>

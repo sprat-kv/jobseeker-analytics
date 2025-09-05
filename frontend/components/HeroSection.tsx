@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 	return (
-		<section className="py-12 md:py-20 text-center">
+		<section className="py-12 md:pt-20 text-center">
 			<div className="flex flex-col items-center mb-8">
 				<img 
 					src="/logo.png" 
