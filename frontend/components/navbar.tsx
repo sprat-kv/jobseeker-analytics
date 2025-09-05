@@ -36,10 +36,9 @@ export const Navbar = () => {
 
 	const loginTooltipContent = (
 		<div className="px-1 py-2 max-w-xs">
-			<div className="text-sm font-bold mb-1">Beta Users Only</div>
+			<div className="text-sm font-bold mb-1">Heads up</div>
 			<div className="text-xs">
-				This login is only for existing beta users. If you're not a beta user yet, please join our waitlist
-				below.
+				Login is currently limited. Want early access? Please complete the short survey below.
 			</div>
 		</div>
 	);

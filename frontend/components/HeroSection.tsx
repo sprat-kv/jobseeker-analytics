@@ -29,19 +29,17 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 
 			<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
 				<div className="flex flex-col items-center gap-4">
-					<h3 className="text-lg font-semibold text-purple-600">Join the Beta</h3>
+					<h3 className="text-lg font-semibold text-purple-600">Get Started</h3>
 					<Button
 						className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-6 text-lg h-auto"
 						color="primary"
 						endContent={<ChevronRightIcon size={20} />}
 						onPress={() => {
-							onTabChange("waitlist");
-							setTimeout(() => {
-								document.getElementById("email-input")?.focus();
-							}, 100);
+							const section = document.getElementById("survey");
+							section?.scrollIntoView({ behavior: "smooth", block: "start" });
 						}}
 					>
-						Get Started
+						Sign up in less than a minute
 					</Button>
 				</div>
 
@@ -63,28 +61,6 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 				</div>
 			</div>
 
-			<div className="relative overflow-hidden rounded-xl border border-muted shadow-xl mx-auto max-w-5xl">
-				<div className="bg-muted/50 absolute top-0 left-0 right-0 h-12 flex items-center px-4">
-					<div className="flex space-x-2">
-						<div className="h-3 w-3 rounded-full bg-red-500" />
-						<div className="h-3 w-3 rounded-full bg-yellow-500" />
-						<div className="h-3 w-3 rounded-full bg-green-500" />
-					</div>
-				</div>
-				<div className="pt-12 pb-2">
-					<img
-						alt="Just a Job App application screenshot"
-						className="w-full h-auto"
-						src="/sankey_diagram.png"
-					/>
-					<div className="bg-background/80 backdrop-blur-sm py-2 px-4 text-center">
-						<p className="text-sm text-default-600 font-medium">
-							Turn "wrote 5 SQL queries" into "queried performance data from over 20 email campaigns using Snowflake to isolate the top three performers and inform the next quarter's marketing strategy."{" "}
-							<span className="text-purple-600 font-bold">Your story is your competitive advantage.</span>
-						</p>
-					</div>
-				</div>
-			</div>
 		</section>
 	);
 };

@@ -25,14 +25,14 @@ const Index = () => {
 					<HeroSection onTabChange={setTab} />
 
 					<section className="max-w-5xl mx-auto py-8">
-						<h2 className="text-3xl font-bold text-center mb-10">The Real Problem with Job Search</h2>
+						<h2 className="text-3xl font-bold text-center mb-10">The Real Problem with the Job Search</h2>
 						<div className="grid md:grid-cols-3 gap-8">
 							<Card>
 								<div className="p-6">
 									<LineChartIcon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">It's Not a Numbers Game</h3>
+									<h3 className="text-xl font-semibold mb-2">Applications Tripled, <br></br>90% of Applications Failed</h3>
 									<p className="text-default-500">
-										Applications per role tripled from 2021-2024. Only 4.7% of technical candidates get interviews.
+										Through analyzing 31M+ applications, AshbyHQ found applications per hire tripled from 2021-2024. Cold applications have less than 10% response rate.
 									</p>
 								</div>
 							</Card>
@@ -40,9 +40,9 @@ const Index = () => {
 							<Card>
 								<div className="p-6">
 									<CheckCircle2Icon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">Companies Don't Prepare You for What's Next</h3>
+									<h3 className="text-xl font-semibold mb-2">Broken Feedback Loop</h3>
 									<p className="text-default-500">
-										Layoffs happen, but no one taught you to write impact metrics. Money is a buffer, but you need the skills to tell your story.
+										Existing tools operate on a transactional model: pay for resume rewrites or ATS scans with zero feedback on whether they lead to interviews.
 									</p>
 								</div>
 							</Card>
@@ -50,9 +50,9 @@ const Index = () => {
 							<Card>
 								<div className="p-6">
 									<UsersIcon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">Authentic Human Signal</h3>
+									<h3 className="text-xl font-semibold mb-2">64% of Job Seekers Are Burned Out</h3>
 									<p className="text-default-500">
-										Recruiters need qualified applicants, not generic resumes. Your story is your competitive advantage.
+										AI auto-apply tools accelerate the cycle of rejection, contributing to candidate burnout and overwhelmed hiring teams.
 									</p>
 								</div>
 							</Card>
@@ -60,27 +60,60 @@ const Index = () => {
 					</section>
 
 					<section className="max-w-4xl mx-auto py-8">
-						<div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-8 border border-purple-200">
-							<h2 className="text-2xl font-bold text-center mb-6 text-purple-800">The Numbers Don't Lie</h2>
-							<div className="text-center">
-								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
-									In job applications, quantified achievements make a measurable difference: adding metrics to your resume boosts hireability by about 40%. Professionals whose resumes include concrete numbers (like impact, efficiency, or growth) are 3.2 times more likely to receive interview callbacks.
-								</p>
-								<p className="text-lg font-semibold text-purple-700">
-									Yet, only 26% of resumes feature five or more quantifiable metrics—leaving a vast majority of applicants relying on vague claims that fail to resonate with hiring managers.
-								</p>
+						<div className="bg-white rounded-xl p-8 border border-gray-200 shadow-lg">
+							<div className="text-center space-y-8">
+								<div className="space-y-6">
+									<p className="text-2xl text-gray-800 font-semibold">
+										In 2024, I was laid off by an email.
+									</p>
+									<p className="text-2xl text-gray-800 font-semibold">
+										I started applying and despite tailoring my resume for 100 roles, received nothing but automated rejections.
+									</p>
+									<p className="text-2xl text-gray-800 font-semibold">
+										The lack of feedback was frustrating.
+									</p>
+								</div>
+								
+								<div className="border-t border-gray-200 pt-8 space-y-6">
+									<p className="text-xl text-gray-700">
+										Existing job search tools operate on a broken, transactional model: pay for a resume rewrite or ATS scan, but there's no feedback loop to validate if these actions lead to more interviews.
+									</p>
+									<p className="text-xl text-gray-700">
+										AI auto-apply tools accelerate this cycle of zero feedback, contributing to candidate burnout from high volumes of rejections and overwhelmed hiring teams.
+									</p>
+									<p className="text-xl font-bold text-purple-700">
+										We need a better way to tell our stories.
+									</p>
+								</div>
+								
+								<div className="border-t border-purple-200 pt-8">
+									<p className="text-xl font-bold text-purple-800">
+										JAJA's mission is to shift the focus from beating the bot to marketing undeniably human achievements that leave hiring managers wanting to interview you.
+									</p>
+								</div>
 							</div>
 						</div>
 					</section>
 
+					{/* Embedded Formbricks Survey */}
+					<section id="survey" className="max-w-4xl mx-auto py-8">
+						<div style={{ position: "relative", height: "80dvh", overflow: "auto" }}>
+							<iframe
+								src="https://app.formbricks.com/s/cmagfwkuu3f8bug01e340supq?embed=true"
+								frameBorder={0}
+								style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", border: 0 }}
+							/>
+						</div>
+					</section>
+
 					<section className="max-w-4xl mx-auto bg-secondary/50 rounded-lg p-8">
-						<h2 className="text-2xl font-bold text-center mb-6">The AI-Powered Story Engine</h2>
+						<h2 className="text-2xl font-bold text-center mb-6">The Story Vault Solution</h2>
 						<div className="text-center mb-8">
 							<p className="text-lg text-default-600 mb-4">
-								This is not another resume writer promising to help you beat the ATS.
+								JAJA starts with the Story Vault (launching Q4 2025), where users log accomplishments via text, voice, email, or with the help of trusted mentors and colleagues who are invited to share work testimonials.
 							</p>
 							<p className="text-default-500">
-								It's a storytelling tool that helps you turn fragmented, unmemorable bullets into achievements bursting with context.
+								Guided prompts help uncover the specific, nuanced details that sharpen the human authenticity of your resume and LinkedIn. As you apply, JAJA's email integration provides real-time analytics, showing which job titles and industries result in interviews.
 							</p>
 						</div>
 						<Tabs
@@ -89,12 +122,24 @@ const Index = () => {
 							selectedKey={tab}
 							onSelectionChange={(key) => setTab(key as string)}
 						>
-							<Tab key="waitlist" title="Join JAJA(Pro) Beta">
+							<Tab key="waitlist" title="Get Early Access">
 								<div className="space-y-4 mt-4">
 									<p className="text-center text-default-600 mb-6">
-										Reserve your spot in our closed beta. Limited to 100 users.
+										Tell us about your goals to get early access. Take the short survey below.
 									</p>
-									<WaitlistForm />
+									<div className="flex justify-center">
+										<Button
+											className="bg-purple-600 hover:bg-purple-700"
+											color="primary"
+											endContent={<PlayIcon size={16} />}
+											onPress={() => {
+												const section = document.getElementById("survey");
+												section?.scrollIntoView({ behavior: "smooth", block: "start" });
+											}}
+										>
+											Open Survey
+										</Button>
+									</div>
 								</div>
 							</Tab>
 							<Tab key="developer" title="Do-It-Yourself Install">
@@ -107,6 +152,20 @@ const Index = () => {
 								</div>
 							</Tab>
 						</Tabs>
+					</section>
+
+					<section className="max-w-4xl mx-auto py-8">
+						<div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-8 border border-purple-200">
+							<h2 className="text-2xl font-bold text-center mb-6 text-purple-800">Complete the Feedback Loop</h2>
+							<div className="text-center">
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
+									When a conversation is booked, the system instantly synthesizes your story vault, resume, and the job description into factually-grounded talking points, ensuring you're prepared for that opportunity with a confident, relevant narrative.
+								</p>
+								<p className="text-lg font-semibold text-purple-700">
+									Finally, a job search tool that learns from your success and helps you tell your story better with each application.
+								</p>
+							</div>
+						</div>
 					</section>
 
 					<section className="max-w-3xl mx-auto bg-secondary/50 rounded-lg p-8 flex flex-col items-center text-center">
