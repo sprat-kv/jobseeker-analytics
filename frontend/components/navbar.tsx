@@ -59,14 +59,14 @@ export const Navbar = () => {
 								className="h-12 w-12 object-contain"
 							/>
 							<div className="flex flex-col">
-								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
+								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
 									Just A Job App
 								</span>
 								<span className="text-xs text-default-500 -mt-1">
 									Unearthing Your Career Gold
 								</span>
 							</div>
-							<span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Beta</span>
+							<span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">Beta</span>
 						</div>
 					</NextLink>
 				</NavbarBrand>
