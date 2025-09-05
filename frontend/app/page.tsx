@@ -52,7 +52,7 @@ const Index = () => {
 									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">1</div>
 									<h3 className="text-xl font-semibold mb-4">The Unearthing Process</h3>
 									<p className="text-default-500">
-										The Story Vault is your personal dig site. Guided prompts and testimonials from colleagues are the tools that help you gently sift through your experience, unearthing the flecks of gold—your specific, quantified achievements—that were hidden in plain sight.
+										The Gold Mine is your personal dig site. Guided prompts and testimonials from colleagues are the tools that help you gently sift through your experience, unearthing the flecks of gold—your specific, quantified achievements—that were hidden in plain sight.
 									</p>
 								</div>
 							</Card>
@@ -105,7 +105,7 @@ const Index = () => {
 									<HeartFilledIcon className="text-amber-500 mb-4 mx-auto" size={48} />
 									<h3 className="text-xl font-semibold mb-4">Your Evidence of Untapped Value</h3>
 									<p className="text-default-500">
-										Stop seeing yourself as dirt. The JAJA Story Vault is a systematic process for unearthing the undeniable evidence of your accomplishments. It's a living record of your value, proving your worth first and foremost, to you.
+										Stop seeing yourself as dirt. The JAJA Gold Mine is a systematic process for unearthing the undeniable evidence of your accomplishments. It's a living record of your value, proving your worth first and foremost, to you.
 									</p>
 								</div>
 							</Card>
