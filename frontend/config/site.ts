@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
 	name: "Just A Job App",
-	description: "Unearthing Your Career Gold.",
+	description: "You See Dirt. We See Gold.",
 	navItems: [
 		{
 			label: "Home",

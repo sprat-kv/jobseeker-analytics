@@ -67,7 +67,7 @@ const Footer = () => {
 
 				<div className="mt-12 pt-6 border-t text-center text-sm text-default-500">
 					<p className="mt-2 text-amber-600 font-medium">
-						© {new Date().getFullYear()} Just A Job App - Unearthing Your Career Gold
+						© {new Date().getFullYear()} Just A Job App - You See Dirt. We See Gold.
 					</p>
 				</div>
 			</div>

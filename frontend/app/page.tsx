@@ -103,7 +103,7 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<HeartFilledIcon className="text-amber-500 mb-4 mx-auto" size={48} />
-									<h3 className="text-xl font-semibold mb-4">Your Evidence of Uncovered Value</h3>
+									<h3 className="text-xl font-semibold mb-4">Your Evidence of Untapped Value</h3>
 									<p className="text-default-500">
 										Stop seeing yourself as dirt. The JAJA Story Vault is a systematic process for unearthing the undeniable evidence of your accomplishments. It's a living record of your value, proving your worth first and foremost, to you.
 									</p>
