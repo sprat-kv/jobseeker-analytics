@@ -89,18 +89,6 @@ const Index = () => {
 						</div>
 					</section>
 
-					<section className="max-w-3xl mx-auto rounded-lg p-8 flex flex-col items-center text-center">
-
-						<Button
-							className="bg-amber-600 hover:bg-amber-700"
-							color="primary"
-							startContent={<PlayIcon size={16} />}
-							variant="solid"
-							onPress={handleWatchDemo}
-						>
-							Watch Demo
-						</Button>
-					</section>
 				</div>
 			</main>
 
