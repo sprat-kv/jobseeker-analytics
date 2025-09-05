@@ -19,12 +19,12 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 					Unearthing Your Career Gold
 				</h2>
 			</div>
-			<h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 leading-tight max-w-4xl mx-auto">
-				There's no ATS hack. No bots to beat. It's just you.
+			<h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600 leading-tight max-w-4xl mx-auto py-2">
+				It's not a numbers game anymore.
 			</h1>
 
 			<p className="text-xl md:text-2xl text-default-500 mb-10 max-w-3xl mx-auto">
-				The most powerful tool in your job search isn't an ATS-proof resume. It's a deeply understood and confidently told personal narrative.
+				You don't have to be a social media influencer to land an interview. You just need to be human.
 			</p>
 
 			<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
