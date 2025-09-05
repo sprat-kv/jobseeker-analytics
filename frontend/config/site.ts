@@ -29,6 +29,7 @@ export const siteConfig = {
 	],
 	links: {
 		github: "https://github.com/just-a-job-app/jobseeker-analytics",
+		discord: "https://discord.gg/gsdpMchCam",
 		sponsor: "https://github.com/sponsors/lnovitz"
 	}
 };

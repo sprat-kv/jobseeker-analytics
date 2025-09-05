@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Card, Tabs, Tab } from "@heroui/react";
+import { Card } from "@heroui/react";
 
-import { UsersIcon, LineChartIcon, CheckCircle2Icon, PlayIcon } from "@/components/icons";
+import { UsersIcon, LineChartIcon, CheckCircle2Icon } from "@/components/icons";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/Footer";
-import WaitlistForm from "@/components/WaitlistForm";
-import DeveloperInfo from "@/components/DeveloperInfo";
 import HeroSection from "@/components/HeroSection";
 
 const Index = () => {
@@ -21,84 +19,95 @@ const Index = () => {
 		<div className="flex flex-col min-h-screen">
 			<main className="flex-grow bg-gradient-to-b from-background to-background/95">
 				<Navbar />
-				<div className="container mx-auto px-4 py-6 space-y-16">
+				<div className="container mx-auto px-4 py-6">
 					<HeroSection onTabChange={setTab} />
-
-					<section className="max-w-5xl mx-auto py-8">
-						<h2 className="text-3xl font-bold text-center mb-10">Why Just a Job App?</h2>
+					<section className="max-w-5xl mx-auto">
+						<h2 className="text-3xl font-bold text-center mb-10">The Real Problem with the Job Search</h2>
 						<div className="grid md:grid-cols-3 gap-8">
 							<Card>
 								<div className="p-6">
-									<LineChartIcon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">Automatic Tracking</h3>
+									<LineChartIcon className="text-amber-500 mb-4" size={48} />
+									<h3 className="text-xl font-semibold mb-2">
+										Applications Tripled, <br />
+										90% Lead to Rejections
+									</h3>
 									<p className="text-default-500">
-										No more manual updates. We track your applications straight from your inbox.
+										Through analyzing 31M+ applications, AshbyHQ found applications per hire tripled
+										from 2021-2024. Cold applications have less than 10% response rate.
 									</p>
 								</div>
 							</Card>
 
 							<Card>
 								<div className="p-6">
-									<CheckCircle2Icon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">Independent</h3>
+									<CheckCircle2Icon className="text-amber-500 mb-4" size={48} />
+									<h3 className="text-xl font-semibold mb-2">Broken Feedback Loop</h3>
 									<p className="text-default-500">
-										Built by jobseekers, for jobseekers. No VC funding.
+										Existing resume services are a one-time transaction. They get paid to deliver a
+										document, and their job is done- whether it actually gets interviews or not.
+										There's no accountability.
 									</p>
 								</div>
 							</Card>
 
 							<Card>
 								<div className="p-6">
-									<UsersIcon className="text-purple-500 mb-4" size={48} />
-									<h3 className="text-xl font-semibold mb-2">Built in Public</h3>
+									<UsersIcon className="text-amber-500 mb-4" size={48} />
+									<h3 className="text-xl font-semibold mb-2">64% of Job Seekers Are Burned Out</h3>
 									<p className="text-default-500">
-										Join our community of contributors and help fix the job search.
+										Auto-apply bots and generic AI resume builders accelerate the cycle of
+										rejection, contributing to candidate burnout and overwhelmed hiring teams.
 									</p>
 								</div>
 							</Card>
 						</div>
 					</section>
 
-					<section className="max-w-4xl mx-auto bg-secondary/50 rounded-lg p-8">
-						<h2 className="text-2xl font-bold text-center mb-6">Ready to ditch your spreadsheet?</h2>
-						<Tabs
-							aria-label="User Options"
-							className="w-full"
-							selectedKey={tab}
-							onSelectionChange={(key) => setTab(key as string)}
-						>
-							<Tab key="waitlist" title="Join the Beta">
-								<div className="space-y-4 mt-4">
-									<p className="text-center text-default-600 mb-6">
-										Reserve your spot in our closed beta. Limited to 100 users.
-									</p>
-									<WaitlistForm />
-								</div>
-							</Tab>
-							<Tab key="developer" title="Do-It-Yourself Install">
-								<div className="space-y-4 mt-4">
-									<p className="text-center text-default-600 mb-6">
-										Not technical? We'll help you get set up! Email us to book time with a friendly
-										developer.
-									</p>
-									<DeveloperInfo />
-								</div>
-							</Tab>
-						</Tabs>
+					<section className="max-w-4xl mx-auto pt-32">
+						<div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-xl p-8 border border-amber-200">
+							<h2 className="text-2xl font-bold text-center mb-6 text-amber-800">
+								Complete the Feedback Loop <br /> (Without Burning Out)
+							</h2>
+							<div className="text-center">
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
+									JAJA's Story Vault, launching Q4 2025, starts with you logging accomplishments via
+									text, voice, email, even testimonials from trusted mentors and colleagues.
+								</p>
+								<p className="text-lg font-semibold text-emerald-700 mb-6">
+									Guided prompts will unearth the metrics and human nuance of your stories.
+								</p>
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">This is your career gold.</p>
+								<p className="text-lg font-semibold text-emerald-700 mb-6">
+									Spread these curated riches from your vault to your resume and LinkedIn profile.
+								</p>
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
+									As you apply, our email integration records the job titles and companies.
+								</p>
+								<p className="text-lg font-semibold text-emerald-700 mb-6">
+									When a recruiter or hiring manager reaches out for an interview,
+									<br />
+									JAJA will tailor stories from your vault, resume, and job description.
+								</p>
+								<p className="text-lg text-gray-700 mb-6 leading-relaxed">
+									The goal: tell stories so relevant that even you believe you deserve the role.
+								</p>
+								<p className="text-lg font-semibold text-emerald-700 mb-6">
+									Because if you don't believe in yourself, no one else will.
+								</p>
+							</div>
+						</div>
 					</section>
 
-					<section className="max-w-3xl mx-auto bg-secondary/50 rounded-lg p-8 flex flex-col items-center text-center">
-						<h2 className="text-2xl font-bold mb-4">See How It Works</h2>
-						<p className="text-default-600 mb-6">Watch how we make job searching simpler</p>
-						<Button
-							className="bg-purple-600 hover:bg-purple-700"
-							color="primary"
-							startContent={<PlayIcon size={16} />}
-							variant="solid"
-							onPress={handleWatchDemo}
-						>
-							Watch Demo
-						</Button>
+					<section>
+						<div className="flex justify-center mb-12 pt-12">
+							{/* Embedded Formbricks Survey */}
+							<div style={{ position: "relative", overflow: "auto" }}>
+								<iframe
+									src="https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?embed=true"
+									style={{ width: "100%", height: "270px", border: 0 }}
+								/>
+							</div>
+						</div>
 					</section>
 				</div>
 			</main>

@@ -18,7 +18,7 @@ import NextLink from "next/link";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, HeartFilledIcon, GoogleIcon, LogOutIcon, InfoIcon } from "@/components/icons";
+import { GithubIcon, DiscordIcon, HeartFilledIcon, GoogleIcon, LogOutIcon, InfoIcon } from "@/components/icons";
 
 export const Navbar = () => {
 	const pathname = usePathname();
@@ -36,10 +36,9 @@ export const Navbar = () => {
 
 	const loginTooltipContent = (
 		<div className="px-1 py-2 max-w-xs">
-			<div className="text-sm font-bold mb-1">Beta Users Only</div>
+			<div className="text-sm font-bold mb-1">Heads up</div>
 			<div className="text-xs">
-				This login is only for existing beta users. If you're not a beta user yet, please join our waitlist
-				below.
+				Login is currently limited. Want early access? Please complete the short survey below.
 			</div>
 		</div>
 	);
@@ -53,11 +52,15 @@ export const Navbar = () => {
 			<NavbarContent className="basis-1/5 sm:basis-full" justify="start">
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
-						<div className="flex items-center gap-2">
-							<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-600">
-								Just a Job App
-							</span>
-							<span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">Beta</span>
+						<div className="flex items-center gap-3">
+							<img alt="Just a Job App Logo" className="h-12 w-12 object-contain" src="/logo.png" />
+							<div className="flex flex-col">
+								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+									Just A Job App
+								</span>
+								<span className="text-xs text-default-500 -mt-1">Unearthing Your Career Gold</span>
+							</div>
+							<span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">Beta</span>
 						</div>
 					</NextLink>
 				</NavbarBrand>
@@ -72,6 +75,9 @@ export const Navbar = () => {
 				<NavbarItem className="flex gap-2">
 					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
 						<GithubIcon className="text-default-500" />
+					</Link>
+					<Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
+						<DiscordIcon className="text-default-500" />
 					</Link>
 					<ThemeSwitch />
 				</NavbarItem>
@@ -175,6 +181,17 @@ export const Navbar = () => {
 					>
 						<GithubIcon className="w-5 h-5 text-default-500" />
 						<span>View code</span>
+					</Link>
+				</NavbarMenuItem>
+				<NavbarMenuItem>
+					<Link
+						isExternal
+						aria-label="Discord"
+						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
+						href={siteConfig.links.discord}
+					>
+						<DiscordIcon className="w-5 h-5 text-default-500" />
+						<span>Join Discord</span>
 					</Link>
 				</NavbarMenuItem>
 
