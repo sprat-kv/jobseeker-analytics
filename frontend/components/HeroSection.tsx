@@ -9,16 +9,15 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 				<img
 					alt="Just a Job App Logo"
 					className="h-32 w-32 sm:h-96 sm:w-96 mb-6"
-					src="/logo.png"
+					src="/favicon.ico"
 				/>
-				<h2 className="text-2xl md:text-3xl font-bold text-amber-600 mb-2">Unearthing Your Career Gold</h2>
 			</div>
 			<h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600 leading-tight max-w-4xl mx-auto py-2">
-				It's not a numbers game anymore.
+				Stop Doubting. Start Interviewing.
 			</h1>
 
 			<p className="text-xl md:text-2xl text-default-500 mb-10 max-w-3xl mx-auto">
-				You don't have to be a social media influencer to land an interview. You just need to be human.
+				The job search is designed to crush confidence. JAJA provides the undeniable proof of your value—your own achievements, backed by data—so you can market yourself with the conviction you deserve.
 			</p>
 
 			<div className="flex justify-center mb-12">
