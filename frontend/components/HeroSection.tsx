@@ -9,15 +9,15 @@ const HeroSection = ({ onTabChange }: HeroSectionProps) => {
 				<img
 					alt="Just a Job App Logo"
 					className="h-32 w-32 sm:h-96 sm:w-96 mb-6"
-					src="/favicon.ico"
+					src="/logo.png"
 				/>
 			</div>
 			<h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600 leading-tight max-w-4xl mx-auto py-2">
-				Stop Doubting. Start Interviewing.
+				You See Dirt. We See Gold.
 			</h1>
 
 			<p className="text-xl md:text-2xl text-default-500 mb-10 max-w-3xl mx-auto">
-				The job search is designed to crush confidence. JAJA provides the undeniable proof of your value—your own achievements, backed by data—so you can market yourself with the conviction you deserve.
+				After months of job searching, it's easy to see your experience as worthless. JAJA is a system designed to unearth the value in your entire career, revealing the undeniable flecks of gold—your achievements—and proving their worth first to you, and then to the world.
 			</p>
 
 			<div className="flex justify-center mb-12">

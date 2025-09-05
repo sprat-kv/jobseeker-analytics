@@ -22,14 +22,14 @@ const Index = () => {
 					<section className="max-w-4xl mx-auto py-16">
 						<div className="text-center mb-12">
 							<h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-								The Hardest Part of the Job Search is Believing in Yourself.
+								You Are Not a Pile of Dirt.
 							</h2>
 							<div className="text-lg text-default-600 leading-relaxed space-y-4">
 								<p>
-									Each automated rejection feels personal. Every unreturned email fuels the inner critic that asks, "Am I good enough?" The lack of feedback isn't just frustrating; it creates a cycle of self-doubt that makes it impossible to present your best self.
+									Rejection by rejection, the job search convinces you of a lie: that your experience is common, that your skills are worthless, that you are just a pile of dirt. The self-doubt becomes so heavy it's impossible to see any value.
 								</p>
 								<p className="text-xl font-semibold text-amber-600">
-									Because if you don't believe in your own story, hiring managers won't either.
+									You start to believe there's no gold to be found, so you stop digging. You can't market what you don't believe you have.
 								</p>
 							</div>
 						</div>
@@ -38,11 +38,11 @@ const Index = () => {
 					{/* Solution Section */}
 					<section className="max-w-4xl mx-auto py-16">
 						<div className="text-center mb-12">
-							<h2 className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-								A System to Provide Proof of Your Value.
+							<h2 className="text-4xl font-bold mb-6 pb-2 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+								Unearthing, Polishing, and Proving Your Worth.
 							</h2>
 							<p className="text-lg text-default-600 mb-12">
-								JAJA is designed to rebuild your professional confidence with undeniable evidence.
+								JAJA provides a systematic process to reveal and validate your intrinsic professional value.
 							</p>
 						</div>
 						
@@ -50,9 +50,9 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">1</div>
-									<h3 className="text-xl font-semibold mb-4">Reclaim Your Narrative</h3>
+									<h3 className="text-xl font-semibold mb-4">The Unearthing Process</h3>
 									<p className="text-default-500">
-										The Story Vault is your evidence locker. Actively logging your quantified achievements and collecting testimonials from colleagues provides a tangible record of your impact, silencing imposter syndrome with facts.
+										The Story Vault is your personal dig site. Guided prompts and testimonials from colleagues are the tools that help you gently sift through your experience, unearthing the flecks of gold—your specific, quantified achievements—that were hidden in plain sight.
 									</p>
 								</div>
 							</Card>
@@ -60,9 +60,9 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">2</div>
-									<h3 className="text-xl font-semibold mb-4">See Your Value on Paper</h3>
+									<h3 className="text-xl font-semibold mb-4">Polishing Each Find</h3>
 									<p className="text-default-500">
-										Our AI translates your achievements into a powerful resume. It takes the self-doubt out of writing about yourself and generates a document that reflects your true professional worth.
+										Our AI takes these raw flecks of gold and polishes them into compelling resume bullet points and narratives, making their brilliance and value immediately obvious for each job application.
 									</p>
 								</div>
 							</Card>
@@ -70,9 +70,9 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">3</div>
-									<h3 className="text-xl font-semibold mb-4">Get Objective Proof from the Market</h3>
+									<h3 className="text-xl font-semibold mb-4">Proving Market Value</h3>
 									<p className="text-default-500">
-										Our analytics engine connects your applications to interviews, providing external validation that you are in demand. Every interview call is a data point that proves you belong.
+										Our analytics engine is the final proof. It tracks your applications and confirms when the market strikes gold, showing you which of your polished achievements are securing valuable interviews.
 									</p>
 								</div>
 							</Card>
@@ -86,9 +86,9 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<HeartFilledIcon className="text-amber-500 mb-4 mx-auto" size={48} />
-									<h3 className="text-xl font-semibold mb-4">Your Personal Evidence Locker</h3>
+									<h3 className="text-xl font-semibold mb-4">Your Evidence of Uncovered Value</h3>
 									<p className="text-default-500">
-										Combat the inner critic with facts. The Story Vault provides a dedicated space to document your quantified wins and surround yourself with positive testimonials from people who know your work best, creating a reservoir of proof to draw upon.
+										Stop seeing yourself as dirt. The Story Vault is a systematic process for unearthing the undeniable evidence of your accomplishments. It's a living record of your value, proving your worth first and foremost, to you.
 									</p>
 								</div>
 							</Card>
@@ -96,9 +96,9 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<LineChartIcon className="text-amber-500 mb-4 mx-auto" size={48} />
-									<h3 className="text-xl font-semibold mb-4">Data That Defeats Doubt</h3>
+									<h3 className="text-xl font-semibold mb-4">Presenting Your Polished Gold</h3>
 									<p className="text-default-500">
-										Feelings aren't facts. JAJA provides objective proof of what's working. See which of your applications are landing interviews and replace the anxiety of the unknown with the confidence that comes from a clear, data-backed strategy.
+										When it's time to talk to a hiring manager, JAJA synthesizes your best finds into factually-grounded talking points. You'll be prepared to showcase your most valuable, polished achievements with the confidence of someone who now knows their worth.
 									</p>
 								</div>
 							</Card>
@@ -106,9 +106,9 @@ const Index = () => {
 							<Card className="p-6">
 								<div className="text-center">
 									<CheckCircle2Icon className="text-amber-500 mb-4 mx-auto" size={48} />
-									<h3 className="text-xl font-semibold mb-4">Confidence is a Habit, Not a Project</h3>
+									<h3 className="text-xl font-semibold mb-4">A Continuously Richer Vein</h3>
 									<p className="text-default-500">
-										After you land your role, JAJA helps you continuously log your wins. This turns confidence into an ongoing practice, ensuring you never have to start from zero again.
+										Your value doesn't stop growing. After you land a role, JAJA helps you continue to unearth and log new achievements, ensuring your personal gold mine becomes richer and more valuable over time.
 									</p>
 								</div>
 							</Card>
@@ -119,10 +119,10 @@ const Index = () => {
 					<section className="max-w-4xl mx-auto py-16">
 						<div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-xl p-8 border border-amber-200 text-center">
 							<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-								Believe in Yourself. We'll Bring the Proof.
+								It's Time to See Your Own Value.
 							</h2>
 							<p className="text-lg text-gray-700 mb-8 leading-relaxed">
-								Get the tools and the evidence you need to walk into your job search with conviction. Enter your email to be the first to know when our confidence-building tools launch in Q4 2025.
+								Stop doubting and start digging with purpose. Enter your email to be the first to know when our career discovery tools launch in Q4 2025.
 							</p>
 							
 							<div className="flex justify-center mb-8">

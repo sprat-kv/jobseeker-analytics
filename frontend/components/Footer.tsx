@@ -8,7 +8,7 @@ const Footer = () => {
 					<div>
 						<h3 className="text-lg font-semibold mb-4 text-emerald-700">About JAJA</h3>
 						<p className="text-default-500 mb-4">
-							Built by jobseekers who understand the struggle of automated rejections and zero feedback.
+							You see dirt. We see gold. JAJA is a system designed to unearth the value in your entire career, revealing the undeniable flecks of gold—your achievements—and proving their worth first to you, and then to the world.
 						</p>
 						<a
 							className="flex items-center gap-2 text-sm text-amber-600 hover:text-amber-700 transition-colors font-medium"
@@ -17,7 +17,7 @@ const Footer = () => {
 							target="_blank"
 						>
 							<ExternalLinkIcon size={16} />
-							Join the waitlist
+							Unearth My Gold
 						</a>
 					</div>
 
@@ -25,25 +25,25 @@ const Footer = () => {
 						<h3 className="text-lg font-semibold mb-4 text-emerald-700">The Solution</h3>
 						<ul className="space-y-2 text-default-500">
 							<li>
-								<a className="text-emerald-700">Story Vault:</a> Log achievements via text, voice, email
+								<a className="text-emerald-700">The Unearthing Process:</a> Your personal dig site for finding gold
 							</li>
 							<li>
-								<a className="text-emerald-700">Mentor Integration:</a> Trusted colleagues share
-								testimonials
+								<a className="text-emerald-700">Polishing Each Find:</a> Transform raw gold into compelling narratives
 							</li>
 							<li>
-								<a className="text-emerald-700">Real-time Analytics:</a> Track which applications lead
-								to interviews
+								<a className="text-emerald-700">Proving Market Value:</a> Confirm when the market strikes gold
 							</li>
 							<li>
-								<a className="text-emerald-700">Interview Prep:</a> Talking points from your vault,
-								tailored to the role
+								<a className="text-emerald-700">Continuous Mining:</a> Keep your gold mine growing richer
 							</li>
 						</ul>
 					</div>
 
 					<div>
-						<h3 className="text-lg font-semibold mb-4 text-emerald-700">Get Early Access</h3>
+						<h3 className="text-lg font-semibold mb-4 text-emerald-700">See Your Own Value</h3>
+						<p className="text-default-500 mb-4">
+							Stop doubting and start digging with purpose. It's time to see your own value.
+						</p>
 						<div className="space-y-4">
 							<a
 								className="flex items-center gap-2 text-sm text-amber-600 hover:text-amber-700 transition-colors font-medium"
@@ -52,7 +52,7 @@ const Footer = () => {
 								target="_blank"
 							>
 								<ExternalLinkIcon size={16} />
-								Join the waitlist
+								Join the Waitlist & Prove Your Value
 							</a>
 							<a
 								className="flex items-center gap-2 text-sm text-default-500 hover:text-amber-700 transition-colors"
