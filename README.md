@@ -61,7 +61,7 @@ In July 2025, we secured a feature on GitHub's official YouTube channel, which h
 🎥 [Watch the full episode here](https://youtu.be/sbzKMVaYHZw?list=PL0ZEIUccq0tD_c7gV0lAMXDXl-xK4pxch&t=1260) 
 
 
-<img width="50%" height="50%" alt="GitHubFeatureYouTube" src="frontend/public/contributors/GitHubFeatureYouTube.png" />
+<img width="75%" height="75%" alt="GitHubFeatureYouTube" src="frontend/public/contributors/GitHubFeatureYouTube.png" />
 
 
 ## Get Involved
