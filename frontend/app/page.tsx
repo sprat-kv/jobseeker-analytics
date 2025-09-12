@@ -43,10 +43,10 @@ const Index = () => {
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
 						<p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-							The job hunt is a black box. I built "Resume Rush" to fix this.
+							The job hunt is a broken feedback loop. I'm building "Resume Rush" to fix this.
 						</p>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-							After being laid off, I needed to rebuild my confidence and prove my value on paper—fast. But with zero feedback on what works, it's tough. "Resume Rush" is a game where you're a gold miner cat digging up your best career achievements ('Nuggets').
+							After being laid off from a gaming company in early 2024, I built Just A Job App (JAJA) to regain my confidence as a developer. This open-source tool, AI-powered job application tracker is expanding to include a mobile game that makes resume reviews fun.
 						</p>
 					</div>
 					<div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
