@@ -46,7 +46,10 @@ const Index = () => {
 							The job hunt is a broken feedback loop. I'm building "Resume Rush" to fix this.
 						</p>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-							After being laid off from a gaming company in early 2024, I built Just A Job App (JAJA) to regain my confidence as a developer. This open-source tool, AI-powered job application tracker is expanding to include a mobile game that makes resume reviews fun.
+							After being laid off from a gaming company in early 2024, I built Just A Job App (JAJA) to regain my confidence as a developer. 
+						</p>
+						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+							Our open-source, AI-powered job application tracker is now expanding to include a mobile game that makes resume reviews fun.
 						</p>
 					</div>
 					<div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
