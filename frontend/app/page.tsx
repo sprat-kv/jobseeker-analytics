@@ -17,6 +17,7 @@ const Index = () => {
 				<Navbar />
 				<div className="container mx-auto px-4 py-6">
 					<div className="text-center">
+						<img alt="Resume Rush Logo" className="h-64 w-64 object-contain mx-auto mb-4" src="/logo.png" />
 						<h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
 							Win the 6-Second Resume Scan.
 						</h1>
