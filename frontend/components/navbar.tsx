@@ -67,7 +67,7 @@ export const Navbar = () => {
 
 			<NavbarContent className="hidden md:flex basis-1/5 sm:basis-full" justify="end">
 				<NavbarItem>
-					<Button as="a" href="#waitlist" variant="solid" color="primary">
+					<Button as="a" href="#waitlist" variant="solid" className="bg-amber-600 text-white hover:bg-amber-700">
 						Join the Waitlist
 					</Button>
 				</NavbarItem>
@@ -75,7 +75,7 @@ export const Navbar = () => {
 
 			{/* Smaller screens */}
 			<NavbarContent className="md:hidden" justify="end">
-				<Button as="a" href="#waitlist" variant="solid" color="primary" size="sm">
+				<Button as="a" href="#waitlist" variant="solid" size="sm" className="bg-amber-600 text-white hover:bg-amber-700">
 					Join Waitlist
 				</Button>
 			</NavbarContent>
