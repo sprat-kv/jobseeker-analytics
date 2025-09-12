@@ -53,12 +53,12 @@ export const Navbar = () => {
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
 						<div className="flex items-center gap-3">
-							<img alt="Just a Job App Logo" className="h-12 w-12 object-contain" src="/logo.png" />
+							<img alt="Resume Rush Logo" className="h-12 w-12 object-contain" src="/logo.png" />
 							<div className="flex flex-col">
 								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-									Just A Job App
+									Resume Rush
 								</span>
-								<span className="text-xs text-default-500 -mt-1">You See Dirt. We See Gold.</span>
+								<span className="text-xs text-default-500 -mt-1">Win the 6-Second Resume Scan</span>
 							</div>
 						</div>
 					</NextLink>
@@ -67,152 +67,18 @@ export const Navbar = () => {
 
 			<NavbarContent className="hidden md:flex basis-1/5 sm:basis-full" justify="end">
 				<NavbarItem>
-					<Link className="text-sm font-normal text-default-600 hover:text-default-900" href="/contributors">
-						Contributors
-					</Link>
-				</NavbarItem>
-				<NavbarItem className="flex gap-2">
-					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
-						<GithubIcon className="text-default-500" />
-					</Link>
-					<Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
-						<DiscordIcon className="text-default-500" />
-					</Link>
-					<ThemeSwitch />
-				</NavbarItem>
-				<NavbarItem>
-					<Button
-						isExternal
-						as={Link}
-						className="text-sm font-normal text-default-600 bg-default-100"
-						data-testid="Sponsor"
-						href={siteConfig.links.sponsor}
-						startContent={<HeartFilledIcon className="text-danger" />}
-						variant="flat"
-					>
-						Sponsor
+					<Button as="a" href="#waitlist" variant="solid" color="primary">
+						Join the Waitlist
 					</Button>
-				</NavbarItem>
-				<NavbarItem>
-					{pathname === "/" || pathname.startsWith("/preview") ? (
-						<Tooltip
-							closeDelay={0}
-							color="foreground"
-							content={loginTooltipContent}
-							delay={200}
-							placement="bottom"
-						>
-							<Button
-								className="w-full text-sm font-normal text-default-600 bg-default-100"
-								data-testid="GoogleLogin"
-								endContent={<InfoIcon className="text-default-400" size={14} />}
-								startContent={<GoogleIcon className="text-danger" />}
-								variant="flat"
-								onPress={handleGoogleLogin}
-							>
-								Login with Google
-							</Button>
-						</Tooltip>
-					) : (
-						<Button
-							className="w-full text-sm font-normal text-default-600 bg-default-100"
-							data-testid="GoogleLogout"
-							startContent={<LogOutIcon />}
-							variant="flat"
-							onPress={handleGoogleLogout}
-						>
-							Logout
-						</Button>
-					)}
 				</NavbarItem>
 			</NavbarContent>
 
 			{/* Smaller screens */}
 			<NavbarContent className="md:hidden" justify="end">
-				{pathname === "/" ? (
-					<Tooltip
-						closeDelay={0}
-						color="foreground"
-						content={loginTooltipContent}
-						delay={200}
-						placement="bottom"
-					>
-						<Button
-							className="w-auto text-sm font-normal text-default-600 bg-default-100"
-							data-testid="GoogleLoginSmallScreen"
-							endContent={<InfoIcon className="text-default-400" size={14} />}
-							startContent={<GoogleIcon className="text-danger" />}
-							variant="flat"
-							onPress={handleGoogleLogin}
-						>
-							Login
-						</Button>
-					</Tooltip>
-				) : (
-					<Button
-						className="w-auto text-sm font-normal text-default-600 bg-default-100 px-7"
-						data-testid="GoogleLogoutSmallScreen"
-						startContent={<LogOutIcon />}
-						variant="flat"
-						onPress={handleGoogleLogout}
-					>
-						Logout
-					</Button>
-				)}
-				<NavbarMenuToggle />
+				<Button as="a" href="#waitlist" variant="solid" color="primary" size="sm">
+					Join Waitlist
+				</Button>
 			</NavbarContent>
-
-			<NavbarMenu className="flex flex-col items-center gap-3">
-				<NavbarMenuItem>
-					<Link
-						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
-						href="/contributors"
-					>
-						🏆 Contributors
-					</Link>
-				</NavbarMenuItem>
-				<NavbarMenuItem>
-					<Link
-						isExternal
-						aria-label="Github"
-						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
-						href={siteConfig.links.github}
-					>
-						<GithubIcon className="w-5 h-5 text-default-500" />
-						<span>View code</span>
-					</Link>
-				</NavbarMenuItem>
-				<NavbarMenuItem>
-					<Link
-						isExternal
-						aria-label="Discord"
-						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
-						href={siteConfig.links.discord}
-					>
-						<DiscordIcon className="w-5 h-5 text-default-500" />
-						<span>Join Discord</span>
-					</Link>
-				</NavbarMenuItem>
-
-				<NavbarMenuItem>
-					<ThemeSwitch className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition">
-						<span>Change theme</span>
-					</ThemeSwitch>
-				</NavbarMenuItem>
-
-				<NavbarMenuItem>
-					<Button
-						isExternal
-						as={Link}
-						className="w-auto text-sm font-medium text-default-600 bg-default-100 px-4 py-2 rounded-md transition"
-						href={siteConfig.links.sponsor}
-						startContent={<HeartFilledIcon className="text-danger" />}
-						variant="flat"
-					>
-						Sponsor
-					</Button>
-				</NavbarMenuItem>
-			</NavbarMenu>
 		</HeroUINavbar>
 	);
 };
