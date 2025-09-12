@@ -17,7 +17,7 @@ const Index = () => {
 				<Navbar />
 				<div className="container mx-auto px-4 py-6">
 					<div className="text-center">
-						<img alt="Resume Rush Logo" className="h-64 w-64 object-contain mx-auto mb-4" src="/logo.png" />
+						<img alt="Resume Gold Rush Logo" className="h-64 w-64 object-contain mx-auto mb-4" src="/logo.png" />
 						<h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
 							Win the 6-Second Resume Scan.
 						</h1>
@@ -43,13 +43,13 @@ const Index = () => {
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
 						<p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-							The job hunt is a broken feedback loop. I'm building "Resume Rush" to fix this.
+							The job hunt is a broken feedback loop. Close the loop in "Resume Gold Rush"
 						</p>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
 							After being laid off from a gaming company in early 2024, I built Just A Job App (JAJA) to regain my confidence as a developer. 
 						</p>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-							Our open-source, AI-powered job application tracker is now expanding to include a mobile game that makes resume reviews fun.
+							Our open-source, AI-powered job application tracker is now expanding to include a mobile game that makes resume reviews fun. It's a game where you're a gold miner cat digging up your best career achievements ('Shining Nuggets').
 						</p>
 					</div>
 					<div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
@@ -59,7 +59,7 @@ const Index = () => {
 									<div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-600">
 										<TrophyIcon aria-hidden="true" className="h-6 w-6 text-white" />
 									</div>
-									Peer-Reviewed Achievements
+									Shining Nuggets
 								</dt>
 								<dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
 									In quick 6-second challenges, get your accomplishments peer-reviewed by other players, earning upgrades as you improve.
@@ -73,7 +73,7 @@ const Index = () => {
 									Get an Inside Edge
 								</dt>
 								<dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-									Need an inside edge? Get your 'Nuggets' reviewed anonymously by players currently working at your target companies.
+									Need an inside edge? Get your 'Shining Nuggets' reviewed anonymously by players currently working at your target companies.
 								</dd>
 							</div>
 							<div className="relative pl-16">
@@ -109,7 +109,7 @@ const Index = () => {
 						Ready to Win the Scan?
 					</h2>
 					<p className="text-lg text-gray-700 mb-8 leading-relaxed">
-						Join the waitlist to get early access to Resume Rush and start turning 6 seconds into job offers.
+						Join the waitlist to get early access to Resume Gold Rush and start turning 6 seconds into job offers.
 					</p>
 
 					<div className="flex justify-center mb-8">
