@@ -189,17 +189,39 @@ const Index = () => {
 				</div>
 			</div>
 
+			{/* Founder's Story Section */}
+			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
+						<div className="md:col-span-1">
+							{/* Founder Image */}
+							<div className="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+								<img 
+									src="homepage/Founder - 2x.png" 
+									alt="Founder of Just A Job App" 
+									className="w-full h-auto object-cover"
+									width="165px"
+									height="140px"
+								/>
+							</div>
+						</div>
+						<div className="md:col-span-2">
+							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Built From Burnout, For Your Breakthrough.</h2>
+							<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+								"After being laid off from a gaming company in early 2024, I submitted 100 tailored applications and got 100 generic rejections. To regain my confidence as a developer, I started building an automated job application tracker, which has now been tested by 100 users. The next step is 'Shining Nuggets,' a mobile game I'm building so no one has to go through layoffs unprepared ever again. <strong className="text-amber-600">Request your invite to be a part of the next phase.</strong>"
+							</p>
+							<p className="mt-4 font-semibold text-gray-900 dark:text-white">– Lianna Novitz, Founder of Just A Job App</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			{/* Features & Benefits Section */}
 			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
 						<p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600 pb-2">
 							The job hunt is a broken feedback loop. Close the loop in "Shining Nuggets"
-						</p>
-						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-							After being laid off from a gaming company in early 2024, I built Just A Job App (JAJA) to regain my confidence as a developer. 
-						</p>
-						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-							Our open-source, AI-powered job application tracker is now expanding to include a mobile game that makes resume reviews fun. It's a game where you're a gold miner cat digging up your best career achievements.
 						</p>
 					</div>
 					<div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
