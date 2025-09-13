@@ -10,6 +10,7 @@ import HeroSection from "@/components/HeroSection";
 
 const Index = () => {
 	const [tab, setTab] = useState("waitlist");
+	const [showImagePopup, setShowImagePopup] = useState(false);
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -76,9 +77,23 @@ const Index = () => {
 			<div className="container mx-auto px-4 py-24 sm:py-32">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 					<div>
-						{/* Placeholder for chart image */}
-						<div className="bg-gray-200 dark:bg-gray-700 h-80 w-full rounded-lg flex items-center justify-center">
-							<p className="text-gray-500"><img alt="Chart showing Applications Per Hire tripling" src="homepage/Problem.png"></img></p>
+						{/* Chart image with click functionality */}
+						<div 
+							className="bg-gray-200 dark:bg-gray-700 h-80 w-full rounded-lg flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+							onClick={() => setShowImagePopup(true)}
+						>
+							<div className="relative">
+								<img 
+									alt="Chart showing Applications Per Hire tripling" 
+									src="homepage/Problem.png" 
+									className="max-h-80 max-w-full object-contain"
+								/>
+								<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m4-3H6" />
+									</svg>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div>
@@ -256,6 +271,39 @@ const Index = () => {
 				</div>
 			</div>
 			<Footer />
+
+			{/* Image Popup Overlay */}
+			{showImagePopup && (
+				<div 
+					className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4"
+					onClick={() => setShowImagePopup(false)}
+				>
+					<div 
+						className="relative w-full max-w-6xl"
+					>
+						<button 
+							className="absolute -top-12 right-0 text-white hover:text-amber-500 focus:outline-none"
+							onClick={(e) => {
+								e.stopPropagation();
+								setShowImagePopup(false);
+							}}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl overflow-hidden">
+							<img 
+								src="homepage/Problem2.png" 
+								alt="Chart showing Applications Per Hire tripling" 
+								className="w-full h-auto"
+								style={{ maxHeight: "90vh" }}
+								onClick={(e) => e.stopPropagation()}
+							/>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
