@@ -194,15 +194,28 @@ const Index = () => {
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
 						<div className="md:col-span-1">
-							{/* Founder Image */}
-							<div className="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
-								<img 
-									src="homepage/Founder - 2x.png" 
-									alt="Founder of Just A Job App" 
-									className="w-full h-auto object-cover"
-									width="165px"
-									height="140px"
-								/>
+							{/* Founder Image with click functionality */}
+							<div 
+								className="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+								onClick={() => {
+									setPopupImageSrc("homepage/Founder - 2x.png");
+									setShowImagePopup(true);
+								}}
+							>
+								<div className="relative">
+									<img 
+										src="homepage/Founder - 2x.png" 
+										alt="Founder of Just A Job App" 
+										className="w-full h-auto object-cover"
+										width="165px"
+										height="140px"
+									/>
+									<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity">
+										<svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m4-3H6" />
+										</svg>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div className="md:col-span-2">
