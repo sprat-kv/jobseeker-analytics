@@ -162,6 +162,33 @@ const Index = () => {
 				</div>
 			</div>
 
+			{/* Vision Section: How It Will All Work */}
+			<div className="bg-gray-50 dark:bg-gray-800 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="mx-auto max-w-2xl lg:text-center">
+						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">The Vision: How It Will All Work</h2>
+						<p className="mt-4 text-2xl font-semibold text-amber-600">Your Future Path to a Better Job Offer</p>
+						<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+							<div className="flex flex-col items-center">
+								<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">1</div>
+								<h3 className="text-xl font-semibold mb-2">You'll Get Organized Instantly.</h3>
+								<p className="text-gray-600 dark:text-gray-300">You'll use the tracker to see your entire job search pipeline in one clean dashboard, with AI-powered features that automate the tedious parts.</p>
+							</div>
+							<div className="flex flex-col items-center">
+								<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">2</div>
+								<h3 className="text-xl font-semibold mb-2">You'll Play 'Shining Nuggets'.</h3>
+								<p className="text-gray-600 dark:text-gray-300">You'll mine your professional achievements and get them anonymously peer-reviewed in fun, 6-second challenges.</p>
+							</div>
+							<div className="flex flex-col items-center">
+								<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">3</div>
+								<h3 className="text-xl font-semibold mb-2">You'll Apply with Data-Backed Confidence.</h3>
+								<p className="text-gray-600 dark:text-gray-300">You'll use your top-rated, validated achievements to build resumes that get noticed, closing the frustrating gap between application and interview.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
@@ -271,32 +298,7 @@ const Index = () => {
 					</div>
 				</div>
 			</div>
-			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
-				<div className="mx-auto max-w-7xl px-6 lg:px-8">
-					<div className="mx-auto max-w-2xl lg:text-center">
-						<div>
-							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Future Path to a Better Job Offer</h2>
-							<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12">
-								<div className="flex flex-col items-center">
-									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">1</div>
-									<h3 className="text-xl font-semibold mb-2">You'll Get Organized Instantly.</h3>
-									<p className="text-gray-600 dark:text-gray-300">You'll use the tracker to see your entire job search pipeline in one clean dashboard, with AI-powered features that automate the tedious parts.</p>
-								</div>
-								<div className="flex flex-col items-center">
-									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">2</div>
-									<h3 className="text-xl font-semibold mb-2">You'll Play 'Shining Nuggets'.</h3>
-									<p className="text-gray-600 dark:text-gray-300">You'll mine your professional achievements and get them anonymously peer-reviewed in fun, 6-second challenges.</p>
-								</div>
-								<div className="flex flex-col items-center">
-									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">3</div>
-									<h3 className="text-xl font-semibold mb-2">You'll Apply with Data-Backed Confidence.</h3>
-									<p className="text-gray-600 dark:text-gray-300">You'll use your top-rated, validated achievements to build resumes that get noticed, closing the frustrating gap between application and interview.</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+
 			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
