@@ -19,10 +19,10 @@ const Index = () => {
 					<div className="text-center">
 						<img alt="Shining Nuggets Logo" className="h-64 w-64 object-contain mx-auto mb-4" src="/logo.png" />
 						<h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-							Win the 6-Second Resume Scan.
+							9 out of 10 applications are met with rejection or silence. <br /> We're building the platform to make yours the one they can't ignore.
 						</h1>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-							You have 6 seconds to impress a recruiter. Let's make them count.
+							We're creating a new tool for ambitious professionals, combining a smart application tracker with a game that gets you real feedback. Our private beta is currently full, but you can request early access to our next release.
 						</p>
 						<div className="mt-10 flex items-center justify-center gap-x-6">
 							<Button
@@ -32,12 +32,78 @@ const Index = () => {
 								variant="solid"
 								className="bg-amber-600 text-white hover:bg-amber-700"
 							>
-								Join the Waitlist
+								Request Early Access
 							</Button>
 						</div>
+						<p className="mt-4 text-sm text-gray-500">Sign up to be first in line when we open more spots.</p>
 					</div>
 				</div>
 			</main>
+
+			{/* Social Proof Bar */}
+			<div className="bg-white dark:bg-gray-900 py-12">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+						<div className="flex flex-col items-center">
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+								<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+							</svg>
+							<h3 className="text-lg font-semibold">Featured on GitHub</h3>
+							<p className="text-sm text-gray-600 dark:text-gray-400">As seen on their official YouTube channel with over 500,000 subscribers.</p>
+						</div>
+						<div className="flex flex-col items-center">
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2 text-amber-500" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+								<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+							</svg>
+							<h3 className="text-lg font-semibold">Trusted by Developers</h3>
+							<p className="text-sm text-gray-600 dark:text-gray-400">A 42% increase in GitHub stars after our feature, validating our approach.</p>
+						</div>
+						<div className="flex flex-col items-center">
+							<svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+								<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+								<circle cx="9" cy="7" r="4"></circle>
+								<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+								<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+							</svg>
+							<h3 className="text-lg font-semibold">Join The Waitlist</h3>
+							<p className="text-sm text-gray-600 dark:text-gray-400">300+ professionals have already signed up organically to get early access.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Problem/Agitation Section */}
+			<div className="container mx-auto px-4 py-24 sm:py-32">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+					<div>
+						{/* Placeholder for chart image */}
+						<div className="bg-gray-200 dark:bg-gray-700 h-80 w-full rounded-lg flex items-center justify-center">
+							<p className="text-gray-500"><img alt="Chart showing Applications Per Hire tripling" src="homepage/Problem.png"></img></p>
+						</div>
+					</div>
+					<div>
+						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">The Job Search is Officially Broken. It's Not Just You.</h2>
+						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+							Does this sound familiar? You spend hours tailoring your resume and writing the perfect cover letter, only to send it into a black hole. Days turn into weeks. The only reply is a generic rejection email, or worse, complete silence.
+						</p>
+						<p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">You're not imagining it. The game has changed:</p>
+						<ul className="mt-6 space-y-4 text-gray-600 dark:text-gray-300">
+							<li>
+								<strong className="font-semibold text-gray-900 dark:text-white">It's 3x more competitive:</strong> The number of applications per hire has tripled since early 2021. (Source: AshbyHQ)
+							</li>
+							<li>
+								<strong className="font-semibold text-gray-900 dark:text-white">It's overwhelming:</strong> Our research shows 77% of job seekers use over three different tools to manage a process 64% already find frustrating.
+							</li>
+							<li>
+								<strong className="font-semibold text-gray-900 dark:text-white">It's leading to burnout:</strong> 64% of applicants report feeling exhausted and stuck. (Source: Huntr)
+							</li>
+						</ul>
+						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+							You're left wondering, "Is my experience not good enough?" when the real problem is you're playing a game with no rules and no scoreboard.
+						</p>
+					</div>
+				</div>
+			</div>
 
 			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -123,6 +189,72 @@ const Index = () => {
 					</div>
 				</div>
 			</section>
+			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="mx-auto max-w-2xl lg:text-center">
+						<h2 className="text-3xl font-bold text-center mb-12">What We're Building For You</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+							<div>
+								<h3 className="text-xl font-semibold mb-2">AI-Powered Job Application Tracker</h3>
+								<p className="text-default-500">Centralize every application, note, and contact to finally end the chaos of spreadsheets. <br/><strong className="text-amber-600">Benefit: Feel in command of your search, not overwhelmed by it.</strong></p>
+							</div>
+							<div>
+								<h3 className="text-xl font-semibold mb-2">Anonymous Peer Reviews in 'Shining Nuggets'</h3>
+								<p className="text-default-500">Get honest feedback on your achievements from professionals in your field without ever revealing your identity. <br/><strong className="text-amber-600">Benefit: Gain insider knowledge without jeopardizing your current job.</strong></p>
+							</div>
+							<div>
+								<h3 className="text-xl font-semibold mb-2">Gamified Resume Building</h3>
+								<p className="text-default-500">We're making resume prep an addictive habit you can do on your coffee break. <br/><strong className="text-amber-600">Benefit: Stay motivated and consistently prepared for new opportunities.</strong></p>
+							</div>
+							<div>
+								<h3 className="text-xl font-semibold mb-2">The Interview Feedback Loop</h3>
+								<p className="text-default-500">For the first time, you'll be able to connect your resume content directly to interview invites. <br/><strong className="text-amber-600">Benefit: Stop guessing and use data-backed strategies to get hired faster.</strong></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="mx-auto max-w-2xl lg:text-center">
+						<div>
+							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Future Path to a Better Job Offer</h2>
+							<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+								<div className="flex flex-col items-center">
+									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">1</div>
+									<h3 className="text-xl font-semibold mb-2">You'll Get Organized Instantly.</h3>
+									<p className="text-gray-600 dark:text-gray-300">You'll use the tracker to see your entire job search pipeline in one clean dashboard, with AI-powered features that automate the tedious parts.</p>
+								</div>
+								<div className="flex flex-col items-center">
+									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">2</div>
+									<h3 className="text-xl font-semibold mb-2">You'll Play 'Shining Nuggets'.</h3>
+									<p className="text-gray-600 dark:text-gray-300">You'll mine your professional achievements and get them anonymously peer-reviewed in fun, 6-second challenges.</p>
+								</div>
+								<div className="flex flex-col items-center">
+									<div className="bg-amber-100 text-amber-800 text-2xl font-bold rounded-full w-12 h-12 flex items-center justify-center mb-4">3</div>
+									<h3 className="text-xl font-semibold mb-2">You'll Apply with Data-Backed Confidence.</h3>
+									<p className="text-gray-600 dark:text-gray-300">You'll use your top-rated, validated achievements to build resumes that get noticed, closing the frustrating gap between application and interview.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="mx-auto max-w-2xl lg:text-center">
+						<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+							The Future of the Job Search is Being Built. Join Us.
+						</h2>
+						<p className="text-lg text-gray-700 mb-8 leading-relaxed">
+							Stop throwing resumes into the void. We're creating a platform that gives you control, confidence, and the feedback you've always needed. Our beta is currently full, but the next release is coming soon. Request your invite to be first in line and help us build a better way to get hired.
+						</p>
+						<Button as="a" href="#waitlist" size="lg" className="bg-amber-600 text-white hover:bg-amber-700">
+							Request Early Access
+						</Button>
+					</div>
+				</div>
+			</div>
 			<Footer />
 		</div>
 	);
