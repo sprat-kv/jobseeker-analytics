@@ -11,6 +11,7 @@ import HeroSection from "@/components/HeroSection";
 const Index = () => {
 	const [tab, setTab] = useState("waitlist");
 	const [showImagePopup, setShowImagePopup] = useState(false);
+	const [popupImageSrc, setPopupImageSrc] = useState("");
 
 	return (
 		<div className="flex flex-col min-h-screen">
@@ -80,7 +81,10 @@ const Index = () => {
 						{/* Chart image with click functionality */}
 						<div 
 							className="bg-gray-200 dark:bg-gray-700 h-80 w-full rounded-lg flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
-							onClick={() => setShowImagePopup(true)}
+							onClick={() => {
+								setPopupImageSrc("homepage/Problem2.png");
+								setShowImagePopup(true);
+							}}
 						>
 							<div className="relative">
 								<img 
@@ -116,6 +120,44 @@ const Index = () => {
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
 							You're left wondering, "Is my experience not good enough?" when the real problem is you're playing a game with no rules and no scoreboard.
 						</p>
+					</div>
+				</div>
+			</div>
+
+			{/* Solution Section */}
+			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+						<div>
+							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">A Smarter Way to Job Search is Coming.</h2>
+							<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
+								Imagine a single platform that not only organizes your entire job search but also helps you perfect your resume with real, anonymous feedback <em className="font-semibold">before</em> you apply.
+							</p>
+							<p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
+								That's the future we're building with Just A Job App. We are creating a seamless experience that integrates our AI-powered tracker (currently being tested by 100 beta users) with <strong className="text-amber-600">Shining Nuggets</strong>, a revolutionary game designed to discover and validate your most impressive accomplishments.
+							</p>
+						</div>
+						<div>
+							{/* Placeholder for concept design image */}
+							<div className="bg-gray-200 dark:bg-gray-700 h-96 w-full rounded-lg flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity" 
+							onClick={() => {
+								setPopupImageSrc("homepage/Solution.png");
+								setShowImagePopup(true);
+							}}>
+								<div className="relative">
+								<img 
+									alt="Concept design of tracker and game interfaces merging" 
+									src="homepage/Solution.png" 
+									className="max-h-80 max-w-full object-contain"
+								/>
+								<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 hover:opacity-100 transition-opacity">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m4-3H6" />
+									</svg>
+								</div>
+							</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -292,11 +334,11 @@ const Index = () => {
 								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 							</svg>
 						</button>
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl overflow-hidden">
+						<div className="bg-white flex justify-center dark:bg-gray-800 p-6 rounded-lg shadow-2xl overflow-hidden">
 							<img 
-								src="homepage/Problem2.png" 
-								alt="Chart showing Applications Per Hire tripling" 
-								className="w-full h-auto"
+								src={popupImageSrc}
+								alt="Enlarged image" 
+								className="h-auto"
 								style={{ maxHeight: "90vh" }}
 								onClick={(e) => e.stopPropagation()}
 							/>
