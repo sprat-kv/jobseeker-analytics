@@ -20,7 +20,7 @@ const Index = () => {
 				<div className="container mx-auto px-4 py-6">
 					<div className="text-center">
 						<img alt="Shining Nuggets Logo" className="h-64 w-64 object-contain mx-auto mb-4" src="/logo.png" />
-						<h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+						<h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r pb-6 from-amber-600 to-emerald-600">
 							9 out of 10 applications are met with rejection or silence. <br /> We're building the platform to make yours the one they can't ignore.
 						</h1>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
