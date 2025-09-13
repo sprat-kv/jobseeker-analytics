@@ -219,9 +219,9 @@ const Index = () => {
 							</div>
 						</div>
 						<div className="md:col-span-2">
-							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Built From Burnout, For Your Breakthrough.</h2>
+							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Built From Self-Doubt, For Your Success.</h2>
 							<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-								"After being laid off from a gaming company in early 2024, I submitted 100 tailored applications and got 100 generic rejections. To regain my confidence as a developer, I started building an automated job application tracker, which has now been tested by 100 users. The next step is 'Shining Nuggets,' a mobile game I'm building so no one has to go through layoffs unprepared ever again. <strong className="text-amber-600">Request your invite to be a part of the next phase.</strong>"
+								"After being laid off from a gaming company in early 2024, I submitted 100 tailored applications and got 100 generic rejections. To regain my confidence as a developer, I started building an automated job application tracker, which has now been refined by 100+ users, including 20+ open-source developers. The next step is 'Shining Nuggets,' a mobile game I'm building so no one has to go through layoffs unprepared ever again. <strong className="text-amber-600">Request your invite to be a part of the next phase.</strong>"
 							</p>
 							<p className="mt-4 font-semibold text-gray-900 dark:text-white">– Lianna Novitz, Founder of Just A Job App</p>
 						</div>
