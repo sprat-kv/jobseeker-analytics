@@ -233,57 +233,71 @@ const Index = () => {
 			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
-						<p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600 pb-2">
-							The job hunt is a broken feedback loop. Close the loop in "Shining Nuggets"
-						</p>
+						<h2 className="text-3xl font-bold text-center mb-12">What We're Building For You</h2>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+							<div>
+								<h3 className="text-xl font-semibold mb-2">AI-Powered Job Application Tracker</h3>
+								<p className="text-gray-600 dark:text-gray-300">Centralize every application, note, and contact to finally end the chaos of spreadsheets. <br/><strong className="text-amber-600">Benefit: Feel in command of your search, not overwhelmed by it.</strong></p>
+							</div>
+							<div>
+								<h3 className="text-xl font-semibold mb-2">Anonymous Peer Reviews in 'Shining Nuggets'</h3>
+								<p className="text-gray-600 dark:text-gray-300">Get honest feedback on your achievements from professionals in your field without ever revealing your identity. <br/><strong className="text-amber-600">Benefit: Gain insider knowledge without jeopardizing your current job.</strong></p>
+							</div>
+							<div>
+								<h3 className="text-xl font-semibold mb-2">Gamified Resume Building</h3>
+								<p className="text-gray-600 dark:text-gray-300">We're making resume prep an addictive habit you can do on your coffee break. <br/><strong className="text-amber-600">Benefit: Stay motivated and consistently prepared for new opportunities.</strong></p>
+							</div>
+							<div>
+								<h3 className="text-xl font-semibold mb-2">The Interview Feedback Loop</h3>
+								<p className="text-gray-600 dark:text-gray-300">For the first time, you'll be able to connect your resume content directly to interview invites. <br/><strong className="text-amber-600">Benefit: Stop guessing and use data-backed strategies to get hired faster.</strong></p>
+							</div>
+						</div>
 					</div>
-					<div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-						<dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-							<div className="relative pl-16">
-								<dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
-									<div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-600">
-										<TrophyIcon aria-hidden="true" className="h-6 w-6 text-white" />
-									</div>
-									Shining Nuggets
-								</dt>
-								<dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-									In quick 6-second challenges, get your accomplishments peer-reviewed by other players, earning upgrades as you improve.
-								</dd>
-							</div>
-							<div className="relative pl-16">
-								<dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
-									<div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-600">
-										<EyeIcon aria-hidden="true" className="h-6 w-6 text-white" />
-									</div>
-									Get an Inside Edge
-								</dt>
-								<dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-									Need an inside edge? Get your achievements reviewed anonymously by players currently working at your target companies.
-								</dd>
-							</div>
-							<div className="relative pl-16">
-								<dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
-									<div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-600">
-										<PaperAirplaneIcon aria-hidden="true" className="h-6 w-6 text-white" />
-									</div>
-									Close the Feedback Loop
-								</dt>
-								<dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-									Your best, peer-validated achievements sync to our job tracker. It connects to your email to detect interviews near-instantly, proving what gets results.
-								</dd>
-							</div>
-							<div className="relative pl-16">
-								<dt className="text-base font-semibold leading-7 text-gray-900 dark:text-white">
-									<div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-600">
-										<SparklesIcon aria-hidden="true" className="h-6 w-6 text-white" />
-									</div>
-									Prove Your Value
-								</dt>
-								<dd className="mt-2 text-base leading-7 text-gray-600 dark:text-gray-300">
-									Finally, a way to know which parts of your resume are working, so you can double down on what makes you stand out.
-								</dd>
-							</div>
-						</dl>
+				</div>
+			</div>
+			
+			{/* FAQ Section - Addressing Objections */}
+			<div className="bg-gray-50 dark:bg-gray-800 py-24 sm:py-32">
+				<div className="mx-auto max-w-4xl px-6 lg:px-8">
+					<div className="text-center mb-16">
+						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Questions, Answered.</h2>
+					</div>
+					<div className="space-y-12">
+						<div className="border-b border-gray-200 dark:border-gray-700 pb-8">
+							<h3 className="text-xl font-semibold mb-4 text-amber-600">What does "Request Early Access" mean? When will I get in?</h3>
+							<p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+								Our current beta is full as we work closely with our first 100 users to perfect the experience. By requesting access, you'll be placed on our priority list. We will send invites in batches as soon as more spots become available for the next version of the platform.
+							</p>
+						</div>
+						<div className="border-b border-gray-200 dark:border-gray-700 pb-8">
+							<h3 className="text-xl font-semibold mb-4 text-amber-600">Is this just for developers?</h3>
+							<p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+								No. While it was born from a developer's experience, it's designed for all ambitious professionals. In our research with job seekers, 16 out of 22 were non-developers, and they confirmed the need for a more efficient, less frustrating tool.
+							</p>
+						</div>
+						<div className="pb-4">
+							<h3 className="text-xl font-semibold mb-4 text-amber-600">Is this confidential? My biggest fear is my boss finding out.</h3>
+							<p className="text-lg leading-relaxed text-gray-600 dark:text-gray-300">
+								Absolutely. Protecting your privacy is a core part of our design. All your data will be private, and all activity in the 'Shining Nuggets' game will be 100% anonymous.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			{/* Final CTA Section */}
+			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+				<div className="mx-auto max-w-7xl px-6 lg:px-8">
+					<div className="mx-auto max-w-2xl lg:text-center">
+						<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+							The Future of the Job Search is Being Built. Join Us.
+						</h2>
+						<p className="text-lg text-gray-700 mb-8 dark:text-gray-300 leading-relaxed">
+							Stop throwing resumes into the void. We're creating a platform that gives you control, confidence, and the feedback you've always needed. Our beta is currently full, but the next release is coming soon. Request your invite to be first in line and help us build a better way to get hired.
+						</p>
+						<Button as="a" href="#waitlist" size="lg" className="bg-amber-600 text-white hover:bg-amber-700">
+							Request Early Access
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -291,10 +305,10 @@ const Index = () => {
 			<section id="waitlist" className="max-w-4xl mx-auto py-16">
 				<div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-xl p-8 border border-amber-200 text-center">
 					<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-						Ready to Win the Scan?
+						Get the Unfair Advantage in Your Job Search.
 					</h2>
 					<p className="text-lg text-gray-700 mb-8 leading-relaxed">
-						Join the waitlist to get early access to Shining Nuggets and start turning 6 seconds into job offers.
+						Join 300+ ambitious professionals on the priority list. We'll give you early access to the tools that turn your hidden achievements into your next big opportunity. Your search is 100% confidential.
 					</p>
 
 					<div className="flex justify-center mb-8">
@@ -308,47 +322,6 @@ const Index = () => {
 					</div>
 				</div>
 			</section>
-			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
-				<div className="mx-auto max-w-7xl px-6 lg:px-8">
-					<div className="mx-auto max-w-2xl lg:text-center">
-						<h2 className="text-3xl font-bold text-center mb-12">What We're Building For You</h2>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-							<div>
-								<h3 className="text-xl font-semibold mb-2">AI-Powered Job Application Tracker</h3>
-								<p className="text-default-500">Centralize every application, note, and contact to finally end the chaos of spreadsheets. <br/><strong className="text-amber-600">Benefit: Feel in command of your search, not overwhelmed by it.</strong></p>
-							</div>
-							<div>
-								<h3 className="text-xl font-semibold mb-2">Anonymous Peer Reviews in 'Shining Nuggets'</h3>
-								<p className="text-default-500">Get honest feedback on your achievements from professionals in your field without ever revealing your identity. <br/><strong className="text-amber-600">Benefit: Gain insider knowledge without jeopardizing your current job.</strong></p>
-							</div>
-							<div>
-								<h3 className="text-xl font-semibold mb-2">Gamified Resume Building</h3>
-								<p className="text-default-500">We're making resume prep an addictive habit you can do on your coffee break. <br/><strong className="text-amber-600">Benefit: Stay motivated and consistently prepared for new opportunities.</strong></p>
-							</div>
-							<div>
-								<h3 className="text-xl font-semibold mb-2">The Interview Feedback Loop</h3>
-								<p className="text-default-500">For the first time, you'll be able to connect your resume content directly to interview invites. <br/><strong className="text-amber-600">Benefit: Stop guessing and use data-backed strategies to get hired faster.</strong></p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
-				<div className="mx-auto max-w-7xl px-6 lg:px-8">
-					<div className="mx-auto max-w-2xl lg:text-center">
-						<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-							The Future of the Job Search is Being Built. Join Us.
-						</h2>
-						<p className="text-lg text-gray-700 mb-8 leading-relaxed">
-							Stop throwing resumes into the void. We're creating a platform that gives you control, confidence, and the feedback you've always needed. Our beta is currently full, but the next release is coming soon. Request your invite to be first in line and help us build a better way to get hired.
-						</p>
-						<Button as="a" href="#waitlist" size="lg" className="bg-amber-600 text-white hover:bg-amber-700">
-							Request Early Access
-						</Button>
-					</div>
-				</div>
-			</div>
 			<Footer />
 
 			{/* Image Popup Overlay */}
