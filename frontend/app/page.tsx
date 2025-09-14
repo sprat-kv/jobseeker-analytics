@@ -505,11 +505,11 @@ const Index = () => {
 			</div>
 
 			<section id="waitlist" className="max-w-4xl mx-auto py-16">
-				<div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-xl p-8 border border-amber-200 text-center transition-all">
-					<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
+				<div className="bg-gradient-to-r from-amber-50 to-emerald-50 dark:from-amber-950/30 dark:to-emerald-950/30 rounded-xl p-8 border border-amber-200 dark:border-amber-800/50 text-center transition-all">
+					<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600 dark:from-amber-500 dark:to-emerald-400">
 						Get the Unfair Advantage in Your Job Search
 					</h2>
-					<p className="text-lg text-gray-700 mb-8 leading-relaxed">
+					<p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
 						Join 300+ ambitious professionals on the priority list. We'll give you early access to the tools
 						that turn your hidden achievements into your next big opportunity. Your search is 100%
 						confidential.
