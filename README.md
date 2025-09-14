@@ -18,7 +18,7 @@ Choose your DIY Install path:
 - Like watching? [Video 📹](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-video-tutorial-diy-install) 
 - More of a reader? [Manual 📖](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-written-tutorial-diy-install)
 
-No GitHub account? [Join the waitlist](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
+No GitHub account? [Join the waitlist](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?source=GHREAD1).
 
 ## Problem: The Job Search is Officially Broken
 
@@ -56,7 +56,7 @@ Key:
 
 ## Launch & Beta
 
-Interested in trying out the new features? Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?source=GHREAD).
+Interested in trying out the new features? Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?source=GHREAD2).
 
 ## News 
 
