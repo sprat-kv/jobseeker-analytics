@@ -523,7 +523,7 @@ const Index = () => {
 						{/* Embedded Formbricks Survey */}
 						<div className="dark:opacity-70" style={{ position: "relative", overflow: "auto" }}>
 							<iframe
-								src="https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?embed=true"
+								src="https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?embed=true&source=JustAJobAppLandingPageEmbed"
 								style={{ width: "400px", height: "270px", border: 0 }}
 								className="rounded-md dark:border dark:border-gray-700"
 							/>
