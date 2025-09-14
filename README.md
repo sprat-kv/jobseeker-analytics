@@ -1,58 +1,62 @@
-# Just A Job App (JAJA)
+# Just A Job App
 
-You Are Not a Pile of Dirt.
 
-<img width="23%" height="23%" alt="Logo" src="frontend/public/logo.png" />
+## 9 out of 10 applications are met with rejection or silence.
+## We're building the platform to make yours the one they can't ignore.
 
-The Job Search crushes confidence.
 
-Rejection after rejection convinces you your experience is worthless. JAJA's here to fix that.
+<img width="50%" height="50%" alt="Logo" src="frontend/public/homepage/Problem2.png" />
+
+The job search is officially broken, and it's not just you. Applications per hire have tripled since early 2021, leaving even qualified candidates stuck in an endless cycle of submitting resumes into the void.
+
 
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
 
 ## Get Started
 
-Choose your DIY Install path: Video [📹](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-video-tutorial-diy-install) or Manual [📖](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-written-tutorial-diy-install)
+Choose your DIY Install path: 
+- Like watching? [Video 📹](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-video-tutorial-diy-install) 
+- More of a reader? [Manual 📖](https://github.com/just-a-job-app/jobseeker-analytics?tab=contributing-ov-file#-written-tutorial-diy-install)
 
 No GitHub account? [Join the waitlist](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
 
-## Problem
+## Problem: The Job Search is Officially Broken
 
-The job search industry is transactional: resume rewrites and ATS scans happen in isolation, with no feedback loop to show whether those actions actually lead to interviews. That gap leaves candidates guessing and second-guessing their value.
+Does this sound familiar? You spend hours tailoring your resume and writing the perfect cover letter, only to send it into a black hole. Days turn into weeks. The only reply is a generic rejection email, or worse, complete silence.
 
-## Our Approach — Unearthing, Polishing, Proving
+You're not imagining it. The game has changed:
+- **It's 3x more competitive:** The number of applications per hire has tripled since early 2021.
+- **It's overwhelming:** Our research shows 77% of job seekers use over three different tools to manage a process 64% already find frustrating.
+- **It's leading to burnout:** 64% of applicants report feeling exhausted and stuck.
 
-JAJA is built around a simple, human-centered process:
-
-1. The Unearthing Process  
-   - The Gold Mine guides you through prompts and teammates' testimonials to surface specific, quantified achievements you may be overlooking.
-
-2. Polishing Each Find  
-   - AI transforms those raw moments into clear, fact-backed resume bullets and interview talking points that highlight measurable impact.
-
-3. Proving Market Value  
-   - Our analytics engine tracks application outcomes and shows which of your polished achievements are actually earning interviews — the final proof that your value resonates with the market.
-
----
 [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
 
+## Our Solution: A Smarter Way to Job Search
 
-## Features as Benefits
+Imagine a single platform that not only organizes your entire job search but also helps you perfect your resume with real, anonymous feedback *before* you apply.
 
-- Your Evidence of Untapped Value  
-  - A living Gold Mine that helps you stop doubting and start documenting real accomplishments.
+<img width="30%" height="30%" alt="Logo" src="frontend/public/homepage/Solution.png" />
 
-- Presenting Your Polished Gold  
-  - Ready-to-use talking points and resume copy grounded in facts and metrics.
+We are creating a seamless experience that integrates our email-powered application tracker with **Shining Nuggets**, a mobile game designed to discover and validate your most impressive accomplishments:
 
-- A Continuously Richer Vein  
-  - Keep logging achievements after you land a role so your professional value keeps compounding.
+1. ✅ **You'll Get Organized Instantly**  
+   See your entire job search pipeline in one clean dashboard, with email-powered features that automate the tedious parts.
 
----
+2. 🔬 **You'll Play 'Shining Nuggets'**  
+   Mine your professional achievements and get them anonymously peer-reviewed in fun, 6-second challenges.
+
+3. 🔬 **You'll Apply with Data-Backed Confidence**  
+   Use your top-rated, validated achievements to build resumes that get noticed, closing the frustrating gap between application and interview.
+
+Key:
+✅ = Feature Deployed
+🔬 = User Research Phase
+
+[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/lnovitz)
 
 ## Launch & Beta
 
-We're launching The Gold Mine and Polish features in Q4 2025. Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
+Interested in trying out the new features? Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
 
 ## News 
 
