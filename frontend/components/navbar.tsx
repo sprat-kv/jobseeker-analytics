@@ -35,6 +35,21 @@ export const Navbar = () => {
 						className="bg-amber-600 text-white hover:bg-amber-700"
 						href="#waitlist"
 						variant="solid"
+						onPress={() => {
+							// Add fireworks animation to waitlist section
+							const waitlistSection = document.getElementById("waitlist");
+							if (waitlistSection) {
+								// Import the function dynamically to avoid circular dependencies
+								import("@/components/Footer").then((module) => {
+									const { createFireworkEffect } = module;
+									waitlistSection.classList.add("golden-sparkle-border");
+									createFireworkEffect(waitlistSection);
+									setTimeout(() => {
+										waitlistSection.classList.remove("golden-sparkle-border");
+									}, 2000);
+								});
+							}
+						}}
 					>
 						Request Early Access
 					</Button>
@@ -49,6 +64,21 @@ export const Navbar = () => {
 					href="#waitlist"
 					size="sm"
 					variant="solid"
+					onPress={() => {
+						// Add fireworks animation to waitlist section
+						const waitlistSection = document.getElementById("waitlist");
+						if (waitlistSection) {
+							// Import the function dynamically to avoid circular dependencies
+							import("@/components/Footer").then((module) => {
+								const { createFireworkEffect } = module;
+								waitlistSection.classList.add("golden-sparkle-border");
+								createFireworkEffect(waitlistSection);
+								setTimeout(() => {
+									waitlistSection.classList.remove("golden-sparkle-border");
+								}, 2000);
+							});
+						}
+					}}
 				>
 					Request Early Access
 				</Button>
