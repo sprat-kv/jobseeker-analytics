@@ -218,7 +218,7 @@ const Index = () => {
 							</p>
 							<p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
 								That's the future we're building with Just A Job App. We are creating a seamless
-								experience that integrates our AI-powered tracker (currently being tested by 100 beta
+								experience that integrates our email-powered application tracker (currently being tested by 100 beta
 								users) with <strong className="text-amber-600">Shining Nuggets</strong>, a revolutionary
 								game designed to discover and validate your most impressive accomplishments.
 							</p>
@@ -279,7 +279,7 @@ const Index = () => {
 								<h3 className="text-xl font-semibold mb-2">You'll Get Organized Instantly.</h3>
 								<p className="text-gray-600 dark:text-gray-300">
 									You'll use the tracker to see your entire job search pipeline in one clean
-									dashboard, with AI-powered features that automate the tedious parts.
+									dashboard, with email integration to automate the tedious parts.
 								</p>
 							</div>
 							<div className="flex flex-col items-center">
@@ -379,7 +379,7 @@ const Index = () => {
 						<h2 className="text-3xl font-bold text-center mb-12">What We're Building For You</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
 							<div>
-								<h3 className="text-xl font-semibold mb-2">AI-Powered Job Application Tracker</h3>
+								<h3 className="text-xl font-semibold mb-2">Email-Powered Job Application Tracker</h3>
 								<p className="text-gray-600 dark:text-gray-300">
 									Centralize every application, note, and contact to finally end the chaos of
 									spreadsheets. <br />
