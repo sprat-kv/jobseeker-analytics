@@ -474,10 +474,10 @@ const Index = () => {
 				</div>
 			</div>
 
-			<section className="max-w-4xl mx-auto py-16" id="waitlist">
-				<div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-xl p-8 border border-amber-200 text-center">
+			<section id="waitlist" className="max-w-4xl mx-auto py-16">
+				<div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-xl p-8 border border-amber-200 text-center transition-all">
 					<h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
-						Get the Unfair Advantage in Your Job Search.
+						Get the Unfair Advantage in Your Job Search
 					</h2>
 					<p className="text-lg text-gray-700 mb-8 leading-relaxed">
 						Join 300+ ambitious professionals on the priority list. We'll give you early access to the tools
