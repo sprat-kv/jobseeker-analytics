@@ -3,25 +3,14 @@
 import {
 	Navbar as HeroUINavbar,
 	NavbarContent,
-	NavbarMenuToggle,
 	NavbarBrand,
 	NavbarItem,
-	NavbarMenu,
-	NavbarMenuItem,
-	Button,
-	Link,
-	Tooltip
+	Button
 } from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
 import NextLink from "next/link";
 
-import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, DiscordIcon, HeartFilledIcon, GoogleIcon, LogOutIcon, InfoIcon } from "@/components/icons";
 
 export const Navbar = () => {
-
 	return (
 		<HeroUINavbar
 			isBordered
@@ -37,7 +26,9 @@ export const Navbar = () => {
 								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
 									Just A Job App
 								</span>
-								<span className="text-xs text-default-500 -mt-1">Get the Unfair Advantage in Your Job Search.</span>
+								<span className="text-xs text-default-500 -mt-1">
+									Get the Unfair Advantage in Your Job Search.
+								</span>
 							</div>
 						</div>
 					</NextLink>
@@ -46,7 +37,12 @@ export const Navbar = () => {
 
 			<NavbarContent className="hidden md:flex basis-1/5 sm:basis-full" justify="end">
 				<NavbarItem>
-					<Button as="a" href="#waitlist" variant="solid" className="bg-amber-600 text-white hover:bg-amber-700">
+					<Button
+						as="a"
+						className="bg-amber-600 text-white hover:bg-amber-700"
+						href="#waitlist"
+						variant="solid"
+					>
 						Request Early Access
 					</Button>
 				</NavbarItem>
@@ -54,7 +50,13 @@ export const Navbar = () => {
 
 			{/* Smaller screens */}
 			<NavbarContent className="md:hidden" justify="end">
-				<Button as="a" href="#waitlist" variant="solid" size="sm" className="bg-amber-600 text-white hover:bg-amber-700">
+				<Button
+					as="a"
+					className="bg-amber-600 text-white hover:bg-amber-700"
+					href="#waitlist"
+					size="sm"
+					variant="solid"
+				>
 					Request Early Access
 				</Button>
 			</NavbarContent>
