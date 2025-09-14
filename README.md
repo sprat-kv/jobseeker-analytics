@@ -56,7 +56,7 @@ Key:
 
 ## Launch & Beta
 
-Interested in trying out the new features? Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo).
+Interested in trying out the new features? Join the waitlist [here](https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?source=GHREAD).
 
 ## News 
 
