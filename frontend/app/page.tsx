@@ -218,9 +218,10 @@ const Index = () => {
 							</p>
 							<p className="mt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
 								That's the future we're building with Just A Job App. We are creating a seamless
-								experience that integrates our email-powered application tracker (currently being tested by 100 beta
-								users) with <strong className="text-amber-600">Shining Nuggets</strong>, a revolutionary
-								game designed to discover and validate your most impressive accomplishments.
+								experience that integrates our email-powered application tracker (currently being tested
+								by 100 beta users) with <strong className="text-amber-600">Shining Nuggets</strong>, a
+								revolutionary game designed to discover and validate your most impressive
+								accomplishments.
 							</p>
 						</div>
 						<div>
