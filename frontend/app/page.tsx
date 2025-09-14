@@ -7,7 +7,6 @@ import { Navbar } from "@/components/navbar";
 import Footer from "@/components/Footer";
 
 const Index = () => {
-	const [tab, setTab] = useState("waitlist");
 	const [showImagePopup, setShowImagePopup] = useState(false);
 	const [popupImageSrc, setPopupImageSrc] = useState("");
 
@@ -35,6 +34,21 @@ const Index = () => {
 								href="#waitlist"
 								size="lg"
 								variant="solid"
+								onPress={() => {
+									// Add fireworks animation to waitlist section
+									const waitlistSection = document.getElementById("waitlist");
+									if (waitlistSection) {
+										// Import the function dynamically to avoid circular dependencies
+										import("@/components/Footer").then((module) => {
+											const { createFireworkEffect } = module;
+											waitlistSection.classList.add("golden-sparkle-border");
+											createFireworkEffect(waitlistSection);
+											setTimeout(() => {
+												waitlistSection.classList.remove("golden-sparkle-border");
+											}, 2000);
+										});
+									}
+								}}
 							>
 								Request Early Access
 							</Button>
@@ -467,6 +481,21 @@ const Index = () => {
 							className="bg-amber-600 text-white hover:bg-amber-700"
 							href="#waitlist"
 							size="lg"
+							onPress={() => {
+								// Add fireworks animation to waitlist section
+								const waitlistSection = document.getElementById("waitlist");
+								if (waitlistSection) {
+									// Import the function dynamically to avoid circular dependencies
+									import("@/components/Footer").then((module) => {
+										const { createFireworkEffect } = module;
+										waitlistSection.classList.add("golden-sparkle-border");
+										createFireworkEffect(waitlistSection);
+										setTimeout(() => {
+											waitlistSection.classList.remove("golden-sparkle-border");
+										}, 2000);
+									});
+								}
+							}}
 						>
 							Request Early Access
 						</Button>

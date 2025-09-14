@@ -7,7 +7,8 @@ import { useEffect } from "react";
 import { ExternalLinkIcon, GoogleIcon } from "@/components/icons";
 
 // Function to create a firework particle effect
-const createFireworkEffect = (element: HTMLElement) => {
+// Exported so it can be used from other components
+export const createFireworkEffect = (element: HTMLElement) => {
   // Number of particles - reduced for a quicker effect
   const particleCount = 30;
   
@@ -55,7 +56,7 @@ const createFireworkEffect = (element: HTMLElement) => {
     container.appendChild(particle);
     
     // Animate particle - shorter duration
-    const duration = Math.random() * 800 + 700; // 700-1500ms
+    const duration = Math.random() * 800; // 700-1500ms
     
     // Create and start animation
     particle.animate([
