@@ -19,10 +19,12 @@ const Index = () => {
 				<Navbar />
 				<div className="container mx-auto px-4 py-6">
 					<div className="text-center">
-						<img alt="Shining Nuggets Logo" className="h-64 w-64 object-contain mx-auto mb-4" src="/logo.png" />
-						<h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r pb-6 from-amber-600 to-emerald-600">
-							9 out of 10 applications are met with rejection or silence. <br /> We're building the platform to make yours the one they can't ignore.
+						<h1 className="text-2xl font-bold tracking-tight sm:text-3xl bg-clip-text text-transparent bg-gradient-to-r pb-6 from-amber-600 to-emerald-600">
+							9 out of 10 applications are met with rejection or silence.
 						</h1>
+						<p className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r pb-6 from-amber-600 to-emerald-600">
+							We're building the platform to make yours the one they can't ignore.
+						</p>
 						<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
 							We're creating a new tool for ambitious professionals, combining a smart application tracker with a game that gets you real feedback. Our private beta is currently full, but you can request early access to our next release.
 						</p>
