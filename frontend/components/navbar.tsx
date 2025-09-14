@@ -1,14 +1,7 @@
 "use client";
 
-import {
-	Navbar as HeroUINavbar,
-	NavbarContent,
-	NavbarBrand,
-	NavbarItem,
-	Button
-} from "@heroui/react";
+import { Navbar as HeroUINavbar, NavbarContent, NavbarBrand, NavbarItem, Button } from "@heroui/react";
 import NextLink from "next/link";
-
 
 export const Navbar = () => {
 	return (
