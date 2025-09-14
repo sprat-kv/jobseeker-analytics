@@ -208,7 +208,7 @@ const Index = () => {
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 						<div>
-							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-gray-900 dark:text-white">
 								A Smarter Way to Job Search is Coming.
 							</h2>
 							<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
@@ -263,10 +263,10 @@ const Index = () => {
 			</div>
 
 			{/* Vision Section: How It Will All Work */}
-			<div className="bg-gray-50 dark:bg-gray-800 py-24 sm:py-32">
+			<div className="bg-gray-50 dark:bg-gray-900/60 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
-						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-gray-900 dark:text-white">
 							The Vision: How It Will All Work
 						</h2>
 						<p className="mt-4 text-2xl font-semibold text-amber-600">
@@ -311,7 +311,7 @@ const Index = () => {
 			</div>
 
 			{/* Founder's Story Section */}
-			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
+			<div className="bg-white dark:bg-gray-800 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
 						<div className="md:col-span-1">
@@ -351,7 +351,7 @@ const Index = () => {
 							</div>
 						</div>
 						<div className="md:col-span-2">
-							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+							<h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-gray-900 dark:text-white">
 								Built From Self-Doubt, For Your Success.
 							</h2>
 							<p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
@@ -377,7 +377,9 @@ const Index = () => {
 			<div className="bg-white dark:bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-2xl lg:text-center">
-						<h2 className="text-3xl font-bold text-center mb-12">What We're Building For You</h2>
+						<h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+							What We're Building For You
+						</h2>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
 							<div>
 								<h3 className="text-xl font-semibold mb-2">Email-Powered Job Application Tracker</h3>
@@ -429,7 +431,9 @@ const Index = () => {
 			<div className="bg-gray-50 dark:bg-gray-800 py-24 sm:py-32">
 				<div className="mx-auto max-w-4xl px-6 lg:px-8">
 					<div className="text-center mb-16">
-						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Your Questions, Answered.</h2>
+						<h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-gray-900 dark:text-white">
+							Your Questions, Answered.
+						</h2>
 					</div>
 					<div className="space-y-12">
 						<div className="border-b border-gray-200 dark:border-gray-700 pb-8">
@@ -517,10 +521,11 @@ const Index = () => {
 
 					<div className="flex justify-center mb-8">
 						{/* Embedded Formbricks Survey */}
-						<div style={{ position: "relative", overflow: "auto" }}>
+						<div className="dark:opacity-70" style={{ position: "relative", overflow: "auto" }}>
 							<iframe
 								src="https://app.formbricks.com/s/cmf667qha4ahcyg01nu13lsgo?embed=true"
 								style={{ width: "400px", height: "270px", border: 0 }}
+								className="rounded-md dark:border dark:border-gray-700"
 							/>
 						</div>
 					</div>
