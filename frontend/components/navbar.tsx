@@ -1,48 +1,9 @@
 "use client";
 
-import {
-	Navbar as HeroUINavbar,
-	NavbarContent,
-	NavbarMenuToggle,
-	NavbarBrand,
-	NavbarItem,
-	NavbarMenu,
-	NavbarMenuItem,
-	Button,
-	Link,
-	Tooltip
-} from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { Navbar as HeroUINavbar, NavbarContent, NavbarBrand, NavbarItem, Button } from "@heroui/react";
 import NextLink from "next/link";
 
-import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, DiscordIcon, HeartFilledIcon, GoogleIcon, LogOutIcon, InfoIcon } from "@/components/icons";
-
 export const Navbar = () => {
-	const pathname = usePathname();
-	const router = useRouter();
-
-	const apiUrl = process.env.NEXT_PUBLIC_API_URL!;
-
-	const handleGoogleLogin = () => {
-		router.push(`${apiUrl}/login`);
-	};
-
-	const handleGoogleLogout = async () => {
-		router.push(`${apiUrl}/logout`);
-	};
-
-	const loginTooltipContent = (
-		<div className="px-1 py-2 max-w-xs">
-			<div className="text-sm font-bold mb-1">Heads up</div>
-			<div className="text-xs">
-				Login is currently limited. Want early access? Please complete the short survey below.
-			</div>
-		</div>
-	);
-
 	return (
 		<HeroUINavbar
 			isBordered
@@ -53,12 +14,14 @@ export const Navbar = () => {
 				<NavbarBrand as="li" className="gap-3 max-w-fit">
 					<NextLink className="flex justify-start items-center gap-1" href="/">
 						<div className="flex items-center gap-3">
-							<img alt="Just a Job App Logo" className="h-12 w-12 object-contain" src="/logo.png" />
+							<img alt="Shining Nuggets Logo" className="h-12 w-12 object-contain" src="/logo.png" />
 							<div className="flex flex-col">
 								<span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-emerald-600">
 									Just A Job App
 								</span>
-								<span className="text-xs text-default-500 -mt-1">You See Dirt. We See Gold.</span>
+								<span className="text-xs text-default-500 -mt-1">
+									Get the Unfair Advantage in Your Job Search.
+								</span>
 							</div>
 						</div>
 					</NextLink>
@@ -67,152 +30,59 @@ export const Navbar = () => {
 
 			<NavbarContent className="hidden md:flex basis-1/5 sm:basis-full" justify="end">
 				<NavbarItem>
-					<Link className="text-sm font-normal text-default-600 hover:text-default-900" href="/contributors">
-						Contributors
-					</Link>
-				</NavbarItem>
-				<NavbarItem className="flex gap-2">
-					<Link isExternal aria-label="Github" href={siteConfig.links.github}>
-						<GithubIcon className="text-default-500" />
-					</Link>
-					<Link isExternal aria-label="Discord" href={siteConfig.links.discord}>
-						<DiscordIcon className="text-default-500" />
-					</Link>
-					<ThemeSwitch />
-				</NavbarItem>
-				<NavbarItem>
 					<Button
-						isExternal
-						as={Link}
-						className="text-sm font-normal text-default-600 bg-default-100"
-						data-testid="Sponsor"
-						href={siteConfig.links.sponsor}
-						startContent={<HeartFilledIcon className="text-danger" />}
-						variant="flat"
+						as="a"
+						className="bg-amber-600 text-white hover:bg-amber-700"
+						href="#waitlist"
+						variant="solid"
+						onPress={() => {
+							// Add fireworks animation to waitlist section
+							const waitlistSection = document.getElementById("waitlist");
+							if (waitlistSection) {
+								// Import the function dynamically to avoid circular dependencies
+								import("@/components/Footer").then((module) => {
+									const { createFireworkEffect } = module;
+									waitlistSection.classList.add("golden-sparkle-border");
+									createFireworkEffect(waitlistSection);
+									setTimeout(() => {
+										waitlistSection.classList.remove("golden-sparkle-border");
+									}, 2000);
+								});
+							}
+						}}
 					>
-						Sponsor
+						Request Early Access
 					</Button>
-				</NavbarItem>
-				<NavbarItem>
-					{pathname === "/" || pathname.startsWith("/preview") ? (
-						<Tooltip
-							closeDelay={0}
-							color="foreground"
-							content={loginTooltipContent}
-							delay={200}
-							placement="bottom"
-						>
-							<Button
-								className="w-full text-sm font-normal text-default-600 bg-default-100"
-								data-testid="GoogleLogin"
-								endContent={<InfoIcon className="text-default-400" size={14} />}
-								startContent={<GoogleIcon className="text-danger" />}
-								variant="flat"
-								onPress={handleGoogleLogin}
-							>
-								Login with Google
-							</Button>
-						</Tooltip>
-					) : (
-						<Button
-							className="w-full text-sm font-normal text-default-600 bg-default-100"
-							data-testid="GoogleLogout"
-							startContent={<LogOutIcon />}
-							variant="flat"
-							onPress={handleGoogleLogout}
-						>
-							Logout
-						</Button>
-					)}
 				</NavbarItem>
 			</NavbarContent>
 
 			{/* Smaller screens */}
 			<NavbarContent className="md:hidden" justify="end">
-				{pathname === "/" ? (
-					<Tooltip
-						closeDelay={0}
-						color="foreground"
-						content={loginTooltipContent}
-						delay={200}
-						placement="bottom"
-					>
-						<Button
-							className="w-auto text-sm font-normal text-default-600 bg-default-100"
-							data-testid="GoogleLoginSmallScreen"
-							endContent={<InfoIcon className="text-default-400" size={14} />}
-							startContent={<GoogleIcon className="text-danger" />}
-							variant="flat"
-							onPress={handleGoogleLogin}
-						>
-							Login
-						</Button>
-					</Tooltip>
-				) : (
-					<Button
-						className="w-auto text-sm font-normal text-default-600 bg-default-100 px-7"
-						data-testid="GoogleLogoutSmallScreen"
-						startContent={<LogOutIcon />}
-						variant="flat"
-						onPress={handleGoogleLogout}
-					>
-						Logout
-					</Button>
-				)}
-				<NavbarMenuToggle />
+				<Button
+					as="a"
+					className="bg-amber-600 text-white hover:bg-amber-700"
+					href="#waitlist"
+					size="sm"
+					variant="solid"
+					onPress={() => {
+						// Add fireworks animation to waitlist section
+						const waitlistSection = document.getElementById("waitlist");
+						if (waitlistSection) {
+							// Import the function dynamically to avoid circular dependencies
+							import("@/components/Footer").then((module) => {
+								const { createFireworkEffect } = module;
+								waitlistSection.classList.add("golden-sparkle-border");
+								createFireworkEffect(waitlistSection);
+								setTimeout(() => {
+									waitlistSection.classList.remove("golden-sparkle-border");
+								}, 2000);
+							});
+						}
+					}}
+				>
+					Request Early Access
+				</Button>
 			</NavbarContent>
-
-			<NavbarMenu className="flex flex-col items-center gap-3">
-				<NavbarMenuItem>
-					<Link
-						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
-						href="/contributors"
-					>
-						🏆 Contributors
-					</Link>
-				</NavbarMenuItem>
-				<NavbarMenuItem>
-					<Link
-						isExternal
-						aria-label="Github"
-						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
-						href={siteConfig.links.github}
-					>
-						<GithubIcon className="w-5 h-5 text-default-500" />
-						<span>View code</span>
-					</Link>
-				</NavbarMenuItem>
-				<NavbarMenuItem>
-					<Link
-						isExternal
-						aria-label="Discord"
-						className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition"
-						href={siteConfig.links.discord}
-					>
-						<DiscordIcon className="w-5 h-5 text-default-500" />
-						<span>Join Discord</span>
-					</Link>
-				</NavbarMenuItem>
-
-				<NavbarMenuItem>
-					<ThemeSwitch className="w-auto flex items-center justify-center gap-2 text-sm font-medium text-default-600 hover:text-default-900 bg-default-100 px-4 py-2 rounded-md transition">
-						<span>Change theme</span>
-					</ThemeSwitch>
-				</NavbarMenuItem>
-
-				<NavbarMenuItem>
-					<Button
-						isExternal
-						as={Link}
-						className="w-auto text-sm font-medium text-default-600 bg-default-100 px-4 py-2 rounded-md transition"
-						href={siteConfig.links.sponsor}
-						startContent={<HeartFilledIcon className="text-danger" />}
-						variant="flat"
-					>
-						Sponsor
-					</Button>
-				</NavbarMenuItem>
-			</NavbarMenu>
 		</HeroUINavbar>
 	);
 };
