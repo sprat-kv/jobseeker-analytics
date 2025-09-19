@@ -67,10 +67,8 @@ def remove_numbers_and_ids(title):
     # Examples: RD2345, JOB123, REQ456, etc.
     title = re.sub(r'\b[A-Z]{1,5}\d+\b', '', title, flags=re.IGNORECASE)  # Letter+number IDs
     
-    # Remove everything after standalone numbers (experience requirements, etc.)
-    # Examples: "Software Engineer 2 Years Experience" -> "Software Engineer"
-    title = re.sub(r'\s+\d+.*$', '', title)  # Remove number and everything after it
-    title = re.sub(r'\b\d+\b.*$', '', title)  # Remove standalone number and everything after it
+    # Remove standalone integers, which are likely levels or irrelevant numbers
+    title = re.sub(r'\s+\d+\s*$', '', title)  # Remove integer at the end of the string
     
     # Clean up extra spaces
     title = re.sub(r'\s+', ' ', title).strip()

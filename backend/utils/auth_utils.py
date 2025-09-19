@@ -1,4 +1,5 @@
 import logging
+import time
 import uuid
 
 from utils.file_utils import get_user_filepath
@@ -6,6 +7,7 @@ from utils.file_utils import get_user_filepath
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
+from google.auth import exceptions as google_auth_exceptions
 from googleapiclient.discovery import build
 from utils.config_utils import get_settings
 
@@ -62,9 +64,17 @@ class AuthenticatedUser:
             if not self.creds.id_token:
                 raise ValueError("No ID token available after refresh.")
     
-            decoded_token = id_token.verify_oauth2_token(
-                self.creds.id_token, Request(), audience=self.creds.client_id
-            )
+            try:
+                decoded_token = id_token.verify_oauth2_token(
+                    self.creds.id_token, Request(), audience=self.creds.client_id
+                )
+            except google_auth_exceptions.TokenTooEarlyError:
+                logger.warning("Token used too early, retrying after a short delay to account for clock skew...")
+                time.sleep(2)  # Wait for 2 seconds
+                decoded_token = id_token.verify_oauth2_token(
+                    self.creds.id_token, Request(), audience=self.creds.client_id
+                )
+
             user_id = decoded_token["sub"]  # 'sub' is the unique user ID
             user_email = decoded_token.get("email")  # 'email' is the user's email address
             return user_id, user_email

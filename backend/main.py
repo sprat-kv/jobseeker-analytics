@@ -17,6 +17,10 @@ from db.utils.dev_utils import clear_local_database  # noqa: F401
 # Import routes
 from routes import email_routes, auth_routes, file_routes, users_routes, start_date_routes, job_applications_routes
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     create_db_and_tables()
